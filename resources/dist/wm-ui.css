@@ -420,3 +420,8 @@
     font-size: 0.75rem;
     text-align: center;
 }
+
+/* Filament ordnet die Tage seit 5.10 in Wochenzeilen an, der Zeitraum zeichnet sie flach: Raster hier selbst setzen. */
+.wm-drp .fi-fo-date-time-picker-calendar {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
