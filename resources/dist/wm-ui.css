@@ -221,6 +221,11 @@
     margin-inline-start: auto;
 }
 
+/* Einträge in Menüs brechen um, abgeschnittener Text ließe offen, was der Knopf tut. */
+.fi-dropdown-list-item-label {
+    white-space: normal;
+}
+
 /* Icons vor bzw. hinter dem Text eines TextEntry sitzen sonst auf der Grundlinie, hier mittig zur Schrift. */
 .fi-in-text-item > .fi-icon,
 .fi-in-text-item > span:not(.fi-badge) > .fi-icon {

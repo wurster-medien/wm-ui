@@ -4,12 +4,13 @@ namespace WursterMedien\Ui;
 
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 
 /**
  * Menü „Mehr“ in der Kopfzeile einer Seite (Admin und Portal): seltene, rückwärts gerichtete und löschende Aktionen,
- * damit oben nur die Hauptschritte als Buttons stehen. Löschen kommt als Letztes. In Karten (forRecord) nur als
- * Icon-Button, damit die Aktionen in eine Zeile passen.
+ * damit oben nur die Hauptschritte als Buttons stehen. Mehrere Themen stehen in Abschnitten (section), Löschen kommt
+ * als Letztes. In Karten (forRecord) nur als Icon-Button, damit die Aktionen in eine Zeile passen.
  */
 class MoreActions
 {
@@ -22,7 +23,18 @@ class MoreActions
             ->label('Mehr')
             ->icon(Heroicon::OutlinedEllipsisVertical)
             ->color(ActionStyle::Secondary->color())
+            ->dropdownWidth(Width::ThreeExtraSmall)
             ->button();
+    }
+
+    /**
+     * Abschnitt innerhalb eines Menüs, mit Trennlinie zum nächsten. Ohne sichtbare Aktion verschwindet er.
+     *
+     * @param  list<Action|ActionGroup>  $actions
+     */
+    public static function section(array $actions): ActionGroup
+    {
+        return ActionGroup::make($actions)->dropdown(false);
     }
 
     /**
@@ -37,6 +49,7 @@ class MoreActions
             ->label($label)
             ->icon($icon)
             ->color(ActionStyle::Secondary->color())
+            ->dropdownWidth(Width::ThreeExtraSmall)
             ->button();
     }
 
@@ -51,6 +64,7 @@ class MoreActions
             ->label('Mehr')
             ->icon(Heroicon::OutlinedEllipsisVertical)
             ->color(ActionStyle::Secondary->color())
+            ->dropdownWidth(Width::ThreeExtraSmall)
             ->iconButton();
     }
 }
