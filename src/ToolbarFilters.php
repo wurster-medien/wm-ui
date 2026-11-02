@@ -170,7 +170,7 @@ class ToolbarFilters
             $options = $filter->getOptions();
 
             if (! $filter->isMultiple()) {
-                return $base + ['type' => 'select', 'placeholder' => 'Alle', 'options' => $options];
+                return $base + ['type' => 'select', ...self::placeholder($filter, $options, $state), 'options' => $options];
             }
 
             $selected = array_values(array_filter((array) ($state['values'] ?? []), fn (mixed $value): bool => filled($value)));
@@ -209,5 +209,26 @@ class ToolbarFilters
         }
 
         return $base + ['type' => 'dates', 'fields' => $dates];
+    }
+
+    /**
+     * Leerer Eintrag einer Auswahl: „Alle“, außer der Filter hat ->selectablePlaceholder(false) (Simon, 2.11.2026: dort
+     * stand „Alle“ doppelt, und der leere Wert zeigte nicht alles, sondern den Standard des Filters). Hat so ein Filter
+     * aus einer alten Adresse oder Sitzung noch den leeren Wert, nennt ein unsichtbarer Eintrag diesen Standard, sonst
+     * bliebe das Feld leer.
+     *
+     * @param  array<int|string, mixed>  $options
+     * @param  array<string, mixed>  $state
+     * @return array{placeholder: ?string, placeholderHidden: bool}
+     */
+    private static function placeholder(SelectFilter $filter, array $options, array $state): array
+    {
+        if ($filter->canSelectPlaceholder()) {
+            return ['placeholder' => 'Alle', 'placeholderHidden' => false];
+        }
+
+        $label = blank($state['value'] ?? null) ? ($options[$filter->getDefaultState()] ?? null) : null;
+
+        return ['placeholder' => $label, 'placeholderHidden' => true];
     }
 }

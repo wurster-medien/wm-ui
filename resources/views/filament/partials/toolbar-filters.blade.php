@@ -9,7 +9,9 @@
                     aria-label="{{ $filter['label'] }}"
                     style="min-width: 7rem; max-width: 14rem"
                 >
-                    <option value="">{{ $filter['placeholder'] }}</option>
+                    @if ($filter['placeholder'] !== null)
+                        <option value="" @if ($filter['placeholderHidden'] ?? false) hidden @endif>{{ $filter['placeholder'] }}</option>
+                    @endif
                     @foreach ($filter['options'] as $value => $label)
                         <option value="{{ $value }}">{{ $label }}</option>
                     @endforeach
