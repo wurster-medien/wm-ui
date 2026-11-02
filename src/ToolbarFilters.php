@@ -11,6 +11,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Number;
 use Livewire\Livewire;
 use LogicException;
@@ -26,6 +27,9 @@ use Throwable;
  *
  * Tabellen ohne Spaltenköpfe (Kacheln, ->content() oder Spalten-Layout) bekommen hier auch „Sortieren nach“, statt
  * einer eigenen Zeile über dem Inhalt (die blendet table-toolbar.blade.php aus).
+ *
+ * Am Handy klappt alles hinter dem Knopf „Filter“ auf, mit der Zahl der geänderten Filter daran (Simon, 2.11.2026: fünf
+ * Filter untereinander schoben die Liste aus dem Bild). Das steuert nur wm-ui.css, am Rechner gibt es den Knopf nicht.
  */
 class ToolbarFilters
 {
@@ -39,13 +43,15 @@ class ToolbarFilters
         }
 
         $table = $livewire->getTable();
-        $sorting = self::count($livewire).self::sorting($table);
+        $count = self::count($livewire);
+        $sorting = self::sorting($table);
 
         if ($table->getFiltersLayout() !== FiltersLayout::Hidden) {
-            return $sorting;
+            return $count.$sorting;
         }
 
         $filters = [];
+        $changed = 0;
 
         foreach ($table->getFilters() as $filter) {
             if ($filter->isHidden()) {
@@ -63,6 +69,7 @@ class ToolbarFilters
             }
 
             $filters[] = $field;
+            $changed += self::differs($filter, $livewire) ? 1 : 0;
         }
 
         /** Schalter (Häkchen) stehen hinter den Auswahlfeldern, nicht mittendrin. */
@@ -71,7 +78,16 @@ class ToolbarFilters
             ...array_filter($filters, fn (array $field): bool => $field['type'] === 'toggle'),
         ];
 
-        return ($filters === [] ? '' : view('filament.partials.toolbar-filters', ['filters' => $filters])->render()).$sorting;
+        if ($filters === []) {
+            return $count.$sorting;
+        }
+
+        return view('filament.partials.toolbar-filters', [
+            'filters' => $filters,
+            'changed' => $changed,
+            'count' => new HtmlString($count),
+            'sorting' => new HtmlString($sorting),
+        ])->render();
     }
 
     /**
@@ -98,22 +114,28 @@ class ToolbarFilters
     public static function differFromDefaults(HasTable $livewire): bool
     {
         foreach ($livewire->getTable()->getFilters() as $filter) {
-            $state = (array) data_get($livewire->tableFilters ?? [], $filter->getName(), []);
-            $default = $filter->getDefaultState();
-
-            $differs = match (true) {
-                $filter instanceof SelectFilter && $filter->isMultiple() => self::normalizedValues($state['values'] ?? []) !== self::normalizedValues($default),
-                $filter instanceof TernaryFilter, $filter instanceof SelectFilter => (string) ($state['value'] ?? '') !== (string) ($default ?? ''),
-                $filter instanceof Filter && ! $filter->hasSchema() => (bool) ($state['isActive'] ?? false) !== (bool) $default,
-                default => $filter->getActiveCount() > 0,
-            };
-
-            if ($differs) {
+            if (self::differs($filter, $livewire)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    private static function differs(BaseFilter $filter, HasTable $livewire): bool
+    {
+        $state = (array) data_get($livewire->tableFilters ?? [], $filter->getName(), []);
+        $default = $filter->getDefaultState();
+
+        return match (true) {
+            $filter instanceof SelectFilter && $filter->isMultiple() => self::normalizedValues($state['values'] ?? []) !== self::normalizedValues($default),
+            /** Ohne leeren Eintrag steht ein leerer Wert (alte Adresse, Sitzung) für den Standard, siehe placeholder(). */
+            $filter instanceof SelectFilter && ! $filter->canSelectPlaceholder() && blank($state['value'] ?? null) => false,
+            $filter instanceof TernaryFilter, $filter instanceof SelectFilter => (string) ($state['value'] ?? '') !== (string) ($default ?? ''),
+            $filter instanceof Filter && ! $filter->hasSchema() => (bool) ($state['isActive'] ?? false) !== (bool) $default,
+            $filter instanceof Filter => array_filter($state, fn (mixed $value): bool => filled($value)) !== [],
+            default => $filter->getActiveCount() > 0,
+        };
     }
 
     /**

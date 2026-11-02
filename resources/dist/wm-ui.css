@@ -89,10 +89,85 @@
     }
 }
 
-{{-- Beschriftungen („Kunde“, „Gruppieren nach“ …) ohne Trennstrich, damit alles in eine Zeile passt. --}}
+/* Beschriftungen („Kunde“, „Gruppieren nach“ …) ohne Trennstrich, damit alles in eine Zeile passt. */
 .fi-ta-ctn .fi-ta-header-toolbar .fi-input-wrp-prefix:not(.fi-inline) {
     border-inline-end: 0;
     padding-inline-end: 0;
+}
+
+/*
+ * Filter (ToolbarFilters): am Rechner direkt in der Leiste, die Hülle zählt für das Layout nicht. Am Handy nur der Knopf
+ * „Filter“ mit der Gesamtzahl daneben, die Felder klappen darunter in voller Breite auf.
+ */
+.wm-filters,
+.wm-filters-panel {
+    display: contents;
+}
+
+.wm-filter-field {
+    flex-shrink: 0;
+}
+
+.wm-filter-input {
+    min-width: 7rem;
+    max-width: 14rem;
+}
+
+.wm-table-count {
+    order: 1;
+}
+
+.wm-toolbar-sorting {
+    order: 2;
+}
+
+@media (min-width: 640px) {
+    .wm-filters-toggle {
+        display: none;
+    }
+}
+
+@media (max-width: 639px) {
+    .fi-ta-ctn .fi-ta-header-toolbar > :first-child:has(.wm-filters) {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    .fi-ta-ctn .fi-ta-header-toolbar > :nth-child(2) {
+        flex: 1 1 100%;
+    }
+
+    .fi-ta-ctn .fi-ta-header-toolbar .fi-ta-search-field {
+        flex: 1 1 auto;
+    }
+
+    .wm-filters-panel {
+        display: none;
+        order: 3;
+        flex: 1 1 100%;
+        flex-direction: column;
+        gap: 0.5rem;
+        min-width: 0;
+    }
+
+    .wm-filters-open .wm-filters-panel {
+        display: flex;
+    }
+
+    .wm-filters-panel > *,
+    .wm-filters-panel .fi-dropdown-trigger,
+    .wm-filters-panel .fi-dropdown-trigger > * {
+        width: 100%;
+    }
+
+    .wm-filters-panel .wm-filter-input {
+        width: 100%;
+        max-width: none;
+    }
+
+    .wm-filters-panel .wm-toolbar-sorting > :first-child {
+        flex: 1 1 auto;
+    }
 }
 
 .fi-ta-header-ctn:has(> .fi-ta-header) {
@@ -113,7 +188,7 @@
     display: contents;
 }
 
-{{-- Überschrift und Reiter (TabsInTableHeading) nebeneinander, am Handy scrollen die Reiter seitlich. --}}
+/* Überschrift und Reiter (TabsInTableHeading) nebeneinander, am Handy scrollen die Reiter seitlich. */
 .wm-ta-heading-tabs { display: flex; flex-wrap: wrap; align-items: center; column-gap: 1.5rem; row-gap: 0.5rem; min-width: 0; }
 .wm-ta-heading-tabs .fi-tabs { padding: 0; margin: 0; max-width: 100%; overflow-x: auto; }
 
@@ -121,8 +196,8 @@
     .wm-ta-heading-tabs .fi-tabs { flex-wrap: wrap; overflow-x: visible; }
 }
 
-{{-- Zeile 1: Überschrift (mit Reitern) links, dann Suche und Spaltenauswahl, ganz rechts die Kopfaktionen. --}}
-{{-- Lange Beschreibungen und viele Reiter brechen in ihrer Spalte um, Suche und Aktionen bleiben rechts daneben. --}}
+/* Zeile 1: Überschrift (mit Reitern) links, dann Suche und Spaltenauswahl, ganz rechts die Kopfaktionen. */
+/* Lange Beschreibungen und viele Reiter brechen in ihrer Spalte um, Suche und Aktionen bleiben rechts daneben. */
 .fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header > :not(.fi-ta-actions) {
     order: 1;
     flex: 1 1 20rem;
@@ -143,7 +218,7 @@
     padding-block: 0.75rem;
 }
 
-{{-- Zeile 2: Filter, Sortierung, Gruppierung, Sammelaktionen; fehlt alles davon, entfällt die Zeile. --}}
+/* Zeile 2: Filter, Sortierung, Gruppierung, Sammelaktionen; fehlt alles davon, entfällt die Zeile. */
 .fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header-toolbar > :first-child {
     order: 4;
     flex: 0 0 calc(100% + 2rem);
@@ -163,7 +238,7 @@
     display: none;
 }
 
-{{-- Am Handy steht die Suche in voller Breite unter der Überschrift, die Aktionen darunter. --}}
+/* Am Handy steht die Suche in voller Breite unter der Überschrift, die Aktionen darunter. */
 @media (max-width: 639px) {
     .fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header-toolbar > :nth-child(2) {
         flex: 1 1 100%;
@@ -192,7 +267,7 @@
     }
 }
 
-{{-- Tabellen ohne Spaltenköpfe: „Sortieren nach“ steht in der Werkzeugleiste (ToolbarFilters), nicht über dem Inhalt. --}}
+/* Tabellen ohne Spaltenköpfe: „Sortieren nach“ steht in der Werkzeugleiste (ToolbarFilters), nicht über dem Inhalt. */
 .fi-ta-content-header .fi-ta-sorting-settings {
     display: none;
 }
@@ -201,16 +276,16 @@
     display: none;
 }
 
-{{-- Kacheln (contentGrid, z. B. „Beiträge“): Aktionen in einer Zeile (MediaGallery::recordActions), das Menü
-     „Mehr“ (MoreActions::forRecord) steht rechts, damit die übrigen Buttons in jeder Karte an derselben Stelle sind. --}}
+/* Kacheln (contentGrid, z. B. „Beiträge“): Aktionen in einer Zeile (MediaGallery::recordActions), das Menü
+     „Mehr“ (MoreActions::forRecord) steht rechts, damit die übrigen Buttons in jeder Karte an derselben Stelle sind. */
 .fi-ta-content-grid .fi-ta-actions {
     flex-wrap: nowrap;
     gap: 0.5rem;
 }
 
-{{-- Wo die Karten schmal sind (kurz nach dem Sprung auf 2, 3 bzw. 4 Spalten, MediaGallery), Buttons ohne Icon.
+/* Wo die Karten schmal sind (kurz nach dem Sprung auf 2, 3 bzw. 4 Spalten, MediaGallery), Buttons ohne Icon.
      Keine Container-Query: Mit container-type an einem Vorfahren setzt Filaments Dropdown (Floating UI) das Menü
-     an die falsche Stelle. --}}
+     an die falsche Stelle. */
 @media (min-width: 1024px) and (max-width: 1079px), (min-width: 1280px) and (max-width: 1399px), (min-width: 1536px) and (max-width: 1759px) {
     .fi-ta-content-grid .fi-ta-actions .fi-btn > .fi-icon {
         display: none;
@@ -219,6 +294,52 @@
 
 .fi-ta-content-grid .fi-ta-actions > .fi-dropdown {
     margin-inline-start: auto;
+}
+
+/*
+ * Tabellen mit ->stackedOnMobile(): am Handy je Zeile eine Karte, Beschriftung links neben dem Wert statt darüber, leere
+ * Werte fallen weg. Zellen mit Ui::PLAIN_CELL stehen ohne Beschriftung (Titel einer Karte).
+ */
+@media (max-width: 639px) {
+    .fi-ta-table-stacked-on-mobile > tbody > tr {
+        padding-block: 0.75rem;
+    }
+
+    .fi-ta-table-stacked-on-mobile > tbody > tr > .fi-ta-cell:has(> .fi-ta-cell-label):not([class*="fi-visible"]) {
+        display: grid;
+        grid-template-columns: 5.5rem minmax(0, 1fr);
+        column-gap: 0.75rem;
+        align-items: baseline;
+        padding-block: 0.125rem;
+    }
+
+    .fi-ta-table-stacked-on-mobile > tbody > tr > .fi-ta-cell:has(> .fi-ta-cell-content .fi-ta-text):not(:has(> .fi-ta-cell-content .fi-ta-text-item)),
+    .fi-ta-table-stacked-on-mobile > tbody > tr > .fi-ta-cell:has(> .fi-ta-cell-content .fi-ta-placeholder) {
+        display: none;
+    }
+
+    .fi-ta-table-stacked-on-mobile > tbody > tr > .fi-ta-cell > .fi-ta-cell-label {
+        padding-top: 0;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .fi-ta-table-stacked-on-mobile > tbody > tr > .fi-ta-cell.wm-cell-plain {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .fi-ta-table-stacked-on-mobile > tbody > tr > .fi-ta-cell.wm-cell-plain > .fi-ta-cell-label {
+        display: none;
+    }
+
+    /* Platz für das Häkchen der Sammelaktionen oben rechts in der Karte. */
+    .fi-ta-table-stacked-on-mobile > tbody > tr:has(> .fi-ta-selection-cell) > .fi-ta-cell.wm-cell-plain {
+        padding-inline-end: 3rem;
+    }
+
+    .fi-ta-table-stacked-on-mobile > tbody > tr > .fi-ta-cell:has(> .fi-ta-actions) {
+        padding-block: 0.5rem 0;
+    }
 }
 
 /* Einträge in Menüs brechen um, abgeschnittener Text ließe offen, was der Knopf tut. */

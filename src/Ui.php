@@ -25,6 +25,9 @@ final class Ui
     /** Primärfarbe wurster medien: Teal wie auf der Agentur-Website (Tailwind Teal 500). */
     public const string PRIMARY_COLOR = '#14b8a6';
 
+    /** Zelle einer Tabelle mit ->stackedOnMobile(), die am Handy ohne Beschriftung steht: ->extraCellAttributes(['class' => Ui::PLAIN_CELL]). */
+    public const string PLAIN_CELL = 'wm-cell-plain';
+
     /** Gemeinsame Einstellungen eines Panels, jeder Panel-Provider ruft sie über ->tap(Ui::panel(...)) auf. */
     public static function panel(Panel $panel): Panel
     {
