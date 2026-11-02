@@ -1,0 +1,422 @@
+/*
+ * Gemeinsames Design der Filament-Plattformen von wurster medien. Liegt ohne Layer und geht damit vor Filament
+ * (@layer components). Wird als Filament-Asset ausgeliefert (UiServiceProvider, php artisan filament:assets).
+ */
+
+/*
+ * „Soft“-Buttons: leicht getönter Hintergrund mit Rahmen und Text in der Farbe statt voll gefüllt. Filament setzt die
+ * Farben eines gefüllten Buttons über --bg/--text/--hover-bg, hier überschrieben. Graue Buttons bleiben weiß mit Rahmen.
+ */
+.fi-btn.fi-color:not(.fi-outlined) {
+    --bg: color-mix(in oklab, var(--color-500) 12%, #fff);
+    --text: var(--color-700);
+    --hover-bg: color-mix(in oklab, var(--color-500) 20%, #fff);
+    --hover-text: var(--color-800);
+    --dark-bg: color-mix(in oklab, var(--color-500) 18%, transparent);
+    --dark-text: var(--color-300);
+    --dark-hover-bg: color-mix(in oklab, var(--color-500) 28%, transparent);
+    --dark-hover-text: var(--color-200);
+    --tw-ring-shadow: 0 0 0 1px var(--tw-ring-color);
+    --tw-ring-color: color-mix(in oklab, var(--color-500) 45%, transparent);
+    box-shadow: var(--tw-ring-shadow);
+}
+
+/* Klick auf die Zeile (RowClick), Inhaltslinks und Knöpfe im Gruppenkopf. */
+.wm-row-click {
+    display: none !important;
+}
+
+.wm-row-open {
+    display: inline;
+    text-align: start;
+    cursor: pointer;
+}
+
+.wm-row-open:hover {
+    text-decoration: underline;
+}
+
+.wm-content-link {
+    color: var(--primary-600);
+    font-weight: 500;
+}
+
+.wm-content-link:hover {
+    text-decoration: underline;
+}
+
+.wm-content-link:where(.dark, .dark *) {
+    color: var(--primary-400);
+}
+
+/* Knöpfe für den ganzen Kunden rechts im Gruppenkopf (CustomerGroup). */
+.fi-ta-group-header:has(.wm-group-actions) {
+    position: relative;
+}
+
+.wm-group-actions {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/*
+ * Werkzeugleiste der Tabellen: Suche und Spaltenauswahl bleiben oben rechts, Sammelaktionen, „Gruppieren nach“ und
+ * Filter (ToolbarFilters) stehen links und brechen bei Platzmangel um. Mit Kopfzeile höchstens zwei Zeilen.
+ */
+@media (min-width: 640px) {
+    .fi-ta-ctn .fi-ta-header-toolbar {
+        flex-wrap: nowrap;
+        align-items: flex-start;
+    }
+
+    .fi-ta-ctn .fi-ta-header-toolbar > .fi-ta-actions {
+        flex: 1 1 auto;
+        min-width: 0;
+        gap: 0.75rem;
+    }
+
+    .fi-ta-ctn .fi-ta-header-toolbar > .fi-ta-actions ~ * {
+        flex-shrink: 0;
+    }
+
+    .fi-ta-ctn .fi-ta-header-toolbar .fi-ta-search-field {
+        width: 14rem;
+    }
+}
+
+{{-- Beschriftungen („Kunde“, „Gruppieren nach“ …) ohne Trennstrich, damit alles in eine Zeile passt. --}}
+.fi-ta-ctn .fi-ta-header-toolbar .fi-input-wrp-prefix:not(.fi-inline) {
+    border-inline-end: 0;
+    padding-inline-end: 0;
+}
+
+.fi-ta-header-ctn:has(> .fi-ta-header) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 1rem;
+    padding-inline: 1rem;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.dark .fi-ta-header-ctn:has(> .fi-ta-header) {
+    border-color: color-mix(in oklab, var(--color-white) 10%, transparent);
+}
+
+.fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header,
+.fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header-toolbar {
+    display: contents;
+}
+
+{{-- Überschrift und Reiter (TabsInTableHeading) nebeneinander, am Handy scrollen die Reiter seitlich. --}}
+.wm-ta-heading-tabs { display: flex; flex-wrap: wrap; align-items: center; column-gap: 1.5rem; row-gap: 0.5rem; min-width: 0; }
+.wm-ta-heading-tabs .fi-tabs { padding: 0; margin: 0; max-width: 100%; overflow-x: auto; }
+
+@media (min-width: 640px) {
+    .wm-ta-heading-tabs .fi-tabs { flex-wrap: wrap; overflow-x: visible; }
+}
+
+{{-- Zeile 1: Überschrift (mit Reitern) links, dann Suche und Spaltenauswahl, ganz rechts die Kopfaktionen. --}}
+{{-- Lange Beschreibungen und viele Reiter brechen in ihrer Spalte um, Suche und Aktionen bleiben rechts daneben. --}}
+.fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header > :not(.fi-ta-actions) {
+    order: 1;
+    flex: 1 1 20rem;
+    min-width: 0;
+    padding-block: 1rem;
+}
+
+.fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header-toolbar > :nth-child(2) {
+    order: 2;
+    flex: 0 0 auto;
+    margin-inline-start: auto;
+    padding-block: 0.75rem;
+}
+
+.fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header > .fi-ta-actions {
+    order: 3;
+    margin-block: 0;
+    padding-block: 0.75rem;
+}
+
+{{-- Zeile 2: Filter, Sortierung, Gruppierung, Sammelaktionen; fehlt alles davon, entfällt die Zeile. --}}
+.fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header-toolbar > :first-child {
+    order: 4;
+    flex: 0 0 calc(100% + 2rem);
+    max-width: none;
+    flex-wrap: wrap;
+    row-gap: 0.75rem;
+    margin-inline: -1rem;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+.dark .fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header-toolbar > :first-child {
+    border-color: color-mix(in oklab, var(--color-white) 10%, transparent);
+}
+
+.fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header-toolbar > :first-child:not(:has(> :not([x-cloak]):not([style*="display: none"]))) {
+    display: none;
+}
+
+{{-- Am Handy steht die Suche in voller Breite unter der Überschrift, die Aktionen darunter. --}}
+@media (max-width: 639px) {
+    .fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header-toolbar > :nth-child(2) {
+        flex: 1 1 100%;
+        margin-inline-start: 0;
+        padding-block: 0 0.75rem;
+    }
+
+    .fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header-toolbar > :nth-child(2) .fi-ta-search-field {
+        flex: 1 1 auto;
+    }
+
+    .fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header > .fi-ta-actions {
+        padding-block: 0 1rem;
+    }
+}
+
+@media (min-width: 640px) {
+    .fi-ta-header-ctn:has(> .fi-ta-header) {
+        padding-inline: 1.5rem;
+    }
+
+    .fi-ta-header-ctn:has(> .fi-ta-header) > .fi-ta-header-toolbar > :first-child {
+        flex-basis: calc(100% + 3rem);
+        margin-inline: -1.5rem;
+        padding-inline: 1.5rem;
+    }
+}
+
+{{-- Tabellen ohne Spaltenköpfe: „Sortieren nach“ steht in der Werkzeugleiste (ToolbarFilters), nicht über dem Inhalt. --}}
+.fi-ta-content-header .fi-ta-sorting-settings {
+    display: none;
+}
+
+.fi-ta-content-header:not(:has(.fi-ta-page-checkbox)) {
+    display: none;
+}
+
+{{-- Kacheln (contentGrid, z. B. „Beiträge“): Aktionen in einer Zeile (MediaGallery::recordActions), das Menü
+     „Mehr“ (MoreActions::forRecord) steht rechts, damit die übrigen Buttons in jeder Karte an derselben Stelle sind. --}}
+.fi-ta-content-grid .fi-ta-actions {
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+}
+
+{{-- Wo die Karten schmal sind (kurz nach dem Sprung auf 2, 3 bzw. 4 Spalten, MediaGallery), Buttons ohne Icon.
+     Keine Container-Query: Mit container-type an einem Vorfahren setzt Filaments Dropdown (Floating UI) das Menü
+     an die falsche Stelle. --}}
+@media (min-width: 1024px) and (max-width: 1079px), (min-width: 1280px) and (max-width: 1399px), (min-width: 1536px) and (max-width: 1759px) {
+    .fi-ta-content-grid .fi-ta-actions .fi-btn > .fi-icon {
+        display: none;
+    }
+}
+
+.fi-ta-content-grid .fi-ta-actions > .fi-dropdown {
+    margin-inline-start: auto;
+}
+
+/* Icons vor bzw. hinter dem Text eines TextEntry sitzen sonst auf der Grundlinie, hier mittig zur Schrift. */
+.fi-in-text-item > .fi-icon,
+.fi-in-text-item > span:not(.fi-badge) > .fi-icon {
+    /* Mitte des Icons (1rem) auf halbe Höhe der Großbuchstaben und Ziffern (~0,36em über der Grundlinie). */
+    vertical-align: calc(0.36em - 0.5rem);
+}
+
+/* Datumsauswahl und Zeitraum (WmDatePicker, x-date-range-picker). */
+.fi-fo-date-time-picker .fi-fo-date-time-picker-panel-header {
+    gap: 0.25rem;
+}
+
+.fi-fo-date-time-picker .fi-fo-date-time-picker-month-select {
+    padding-inline: 0.375rem;
+}
+
+.fi-fo-date-time-picker [data-wm-date-picker] .fi-fo-date-time-picker-year-input {
+    display: none;
+}
+
+.fi-fo-date-time-picker .fi-fo-date-time-picker-month-select.wm-dp-year {
+    flex-grow: 0;
+    width: auto;
+    padding-inline-end: 1.75rem;
+}
+
+.wm-dp-nav {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.375rem;
+    color: var(--gray-500);
+    cursor: pointer;
+}
+
+.wm-dp-nav svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.wm-dp-nav:hover:not(:disabled) {
+    background: var(--gray-100);
+    color: var(--gray-950);
+}
+
+.wm-dp-nav:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.dark .wm-dp-nav {
+    color: var(--gray-400);
+}
+
+.dark .wm-dp-nav:hover:not(:disabled) {
+    background: color-mix(in oklab, #fff 10%, transparent);
+    color: #fff;
+}
+
+.fi-fo-date-time-picker .fi-fo-date-time-picker-calendar .fi-fo-date-time-picker-calendar-day.fi-fo-date-time-picker-calendar-day-today {
+    box-shadow: inset 0 0 0 1.5px var(--primary-500);
+    color: var(--primary-700);
+    font-weight: 600;
+}
+
+.fi-fo-date-time-picker .fi-fo-date-time-picker-calendar .fi-fo-date-time-picker-calendar-day.fi-selected {
+    background: color-mix(in oklab, var(--primary-500) 20%, transparent);
+    color: var(--primary-700);
+    font-weight: 600;
+}
+
+.fi-fo-date-time-picker .fi-fo-date-time-picker-calendar .fi-fo-date-time-picker-calendar-day.fi-selected.fi-focused {
+    background: color-mix(in oklab, var(--primary-500) 30%, transparent);
+}
+
+.dark .fi-fo-date-time-picker .fi-fo-date-time-picker-calendar .fi-fo-date-time-picker-calendar-day.fi-fo-date-time-picker-calendar-day-today,
+.dark .fi-fo-date-time-picker .fi-fo-date-time-picker-calendar .fi-fo-date-time-picker-calendar-day.fi-selected {
+    color: var(--primary-300);
+}
+
+.dark .fi-fo-date-time-picker .fi-fo-date-time-picker-calendar .fi-fo-date-time-picker-calendar-day.fi-fo-date-time-picker-calendar-day-today {
+    box-shadow: inset 0 0 0 1.5px var(--primary-400);
+}
+
+.wm-dp-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+.dark .wm-dp-footer {
+    border-top-color: color-mix(in oklab, #fff 10%, transparent);
+}
+
+.wm-dp-action {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    cursor: pointer;
+    --color: var(--gray-500);
+    --text: var(--gray-700);
+    --dark-text: var(--gray-200);
+    background: color-mix(in oklab, var(--color) 10%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--color) 35%, transparent);
+    color: var(--text);
+}
+
+.wm-dp-action:hover {
+    background: color-mix(in oklab, var(--color) 20%, transparent);
+}
+
+.wm-dp-action[data-wm-dp-action="today"] {
+    --color: var(--primary-500);
+    --text: var(--primary-700);
+    --dark-text: var(--primary-300);
+}
+
+.dark .wm-dp-action {
+    color: var(--dark-text);
+}
+
+.wm-dp-nav:focus-visible,
+.wm-dp-action:focus-visible {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 1px;
+}
+
+.wm-dp-action[hidden] {
+    display: none;
+}
+
+/* Zeitraum (x-date-range-picker): durchgehender Bereich zwischen Beginn und Ende. */
+.wm-drp .fi-fo-date-time-picker-trigger {
+    text-align: start;
+}
+
+.wm-drp .wm-drp-text {
+    display: block;
+    white-space: nowrap;
+}
+
+.wm-drp .wm-drp-placeholder {
+    color: var(--gray-400);
+}
+
+.wm-drp-days {
+    margin-inline-start: 0.375rem;
+    color: var(--gray-500);
+    font-size: 0.75rem;
+}
+
+.wm-drp-panel {
+    width: 18rem;
+}
+
+.wm-drp .fi-fo-date-time-picker-calendar,
+.wm-drp .fi-fo-date-time-picker-calendar-header {
+    column-gap: 0;
+}
+
+.wm-drp .fi-fo-date-time-picker-calendar .fi-fo-date-time-picker-calendar-day.wm-drp-in-range {
+    border-radius: 0;
+    background: color-mix(in oklab, var(--primary-500) 10%, transparent);
+}
+
+.wm-drp .fi-fo-date-time-picker-calendar .fi-fo-date-time-picker-calendar-day.wm-drp-range-start {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+}
+
+.wm-drp .fi-fo-date-time-picker-calendar .fi-fo-date-time-picker-calendar-day.wm-drp-range-end {
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+}
+
+.fi-fo-date-time-picker .fi-fo-date-time-picker-calendar .fi-fo-date-time-picker-calendar-day.wm-dp-outside:not(.fi-selected) {
+    color: var(--gray-400);
+}
+
+.dark .fi-fo-date-time-picker .fi-fo-date-time-picker-calendar .fi-fo-date-time-picker-calendar-day.wm-dp-outside:not(.fi-selected) {
+    color: var(--gray-500);
+}
+
+.wm-drp-hint {
+    flex: 1;
+    color: var(--gray-500);
+    font-size: 0.75rem;
+    text-align: center;
+}

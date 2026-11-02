@@ -1,0 +1,23 @@
+{
+    "name": "wurster-medien/wm-ui",
+    "description": "Gemeinsames Design der Filament-Plattformen von wurster medien (Kundenbereich, Social Hub)",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.3",
+        "filament/filament": "^5.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "WursterMedien\\Ui\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "WursterMedien\\Ui\\UiServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable"
+}
