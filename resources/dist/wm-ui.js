@@ -387,3 +387,59 @@ window.WmDatePicker ??= (() => {
         document.addEventListener('alpine:init', register)
     }
 })()
+
+/*
+ * Abfragen im Hintergrund (wire:poll): Am Handy scheitert leicht eine, wenn es aufwacht oder die App wechselt, die nächste
+ * klappt wieder. Dafür keine Meldung „Fehler beim Laden der Seite“ (Simon, 3.11.2026), die gilt nur, wenn jemand etwas
+ * getan hat. Eine abgelaufene Sitzung lädt die Seite neu, statt die Fehlerseite über die Liste zu legen; der Status ist dabei
+ * nicht immer 419, weil Laravel Anfragen der eigenen Seite auch ohne Token durchlässt. Fehler des Servers (5xx) bleiben sichtbar.
+ *
+ * Filament fragt window.filamentErrorNotifications beim Scheitern ab und kennt keine Ausnahme für Abfragen. Darum läuft
+ * dieser Teil über capture vor Filament, nimmt den Wert für diesen Durchlauf weg und setzt ihn gleich danach wieder.
+ */
+document.addEventListener('livewire:init', () => {
+    const RELOADED_AT = 'wm-session-reload'
+
+    const onlyPolls = (request) => {
+        const messages = [...(request?.messages ?? [])]
+
+        return messages.length > 0 && messages.every((message) => [...message.actions].every((action) => action.metadata?.type === 'poll'))
+    }
+
+    const skipFilamentNotice = () => {
+        const notifications = window.filamentErrorNotifications
+        window.filamentErrorNotifications = null
+        queueMicrotask(() => (window.filamentErrorNotifications = notifications))
+    }
+
+    /** Höchstens einmal in zehn Minuten, falls auch die neu geladene Seite so antwortet. */
+    const reloadOnce = () => {
+        try {
+            if (Date.now() - Number(sessionStorage.getItem(RELOADED_AT) ?? 0) < 600000) {
+                return
+            }
+
+            sessionStorage.setItem(RELOADED_AT, String(Date.now()))
+        } catch (error) {
+            return
+        }
+
+        window.location.reload()
+    }
+
+    Livewire.interceptRequest(({ request, onFailure, onError }) => {
+        onFailure(() => {
+            if (onlyPolls(request)) {
+                skipFilamentNotice()
+            }
+        })
+
+        onError(({ response, preventDefault }) => {
+            if (response?.status >= 400 && response.status < 500 && onlyPolls(request)) {
+                preventDefault()
+                skipFilamentNotice()
+                reloadOnce()
+            }
+        })
+    })
+}, { capture: true })
