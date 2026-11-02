@@ -1,0 +1,12 @@
+{{-- Fuß aller Mails (überschrieben): so breit wie der Rahmen in layout.blade.php. --}}
+<tr>
+<td>
+<table class="footer" align="center" width="680" cellpadding="0" cellspacing="0" role="presentation">
+<tr>
+<td class="content-cell" align="center">
+{{ Illuminate\Mail\Markdown::parse($slot) }}
+</td>
+</tr>
+</table>
+</td>
+</tr>

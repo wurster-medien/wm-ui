@@ -15,9 +15,21 @@ use Illuminate\Support\ServiceProvider;
  */
 class UiServiceProvider extends ServiceProvider
 {
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/wm-ui.php', 'wm-ui');
+    }
+
     public function boot(): void
     {
         View::addLocation(__DIR__.'/../resources/views');
+
+        /** Mails: Bausteine und Theme aus dem Paket, resources/views/vendor/mail der Anwendung geht vor (Logo, Fuß). */
+        View::prependNamespace('notifications', __DIR__.'/../resources/views/notifications');
+        config([
+            'mail.markdown.theme' => 'wurster',
+            'mail.markdown.paths' => [resource_path('views/vendor/mail'), __DIR__.'/../resources/views/mail'],
+        ]);
 
         FilamentAsset::register([
             Css::make('wm-ui', __DIR__.'/../resources/dist/wm-ui.css'),
