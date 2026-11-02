@@ -29,6 +29,12 @@ final class RowClick
     /** Klasse am Knopf, den der Klick auf die Zeile ersetzt (filament.partials.table-styles). */
     public const string TARGET_CLASS = 'wm-row-click';
 
+    /** Klasse an der Aktion, die am Handy unsichtbar über der ganzen Karte liegt (wm-ui.css). */
+    public const string PHONE_TARGET_CLASS = 'wm-row-phone-open';
+
+    /** Klasse an Knöpfen, die am Handy nur im Fenster der Karte stehen (wm-ui.css). */
+    public const string PHONE_HIDDEN_CLASS = 'wm-row-not-on-phone';
+
     /**
      * Die erste sichtbare der genannten Zeilenaktionen öffnet die Zeile (mit Adresse als Link, sonst ihr Fenster), ihr
      * Knopf entfällt: `->tap(RowClick::opens('view', 'edit'))` nach recordActions().
@@ -49,6 +55,27 @@ final class RowClick
                 ->recordUrl(fn (Model|array $record): ?string => self::target($table, $record, $actions)?->getUrl())
                 ->openRecordUrlInNewTab(fn (Model|array $record): bool => self::target($table, $record, $actions)?->shouldOpenUrlInNewTab() ?? false)
                 ->recordAction(fn (Model|array $record): ?string => ($action = self::target($table, $record, $actions)) !== null && $action->getUrl() === null ? $action->getName() : null);
+        };
+    }
+
+    /**
+     * Am Handy öffnet die ganze Karte einer Tabelle mit ->stackedOnMobile() diese Aktion statt des Ziels von opens(), am
+     * Rechner gilt weiter opens(). Die Aktion liegt nur per CSS über der Karte, der Server muss die Breite nicht kennen.
+     * Die übrigen genannten Knöpfe stehen am Handy nicht auf der Karte, die Aktion bietet sie in ihrem Fenster an:
+     * `->tap(RowClick::opensOnPhone('view', 'delete'))` nach recordActions().
+     *
+     * @return Closure(Table): Table
+     */
+    public static function opensOnPhone(string $action, string ...$onlyInWindow): Closure
+    {
+        return function (Table $table) use ($action, $onlyInWindow): Table {
+            $table->getAction($action)?->extraAttributes(['class' => self::PHONE_TARGET_CLASS], merge: true);
+
+            foreach ($onlyInWindow as $name) {
+                $table->getAction($name)?->extraAttributes(['class' => self::PHONE_HIDDEN_CLASS], merge: true);
+            }
+
+            return $table;
         };
     }
 

@@ -376,6 +376,46 @@
     }
 }
 
+/*
+ * RowClick::opensOnPhone: Am Handy liegt die Aktion unsichtbar über der ganzen Karte, Knöpfe, Häkchen und Links darüber.
+ * Beschreibungen stehen dann nur im Fenster, am Rechner gibt es den Knopf nicht.
+ */
+@media (min-width: 640px) {
+    .wm-row-phone-open {
+        display: none;
+    }
+}
+
+@media (max-width: 639px) {
+    .wm-row-not-on-phone {
+        display: none;
+    }
+
+    .fi-ta-table-stacked-on-mobile .wm-row-phone-open {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+    }
+
+    /* Ohne z-index: Sonst liegen die Häkchen der nächsten Karte über dem offenen Menü „Mehr“. */
+    .fi-ta-table-stacked-on-mobile > tbody > tr:has(.wm-row-phone-open) .fi-ta-actions > :not(.wm-row-phone-open) {
+        position: relative;
+    }
+
+    .fi-ta-table-stacked-on-mobile > tbody > tr:has(.wm-row-phone-open) a.fi-ta-col {
+        position: relative;
+        z-index: 1;
+    }
+
+    .fi-ta-table-stacked-on-mobile > tbody > tr:has(.wm-row-phone-open) > .fi-ta-selection-cell {
+        z-index: 1;
+    }
+
+    .fi-ta-table-stacked-on-mobile > tbody > tr:has(.wm-row-phone-open) .fi-ta-text-description {
+        display: none;
+    }
+}
+
 /* Einträge in Menüs brechen um, abgeschnittener Text ließe offen, was der Knopf tut. */
 .fi-dropdown-list-item-label {
     white-space: normal;
