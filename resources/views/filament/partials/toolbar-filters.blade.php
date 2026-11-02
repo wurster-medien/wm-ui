@@ -10,7 +10,7 @@
                     style="min-width: 7rem; max-width: 14rem"
                 >
                     @if ($filter['placeholder'] !== null)
-                        <option value="" @if ($filter['placeholderHidden'] ?? false) hidden @endif>{{ $filter['placeholder'] }}</option>
+                        <option value=""{{ ($filter['placeholderHidden'] ?? false) ? ' hidden' : '' }}>{{ $filter['placeholder'] }}</option>
                     @endif
                     @foreach ($filter['options'] as $value => $label)
                         <option value="{{ $value }}">{{ $label }}</option>
