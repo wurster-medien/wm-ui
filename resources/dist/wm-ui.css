@@ -128,11 +128,6 @@
 }
 
 @media (max-width: 639px) {
-    .fi-ta-ctn .fi-ta-header-toolbar > :first-child:has(.wm-filters) {
-        flex: 1 1 100%;
-        min-width: 0;
-    }
-
     .fi-ta-ctn .fi-ta-header-toolbar > :nth-child(2) {
         flex: 1 1 100%;
     }
@@ -267,6 +262,45 @@
     }
 }
 
+/*
+ * Am Handy stehen „Filter“ und Suche in einer Zeile, die Zahl der Einträge daneben, wenn sie passt, sonst darunter. Dafür
+ * zählen Knopf, Zahl und Klappe direkt zur Leiste, die Klappe steht zuletzt in voller Breite.
+ */
+@media (max-width: 639px) {
+    .fi-ta-ctn .fi-ta-header-toolbar:has(.wm-filters) {
+        gap: 0.5rem 0.75rem;
+    }
+
+    .fi-ta-ctn .fi-ta-header-toolbar > :first-child:has(.wm-filters) {
+        display: contents;
+    }
+
+    .fi-ta-ctn .fi-ta-header-toolbar > :first-child:has(.wm-filters) ~ :nth-child(2) {
+        order: 1;
+        flex: 1 1 10rem;
+        min-width: 0;
+        padding-block: 0;
+    }
+
+    .wm-filters .wm-table-count {
+        order: 2;
+    }
+
+    .fi-ta-header-ctn:has(> .fi-ta-header):has(.wm-filters) {
+        gap: 0.5rem 0.75rem;
+        padding-block-end: 0.75rem;
+    }
+
+    .fi-ta-header-ctn:has(> .fi-ta-header):has(.wm-filters) > .fi-ta-header > :not(.fi-ta-actions) {
+        order: -1;
+        padding-block-end: 0.25rem;
+    }
+
+    .fi-ta-header-ctn:has(> .fi-ta-header):has(.wm-filters) > .fi-ta-header > .fi-ta-actions {
+        padding-block: 0;
+    }
+}
+
 /* Tabellen ohne Spaltenköpfe: „Sortieren nach“ steht in der Werkzeugleiste (ToolbarFilters), nicht über dem Inhalt. */
 .fi-ta-content-header .fi-ta-sorting-settings {
     display: none;
@@ -305,7 +339,7 @@
         padding-block: 0.75rem;
     }
 
-    .fi-ta-table-stacked-on-mobile > tbody > tr > .fi-ta-cell:has(> .fi-ta-cell-label):not([class*="fi-visible"]) {
+    .fi-ta-table-stacked-on-mobile > tbody > tr > .fi-ta-cell:has(> .fi-ta-cell-label):not(:where([class*="fi-visible"])) {
         display: grid;
         grid-template-columns: 5.5rem minmax(0, 1fr);
         column-gap: 0.75rem;
