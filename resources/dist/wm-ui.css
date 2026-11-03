@@ -626,15 +626,36 @@
     grid-template-columns: repeat(7, minmax(0, 1fr));
 }
 
-/* Mitlaufende Kopfzeile der Tabellen (wm-ui.js): deckend über den Zeilen, mit Schatten nach unten. */
-.wm-thead-stuck > tr > :is(th, td) {
-    position: relative;
-    z-index: 2;
-    background-color: var(--gray-50);
-    box-shadow: 0 1px 0 var(--gray-200), 0 4px 6px -4px rgb(0 0 0 / 0.15);
+/* Mitlaufende Kopfzeile der Tabellen (Rahmen stellt wm-ui.js ein): deckend über den Zeilen. */
+.wm-sticky-clip {
+    overflow: clip !important;
 }
 
-.dark .wm-thead-stuck > tr > :is(th, td) {
+.wm-sticky-box {
+    max-height: calc(100dvh - var(--wm-thead-top, 4rem) - 1rem);
+    overflow: auto !important;
+}
+
+thead.wm-sticky-page,
+thead.wm-sticky-box-head {
+    position: sticky;
+    top: var(--wm-thead-top, 4rem);
+    z-index: 2;
+    box-shadow: 0 1px 0 var(--gray-200);
+}
+
+thead.wm-sticky-box-head {
+    top: 0;
+}
+
+.dark thead:is(.wm-sticky-page, .wm-sticky-box-head) {
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.1);
+}
+
+.dark .fi-ta-table > thead:is(.wm-sticky-page, .wm-sticky-box-head) > tr {
     background-color: color-mix(in oklab, var(--gray-900), white 5%);
-    box-shadow: 0 1px 0 rgb(255 255 255 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+}
+
+.dark .fi-ta-table > thead:is(.wm-sticky-page, .wm-sticky-box-head) > tr.fi-ta-table-head-groups-row {
+    background-color: var(--gray-900);
 }
