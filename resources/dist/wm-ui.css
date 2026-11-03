@@ -625,3 +625,16 @@
 .wm-drp .fi-fo-date-time-picker-calendar {
     grid-template-columns: repeat(7, minmax(0, 1fr));
 }
+
+/* Mitlaufende Kopfzeile der Tabellen (wm-ui.js): deckend über den Zeilen, mit Schatten nach unten. */
+.wm-thead-stuck > tr > :is(th, td) {
+    position: relative;
+    z-index: 2;
+    background-color: var(--gray-50);
+    box-shadow: 0 1px 0 var(--gray-200), 0 4px 6px -4px rgb(0 0 0 / 0.15);
+}
+
+.dark .wm-thead-stuck > tr > :is(th, td) {
+    background-color: color-mix(in oklab, var(--gray-900), white 5%);
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+}

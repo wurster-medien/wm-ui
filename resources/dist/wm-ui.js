@@ -443,3 +443,55 @@ document.addEventListener('livewire:init', () => {
         })
     })
 }, { capture: true })
+
+/*
+ * Kopfzeilen der Tabellen bleiben beim Scrollen unter der Kopfleiste stehen (Simon, 3.11.2026: „alle horizontalen th
+ * sticky, damit sie mitscrollen“). position: sticky greift nicht, weil Filament jede Tabelle für breite Inhalte in einen
+ * Rahmen mit overflow-x: auto legt; deshalb verschiebt dieses Skript die Zellen der Kopfzeile, nie weiter als bis zur
+ * letzten Zeile. Nur Tabellen im Inhalt der Seite, nicht in Fenstern (die scrollen selbst), nicht als Karten am Handy.
+ */
+;(() => {
+    const STUCK = 'wm-thead-stuck'
+    let frame = null
+
+    const topbarBottom = () => {
+        const bar = document.querySelector('.fi-topbar-ctn')
+
+        return bar && ['sticky', 'fixed'].includes(getComputedStyle(bar).position) ? Math.max(0, bar.getBoundingClientRect().bottom) : 0
+    }
+
+    const update = () => {
+        frame = null
+        const top = topbarBottom()
+
+        for (const head of document.querySelectorAll('.fi-main table > thead')) {
+            if (head.closest('.fi-modal')) {
+                continue
+            }
+
+            const table = head.parentElement
+            const height = head.offsetHeight
+            const box = table.getBoundingClientRect()
+            const shift = height > 0 ? Math.round(Math.max(0, Math.min(top - box.top, box.height - 2 * height))) : 0
+
+            head.classList.toggle(STUCK, shift > 0)
+
+            for (const cell of head.querySelectorAll(':scope > tr > th, :scope > tr > td')) {
+                cell.style.transform = shift > 0 ? `translateY(${shift}px)` : ''
+            }
+        }
+    }
+
+    const schedule = () => {
+        frame ??= requestAnimationFrame(update)
+    }
+
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    document.addEventListener('livewire:navigated', schedule)
+    document.addEventListener('DOMContentLoaded', schedule)
+    document.addEventListener('livewire:init', () => {
+        Livewire.hook('morph.updated', schedule)
+        Livewire.hook('morph.added', schedule)
+    })
+})()
