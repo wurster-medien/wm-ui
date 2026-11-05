@@ -517,6 +517,11 @@
     border-top: 1px solid var(--gray-200);
 }
 
+/* Mit Uhrzeit steht die Leiste unter den Feldern für Stunde und Minute, nicht direkt an ihnen. */
+.fi-fo-date-time-picker-time-inputs + .wm-dp-footer {
+    margin-top: 0.75rem;
+}
+
 .dark .wm-dp-footer {
     border-top-color: color-mix(in oklab, #fff 10%, transparent);
 }
