@@ -470,6 +470,14 @@ document.addEventListener('livewire:init', () => {
         const top = bar && ['sticky', 'fixed'].includes(getComputedStyle(bar).position) ? bar.offsetHeight : 0
         document.documentElement.style.setProperty('--wm-thead-top', `${top}px`)
 
+        // Ohne seinen Rahmen vergisst der Browser die Scroll-Position, deshalb merken und unten zurücksetzen (Simon,
+        // 6.11.2026: jede Aktualisierung der Seite, etwa die Telefon-Box alle 3 Sekunden, warf die Liste nach oben).
+        const positions = new Map()
+
+        for (const element of document.querySelectorAll(`.${BOX}`)) {
+            positions.set(element, [element.scrollTop, element.scrollLeft])
+        }
+
         for (const element of document.querySelectorAll(`.${CLIP}, .${BOX}`)) {
             element.classList.remove(CLIP, BOX)
         }
@@ -498,6 +506,13 @@ document.addEventListener('livewire:init', () => {
             } else {
                 frames.forEach((element) => element.classList.add(CLIP))
                 head.classList.add(PAGE_HEAD)
+            }
+        }
+
+        for (const [element, [top, left]] of positions) {
+            if (element.classList.contains(BOX)) {
+                element.scrollTop = top
+                element.scrollLeft = left
             }
         }
     }
