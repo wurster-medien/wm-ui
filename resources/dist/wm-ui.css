@@ -664,3 +664,22 @@ thead.wm-sticky-box-head {
 .dark .fi-ta-table > thead:is(.wm-sticky-page, .wm-sticky-box-head) > tr.fi-ta-table-head-groups-row {
     background-color: var(--gray-900);
 }
+
+/*
+ * Aktiver Reiter deutlicher (Simon, 6.11.2026: „aktueller Reiter überall mehr kenntlich machen“): getönt in der
+ * Hauptfarbe mit Rahmen wie die Soft-Buttons und fette Schrift statt nur grau hinterlegt, für alle Reiter (fi-tabs).
+ */
+.fi-tabs-item.fi-active,
+.fi-tabs-item.fi-active:hover {
+    background-color: color-mix(in oklab, var(--primary-500) 12%, #fff);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--primary-500) 45%, transparent);
+}
+
+.fi-tabs-item.fi-active:where(.dark, .dark *),
+.fi-tabs-item.fi-active:hover:where(.dark, .dark *) {
+    background-color: color-mix(in oklab, var(--primary-500) 18%, transparent);
+}
+
+.fi-tabs-item.fi-active .fi-tabs-item-label {
+    font-weight: 600;
+}
