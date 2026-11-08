@@ -529,3 +529,312 @@ document.addEventListener('livewire:init', () => {
         Livewire.hook('morph.added', schedule)
     })
 })()
+
+/*
+ * Auswahlfelder ohne die Liste des Browsers (Simon, 8.11.2026: „einheitlich, aber nicht auf die Browser-Liste, mach es
+ * schön“): Jedes einfache <select class="fi-select-input"> in einem Eingabefeld von Filament (Tabellenfilter, „pro Seite“,
+ * Formulare, eigene Seiten) öffnet stattdessen ein Menü im Stil von Filament, am Rechner und am Handy. Das <select> bleibt
+ * der Wert (Livewire, Alpine, Formulare lesen es wie bisher), das Menü setzt ihn und meldet input und change. Ab neun
+ * Einträgen sucht Tippen in der Liste. Der Fokus bleibt immer im Feld, damit Fenster mit Fokusfalle nichts merken; das
+ * Menü hängt an <body>. Felder mit Suche (Filaments eigene Auswahl) bleiben, wie sie sind.
+ */
+;(() => {
+    const FIELD = '.fi-input-wrp-content-ctn > select.fi-select-input:not([multiple])'
+    const SEARCH_FROM = 9
+    const CHECK = '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd"/></svg>'
+    const coarse = window.matchMedia('(pointer: coarse)')
+    let open = null
+
+    document.documentElement.classList.add('wm-selects')
+
+    const fold = (text) => text.toLocaleLowerCase('de').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ß/g, 'ss')
+
+    const fieldOf = (target) => {
+        const wrapper = target.closest?.('.fi-input-wrp')
+
+        if (! wrapper || target.closest('button, a, input, textarea, [contenteditable]')) {
+            return null
+        }
+
+        const fields = wrapper.querySelectorAll(FIELD)
+
+        return fields.length === 1 && ! fields[0].disabled ? fields[0] : null
+    }
+
+    const close = (refocus = false) => {
+        if (! open) {
+            return
+        }
+
+        const { select, panel } = open
+        open = null
+        panel.remove()
+        select.removeAttribute('aria-expanded')
+
+        if (refocus && ! coarse.matches) {
+            select.focus({ preventScroll: true })
+        }
+    }
+
+    const place = () => {
+        if (! open) {
+            return
+        }
+
+        const { select, panel } = open
+        const wrapper = select.closest('.fi-input-wrp')
+
+        if (! wrapper?.isConnected) {
+            close()
+
+            return
+        }
+
+        const box = wrapper.getBoundingClientRect()
+        const gap = 4
+        const margin = 8
+        const width = Math.min(Math.max(box.width, 192), window.innerWidth - 2 * margin)
+        const below = window.innerHeight - box.bottom - gap - margin
+        const above = box.top - gap - margin
+        const up = below < 200 && above > below
+
+        panel.style.width = `${width}px`
+        panel.style.left = `${Math.max(margin, Math.min(box.left, window.innerWidth - width - margin))}px`
+        panel.style.maxHeight = `${Math.min(320, up ? above : below)}px`
+        panel.style.top = up ? '' : `${box.bottom + gap}px`
+        panel.style.bottom = up ? `${window.innerHeight - box.top + gap}px` : ''
+    }
+
+    const highlight = (index) => {
+        open.active = index
+
+        open.items.forEach(({ item }, position) => item.classList.toggle('wm-active', position === index))
+        open.items[index]?.item.scrollIntoView({ block: 'nearest' })
+    }
+
+    const render = () => {
+        const { select, list, search, query } = open
+        const words = fold(query).split(/\s+/).filter(Boolean)
+        let group = null
+        list.replaceChildren()
+        open.items = []
+
+        for (const option of select.options) {
+            if (option.hidden) {
+                continue
+            }
+
+            const label = option.textContent.trim()
+
+            if (words.length > 0 && ! words.every((word) => fold(label).includes(word))) {
+                continue
+            }
+
+            const optgroup = option.parentElement.tagName === 'OPTGROUP' ? option.parentElement.label : null
+
+            if (optgroup !== group && optgroup) {
+                const heading = document.createElement('div')
+                heading.className = 'wm-select-group'
+                heading.textContent = optgroup
+                list.append(heading)
+            }
+
+            group = optgroup
+            const item = document.createElement('div')
+            item.className = 'wm-select-option'
+            item.setAttribute('role', 'option')
+            item.setAttribute('aria-selected', String(option.selected))
+            item.classList.toggle('wm-selected', option.selected)
+            item.classList.toggle('wm-disabled', option.disabled)
+            item.innerHTML = `<span></span>${option.selected ? CHECK : ''}`
+            item.firstChild.textContent = label || ' '
+            item.dataset.index = String(open.items.length)
+            list.append(item)
+            open.items.push({ option, item })
+        }
+
+        if (open.items.length === 0) {
+            const empty = document.createElement('div')
+            empty.className = 'wm-select-empty'
+            empty.textContent = 'Keine Treffer'
+            list.append(empty)
+        }
+
+        if (search) {
+            search.textContent = query
+            search.classList.toggle('wm-select-search-empty', query === '')
+        }
+
+        const selected = open.items.findIndex(({ option }) => option.selected)
+        highlight(words.length > 0 ? open.items.findIndex(({ option }) => ! option.disabled) : selected)
+    }
+
+    const move = (by) => {
+        const count = open.items.length
+
+        for (let step = 1; step <= count; step++) {
+            const index = ((open.active < 0 ? (by > 0 ? -1 : 0) : open.active) + by * step + count) % count
+
+            if (! open.items[index].option.disabled) {
+                highlight(index)
+
+                return
+            }
+        }
+    }
+
+    const choose = (index) => {
+        const entry = open?.items[index]
+
+        if (! entry || entry.option.disabled) {
+            return
+        }
+
+        const { select } = open
+        const changed = select.value !== entry.option.value
+        close(true)
+
+        if (changed) {
+            select.value = entry.option.value
+            select.dispatchEvent(new Event('input', { bubbles: true }))
+            select.dispatchEvent(new Event('change', { bubbles: true }))
+        }
+    }
+
+    const show = (select) => {
+        if (open?.select === select) {
+            close(true)
+
+            return
+        }
+
+        close()
+
+        const panel = document.createElement('div')
+        panel.className = 'wm-select-panel'
+        panel.innerHTML = '<div class="wm-select-list" role="listbox"></div>'
+        const list = panel.firstChild
+        const label = select.getAttribute('aria-label') ?? select.labels?.[0]?.textContent.trim()
+
+        if (label) {
+            list.setAttribute('aria-label', label)
+        }
+
+        let search = null
+
+        if (select.options.length >= SEARCH_FROM && ! coarse.matches) {
+            search = document.createElement('div')
+            search.className = 'wm-select-search wm-select-search-empty'
+            search.dataset.placeholder = 'Tippen zum Suchen'
+            panel.prepend(search)
+        }
+
+        // Ein Klick ins Menü nimmt dem Feld nie den Fokus.
+        panel.addEventListener('mousedown', (event) => event.preventDefault())
+        panel.addEventListener('click', (event) => {
+            const item = event.target.closest('.wm-select-option')
+
+            if (item) {
+                choose(Number(item.dataset.index))
+            }
+        })
+        panel.addEventListener('mousemove', (event) => {
+            const item = event.target.closest('.wm-select-option')
+
+            if (item && open && Number(item.dataset.index) !== open.active && ! item.classList.contains('wm-disabled')) {
+                highlight(Number(item.dataset.index))
+            }
+        })
+
+        document.body.append(panel)
+        open = { select, panel, list, search, query: '', items: [], active: -1 }
+        select.setAttribute('aria-expanded', 'true')
+
+        if (! coarse.matches) {
+            select.focus({ preventScroll: true })
+        }
+
+        place()
+        render()
+    }
+
+    document.addEventListener('click', (event) => {
+        if (open && ! open.panel.contains(event.target) && ! open.select.closest('.fi-input-wrp')?.contains(event.target)) {
+            close()
+        }
+
+        const select = fieldOf(event.target)
+
+        if (select) {
+            show(select)
+        }
+    })
+
+    // Ein Klick auf die Beschriftung des Feldes (label for) fokussiert das <select>; am Handy öffnete das die Liste.
+    document.addEventListener('focusin', (event) => {
+        if (coarse.matches && event.target.matches?.(FIELD)) {
+            event.target.blur()
+        }
+    })
+
+    document.addEventListener('keydown', (event) => {
+        if (! open) {
+            if (event.target.matches?.(FIELD) && (['Enter', ' ', 'ArrowDown', 'ArrowUp'].includes(event.key) || (event.altKey && event.key === 'ArrowDown'))) {
+                event.preventDefault()
+                show(event.target)
+            }
+
+            return
+        }
+
+        const key = event.key
+
+        if (key === 'Escape') {
+            event.preventDefault()
+            event.stopPropagation()
+            close(true)
+        } else if (key === 'Tab') {
+            close()
+        } else if (key === 'ArrowDown' || key === 'ArrowUp') {
+            event.preventDefault()
+            move(key === 'ArrowDown' ? 1 : -1)
+        } else if (key === 'Home' || key === 'End') {
+            event.preventDefault()
+            highlight(key === 'Home' ? 0 : open.items.length - 1)
+        } else if (key === 'Enter' || (key === ' ' && ! open.search)) {
+            event.preventDefault()
+            choose(open.active)
+        } else if (open.search && key === 'Backspace') {
+            event.preventDefault()
+            open.query = open.query.slice(0, -1)
+            render()
+        } else if (key.length === 1 && ! event.ctrlKey && ! event.metaKey && ! event.altKey) {
+            event.preventDefault()
+
+            if (open.search) {
+                open.query += key
+                render()
+            } else {
+                // Ohne Suche springt ein Buchstabe zum nächsten Eintrag, der so anfängt.
+                const start = open.active + 1
+                const found = [...open.items.slice(start), ...open.items.slice(0, start)]
+                    .find(({ option }) => ! option.disabled && fold(option.textContent.trim()).startsWith(fold(key)))
+
+                if (found) {
+                    highlight(open.items.indexOf(found))
+                }
+            }
+        }
+    }, true)
+
+    window.addEventListener('resize', () => close())
+    document.addEventListener('scroll', (event) => {
+        if (open && ! open.panel.contains(event.target)) {
+            place()
+        }
+    }, true)
+    document.addEventListener('livewire:navigating', () => close())
+    document.addEventListener('livewire:init', () => {
+        Livewire.hook('morph.updated', () => requestAnimationFrame(place))
+    })
+})()
