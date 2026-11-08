@@ -458,6 +458,51 @@ document.addEventListener('livewire:init', () => {
     const BOX_HEAD = 'wm-sticky-box-head'
     let frame = null
 
+    // Eigene Tabellen haben keinen Hintergrund im Kopf, darunter liefen die Zeilen sichtbar durch (Simon, 9.11.2026,
+    // Nutzung): Die Kopfzeile bekommt die Hintergründe ihrer Rahmen übereinander, bis einer deckt (weiße Karte,
+    // getönter Kasten, dunkles Design).
+    const alphaOf = (color) => {
+        if (color === 'transparent') {
+            return 0
+        }
+
+        const slash = color.match(/\/\s*([\d.]+)(%?)\s*\)$/)
+
+        if (slash) {
+            return parseFloat(slash[1]) / (slash[2] ? 100 : 1)
+        }
+
+        const parts = color.match(/^rgba\(([^)]*)\)$/)?.[1].split(',')
+
+        return parts?.length === 4 ? parseFloat(parts[3]) : 1
+    }
+
+    const paint = (head) => {
+        const layers = []
+
+        for (let element = head; element; element = element.parentElement) {
+            const color = getComputedStyle(element).backgroundColor
+            const alpha = alphaOf(color)
+
+            if (alpha > 0) {
+                layers.push(color)
+            }
+
+            if (alpha >= 1) {
+                break
+            }
+        }
+
+        const base = layers.length && alphaOf(layers.at(-1)) >= 1 ? layers.pop() : null
+        head.style.setProperty('--wm-thead-layers', layers.length ? layers.map((color) => `linear-gradient(${color}, ${color})`).join(', ') : 'none')
+
+        if (base) {
+            head.style.setProperty('--wm-thead-bg', base)
+        } else {
+            head.style.removeProperty('--wm-thead-bg')
+        }
+    }
+
     const overflows = (element) => {
         const style = getComputedStyle(element)
 
@@ -484,10 +529,15 @@ document.addEventListener('livewire:init', () => {
 
         for (const head of document.querySelectorAll('.fi-main table > thead')) {
             head.classList.remove(PAGE_HEAD, BOX_HEAD)
+            head.style.removeProperty('--wm-thead-layers')
+            head.style.removeProperty('--wm-thead-bg')
 
-            if (head.closest('.fi-modal') || head.offsetHeight === 0) {
+            // Unsichtbare Kopfzeilen (nur für Screenreader, position absolute) bleiben, wie sie sind.
+            if (head.closest('.fi-modal') || head.offsetHeight === 0 || getComputedStyle(head).position === 'absolute') {
                 continue
             }
+
+            paint(head)
 
             const table = head.parentElement
             const frames = []

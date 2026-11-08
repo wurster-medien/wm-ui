@@ -646,7 +646,13 @@ thead.wm-sticky-box-head {
     position: sticky;
     top: var(--wm-thead-top, 4rem);
     z-index: 2;
+    background-color: var(--wm-thead-bg, #fff);
+    background-image: var(--wm-thead-layers, none);
     box-shadow: 0 1px 0 var(--gray-200);
+}
+
+.dark thead:is(.wm-sticky-page, .wm-sticky-box-head) {
+    background-color: var(--wm-thead-bg, var(--gray-900));
 }
 
 thead.wm-sticky-box-head {
