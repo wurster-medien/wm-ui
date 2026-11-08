@@ -535,7 +535,7 @@ document.addEventListener('livewire:init', () => {
  * schön“): Jedes einfache <select class="fi-select-input"> in einem Eingabefeld von Filament (Tabellenfilter, „pro Seite“,
  * Formulare, eigene Seiten) öffnet stattdessen ein Menü im Stil von Filament, am Rechner und am Handy. Das <select> bleibt
  * der Wert (Livewire, Alpine, Formulare lesen es wie bisher), das Menü setzt ihn und meldet input und change. Ab neun
- * Einträgen sucht Tippen in der Liste. Der Fokus bleibt immer im Feld, damit Fenster mit Fokusfalle nichts merken; das
+ * Einträgen sucht Tippen in der Liste, mit `data-wm-search` am <select> immer (Simon, 8.11.2026: Tags der Mediendatenbank). Der Fokus bleibt immer im Feld, damit Fenster mit Fokusfalle nichts merken; das
  * Menü hängt an <body>. Felder mit Suche (Filaments eigene Auswahl) bleiben, wie sie sind.
  */
 ;(() => {
@@ -722,7 +722,7 @@ document.addEventListener('livewire:init', () => {
 
         let search = null
 
-        if (select.options.length >= SEARCH_FROM && ! coarse.matches) {
+        if ((select.options.length >= SEARCH_FROM || select.hasAttribute('data-wm-search')) && ! coarse.matches) {
             search = document.createElement('div')
             search.className = 'wm-select-search wm-select-search-empty'
             search.dataset.placeholder = 'Tippen zum Suchen'
