@@ -766,6 +766,12 @@ document.addEventListener('livewire:init', () => {
         const select = fieldOf(event.target)
 
         if (select) {
+            // Liegt das Feld in einem <label>, schickt der Browser danach einen zweiten Klick ans <select>, der das Menü
+            // gleich wieder schließen würde (Simon, 9.11.2026: Sicherungen).
+            if (event.target !== select && event.target.closest('label')?.control === select) {
+                event.preventDefault()
+            }
+
             show(select)
         }
     })
