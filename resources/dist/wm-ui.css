@@ -421,6 +421,26 @@
     white-space: normal;
 }
 
+/* Auswahl in einem Menü (ChoiceMenu) wie in den Auswahlfeldern: der aktuelle Eintrag in Teal, Haken rechts, nicht blass. */
+.fi-dropdown-list-item.wm-choice-current {
+    opacity: 1;
+}
+
+.fi-dropdown-list-item.wm-choice-current > .fi-dropdown-list-item-label {
+    font-weight: 500;
+    color: var(--primary-600);
+}
+
+.fi-dropdown-list-item.wm-choice-current > .fi-icon {
+    order: 1;
+    color: var(--primary-600);
+}
+
+.dark .fi-dropdown-list-item.wm-choice-current > .fi-dropdown-list-item-label,
+.dark .fi-dropdown-list-item.wm-choice-current > .fi-icon {
+    color: var(--primary-400);
+}
+
 /* Icons vor bzw. hinter dem Text eines TextEntry sitzen sonst auf der Grundlinie, hier mittig zur Schrift. */
 .fi-in-text-item > .fi-icon,
 .fi-in-text-item > span:not(.fi-badge) > .fi-icon {
