@@ -36,6 +36,26 @@
     text-decoration: underline;
 }
 
+/*
+ * Die ganze Zeile öffnet dasselbe Ziel wie ihr Titel (Simon, 9.11.2026: „warum nicht ganze Zeile, wie sonst?“): Tabellenzeilen
+ * und Elemente mit data-wm-row, die ein .wm-row-open enthalten. Den Klick leitet wm-ui.js weiter, Knöpfe und Links behalten
+ * ihr Ziel. Ohne Recht ist der Titel nur Text, dann ist auch die Zeile nicht klickbar.
+ */
+tr:has(> td .wm-row-open),
+[data-wm-row]:has(.wm-row-open) {
+    cursor: pointer;
+}
+
+tr:has(> td .wm-row-open):hover > td,
+[data-wm-row]:has(.wm-row-open):hover {
+    background-color: var(--gray-50);
+}
+
+:is(.dark) tr:has(> td .wm-row-open):hover > td,
+:is(.dark) [data-wm-row]:has(.wm-row-open):hover {
+    background-color: rgb(255 255 255 / 0.05);
+}
+
 .wm-content-link {
     color: var(--primary-600);
     font-weight: 500;

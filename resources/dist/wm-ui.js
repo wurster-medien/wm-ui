@@ -389,6 +389,38 @@ window.WmDatePicker ??= (() => {
 })()
 
 /*
+ * Ganze Zeile klickbar wie in Filament-Tabellen (RowClick, Simon 9.11.2026): Ein Klick in eine Tabellenzeile oder ein Element
+ * mit data-wm-row, das ein <x-row-open> enthält, öffnet dessen Ziel. Knöpfe, Links, Felder und Menüs behalten ihr eigenes
+ * Ziel, markierter Text öffnet nichts.
+ */
+;(() => {
+    if (window.wmRowOpen) {
+        return
+    }
+
+    window.wmRowOpen = true
+
+    const OWN_TARGETS = 'a, button, input, select, textarea, label, summary, [role="button"], [contenteditable], .fi-dropdown-panel, .fi-modal'
+
+    document.addEventListener('click', (event) => {
+        const target = event.target
+
+        if (event.defaultPrevented || event.button !== 0 || ! (target instanceof Element) || target.closest(OWN_TARGETS)) {
+            return
+        }
+
+        const row = target.closest('[data-wm-row], tr')
+        const opener = row?.querySelector('.wm-row-open')
+
+        if (! opener || window.getSelection()?.toString()) {
+            return
+        }
+
+        opener.click()
+    })
+})()
+
+/*
  * Abfragen im Hintergrund (wire:poll): Am Handy scheitert leicht eine, wenn es aufwacht oder die App wechselt, die nächste
  * klappt wieder. Dafür keine Meldung „Fehler beim Laden der Seite“ (Simon, 3.11.2026), die gilt nur, wenn jemand etwas
  * getan hat. Eine abgelaufene Sitzung lädt die Seite neu, statt die Fehlerseite über die Liste zu legen; der Status ist dabei

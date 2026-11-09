@@ -22,7 +22,8 @@ use Illuminate\Database\Eloquent\Model;
  *
  * Jede Filament-Tabelle mit Zeilenaktionen entscheidet über opens(), url() oder none(), nie über recordUrl() bzw.
  * recordAction() direkt (RowClickTest). Eigene Listen (Blade) machen den Titel über `<x-row-open :action="…">` zum
- * Auslöser desselben Ziels und lassen dessen Knopf weg (Kasten „To-Dos“, DNS-Werte, Weiterleitungen, Abwesenheiten).
+ * Auslöser desselben Ziels und lassen dessen Knopf weg (Kasten „To-Dos“, DNS-Werte, Weiterleitungen, Abwesenheiten);
+ * die ganze Tabellenzeile bzw. das Element mit `data-wm-row` darum öffnet es ebenso (wm-ui.js, Simon 9.11.2026).
  */
 final class RowClick
 {
