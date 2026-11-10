@@ -441,6 +441,67 @@ tr:has(> td .wm-row-open):hover > td,
     white-space: normal;
 }
 
+/*
+    Kunden-Menü oben in der Seitenleiste (Filaments Mandanten-Menü im Portal, eigene Umschalter mit .fi-tenant-menu):
+    Namen in einer Zeile mit „…“ (der ganze Name steht dann im Tooltip), sonst wird die Liste mit zwei, drei Zeilen je
+    Firma unübersichtlich lang. Das Panel ist so breit wie der Umschalter statt 14rem (sonst schaut die Navigation rechts
+    daneben heraus), ohne eigene Bildlaufleiste (scrollt mit Rad und Touchpad), die Suche bleibt oben stehen und sieht
+    aus wie ein Eingabefeld.
+*/
+.fi-tenant-menu .fi-dropdown-list-item-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fi-sidebar .fi-tenant-menu {
+    position: relative;
+}
+
+.fi-sidebar .fi-tenant-menu > .fi-dropdown-panel {
+    /* min-width statt max-width: none, Filaments max-width: 14rem !important liegt in einer Ebene und gewinnt sonst. */
+    width: 100%;
+    min-width: 100%;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+.fi-sidebar .fi-tenant-menu > .fi-dropdown-panel::-webkit-scrollbar {
+    display: none;
+}
+
+.fi-sidebar .fi-tenant-menu .fi-dropdown-list > div:has(> input[type="search"]) {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 0.25rem;
+    margin: -0.25rem -0.25rem 0;
+    background: #fff;
+}
+
+.dark .fi-sidebar .fi-tenant-menu .fi-dropdown-list > div:has(> input[type="search"]) {
+    background: var(--gray-900);
+}
+
+.fi-sidebar .fi-tenant-menu .fi-dropdown-list > div > input.fi-input[type="search"] {
+    border-radius: var(--radius-lg);
+    background: #fff;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 0 0 1px color-mix(in oklab, var(--gray-950) 10%, transparent);
+}
+
+.fi-sidebar .fi-tenant-menu .fi-dropdown-list > div > input.fi-input[type="search"]:focus {
+    box-shadow: 0 0 0 2px var(--primary-600);
+}
+
+.dark .fi-sidebar .fi-tenant-menu .fi-dropdown-list > div > input.fi-input[type="search"] {
+    background: rgb(255 255 255 / 0.05);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.2);
+}
+
+.dark .fi-sidebar .fi-tenant-menu .fi-dropdown-list > div > input.fi-input[type="search"]:focus {
+    box-shadow: 0 0 0 2px var(--primary-500);
+}
+
 /* Auswahl in einem Menü (ChoiceMenu) wie in den Auswahlfeldern: der aktuelle Eintrag in Teal, Haken rechts, nicht blass. */
 .fi-dropdown-list-item.wm-choice-current {
     opacity: 1;
