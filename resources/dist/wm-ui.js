@@ -418,6 +418,23 @@ window.WmDatePicker ??= (() => {
 
         opener.click()
     })
+
+    /*
+     * Links im Inhalt einer Filament-Tabelle, deren Zeile ein Fenster öffnet (Simon, 10.11.2026: Links unter dem Titel der
+     * To-Dos öffneten „Bearbeiten“): Filament legt dann jede Zelle in einen <button wire:click.prevent.stop>, der den Klick
+     * auf den Link schluckt. Erreicht der Klick den Link, endet er dort, der Browser folgt ihm (auch mit Strg/⌘ oder
+     * target). Eigene Handler am Link laufen weiter, nur der Knopf der Zelle bekommt ihn nicht.
+     */
+    document.addEventListener('click', (event) => {
+        const target = event.target
+        const link = target instanceof Element ? target.closest('a[href]') : null
+
+        if (! link || ! link.parentElement?.closest('button.fi-ta-col, button.fi-ta-record-content')) {
+            return
+        }
+
+        link.addEventListener('click', (linkEvent) => linkEvent.stopPropagation(), { once: true })
+    }, true)
 })()
 
 /*
