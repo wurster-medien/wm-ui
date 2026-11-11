@@ -79,7 +79,7 @@ final class DesignRules
 
     /**
      * Ratsche gegen neue eigene Stile in Ansichten: Blade-Dateien mit einem style-Element, die nicht in der Erlaubnisliste
-     * stehen (Pfade relativ zu $viewsPath, mit Schrägstrichen). Stile gehören nach resources/dist/wm-ui.css.
+     * stehen (Pfade relativ zu $viewsPath, mit Schrägstrichen); veraltete Einträge melden sich ebenfalls. Erkannt: `style=`, `:style=`, `@style(`. Stile gehören nach resources/dist/wm-ui.css.
      *
      * @param  list<string>  $allowlist
      * @return list<string>
@@ -112,13 +112,24 @@ final class DesignRules
     public static function inlineStyleAttributeViolations(string $viewsPath, array $allowlist = []): array
     {
         $problems = [];
+        $found = [];
 
         foreach (Finder::create()->files()->in($viewsPath)->name('*.blade.php') as $file) {
             $path = str_replace('\\', '/', $file->getRelativePathname());
 
-            if (preg_match('/[\s:]style\s*=\s*["\']/i', $file->getContents()) === 1 && ! in_array($path, $allowlist, true)) {
+            if (preg_match('/[\s:]style\s*=\s*["\']|@style\s*\(/i', $file->getContents()) !== 1) {
+                continue;
+            }
+
+            $found[] = $path;
+
+            if (! in_array($path, $allowlist, true)) {
                 $problems[] = "{$path}: eigenes style-Attribut, Stil gehört als Klasse ins Paket (resources/dist/wm-ui.css)";
             }
+        }
+
+        foreach (array_diff($allowlist, $found) as $path) {
+            $problems[] = "{$path}: steht in der Erlaubnisliste, hat aber kein style-Attribut mehr (Eintrag entfernen)";
         }
 
         sort($problems);
