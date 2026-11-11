@@ -1055,6 +1055,7 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
 .dark .wm-budget-bar.is-none::-moz-progress-bar { background: var(--gray-500); }
 .dark .wm-budget-total { border-color: var(--gray-700); }
 
+/*
  * Summen und Kalkulation im Angebots-Editor (Faktura A2, Kundenbereich): Blöcke mit Überschrift, Zeilen mit Bezeichnung links
  * und Betrag rechts, gedämpfte Zeilen für die Umsatzsteuer, Warnung, Hinweis. Dazu die Liste verknüpfter Angebote
  * (.wm-linked-offers) am Lead, bei der Firma und in der Anfrage.
