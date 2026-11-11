@@ -1005,3 +1005,21 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
     .dark .wm-time-trigger:not(.is-running) { background: transparent; }
     .wm-time-trigger:not(.is-running) .wm-time-label { display: none; }
 }
+
+/*
+ * Fremdleistungen am Projekt (Faktura C2, Kasten "Fremdleistungen" auf der Projektseite):
+ * Liste mit Trennlinie, Titelzeile, Hinweis- und Fehlerzeile, Knopfreihe und Summenzeile.
+ */
+.wm-cost-list { display: flex; flex-direction: column; }
+.wm-cost { padding: 0.875rem 0; border-top: 1px solid var(--gray-100); }
+.wm-cost:first-child { padding-top: 0; border-top: 0; }
+.wm-cost-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
+.wm-cost-text { font-size: 0.875rem; white-space: pre-line; overflow-wrap: anywhere; }
+.wm-cost-meta { font-size: 0.875rem; color: var(--gray-500); white-space: normal; overflow-wrap: anywhere; }
+.wm-cost-error { font-size: 0.875rem; color: var(--danger-600); white-space: normal; overflow-wrap: anywhere; }
+.wm-cost-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+.wm-cost-total { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--gray-200); font-size: 0.875rem; font-weight: 600; }
+.dark .wm-cost { border-color: var(--gray-800); }
+.dark .wm-cost-meta { color: var(--gray-400); }
+.dark .wm-cost-error { color: var(--danger-400); }
+.dark .wm-cost-total { border-color: var(--gray-700); }

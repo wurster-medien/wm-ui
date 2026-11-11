@@ -100,4 +100,29 @@ final class DesignRules
 
         return $problems;
     }
+
+    /**
+     * Ratsche gegen style-Attribute in Ansichten: Blade-Dateien mit `style="` bzw. `:style=`, die nicht in der
+     * Erlaubnisliste stehen (Pfade relativ zu $viewsPath, mit Schrägstrichen). Stile gehören als Klassen nach
+     * resources/dist/wm-ui.css.
+     *
+     * @param  list<string>  $allowlist
+     * @return list<string>
+     */
+    public static function inlineStyleAttributeViolations(string $viewsPath, array $allowlist = []): array
+    {
+        $problems = [];
+
+        foreach (Finder::create()->files()->in($viewsPath)->name('*.blade.php') as $file) {
+            $path = str_replace('\\', '/', $file->getRelativePathname());
+
+            if (preg_match('/[\s:]style\s*=\s*["\']/i', $file->getContents()) === 1 && ! in_array($path, $allowlist, true)) {
+                $problems[] = "{$path}: eigenes style-Attribut, Stil gehört als Klasse ins Paket (resources/dist/wm-ui.css)";
+            }
+        }
+
+        sort($problems);
+
+        return $problems;
+    }
 }
