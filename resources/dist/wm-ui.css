@@ -1023,3 +1023,34 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
 .dark .wm-cost-meta { color: var(--gray-400); }
 .dark .wm-cost-error { color: var(--danger-400); }
 .dark .wm-cost-total { border-color: var(--gray-700); }
+
+/* ==========================================================================
+   Budget am Projekt (Faktura C1, Kasten "Budget" im Admin: ProjectBudgetBox)
+   ========================================================================== */
+.wm-budget-lines { display: flex; flex-direction: column; }
+.wm-budget-line { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; padding: 0.75rem 0; border-top: 1px solid var(--gray-200); }
+.wm-budget-line:first-child { border-top: 0; padding-top: 0; }
+.wm-budget-name { flex: 1 1 11rem; min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
+.wm-budget-meter { flex: 2 1 16rem; min-width: 0; display: flex; flex-direction: column; gap: 0.375rem; }
+.wm-budget-muted { color: var(--gray-500); font-size: 0.875rem; font-weight: 400; }
+.wm-budget-numbers { font-variant-numeric: tabular-nums; font-size: 0.875rem; white-space: normal; }
+.wm-budget-actions { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+.wm-budget-bar { appearance: none; -webkit-appearance: none; display: block; width: 100%; height: 0.5rem; border: 0; border-radius: 9999px; overflow: hidden; background: var(--gray-200); }
+.wm-budget-bar::-webkit-progress-bar { background: var(--gray-200); border-radius: 9999px; }
+.wm-budget-bar::-webkit-progress-value { background: var(--success-500); border-radius: 9999px; }
+.wm-budget-bar::-moz-progress-bar { background: var(--success-500); border-radius: 9999px; }
+.wm-budget-bar.is-yellow::-webkit-progress-value { background: var(--warning-500); }
+.wm-budget-bar.is-yellow::-moz-progress-bar { background: var(--warning-500); }
+.wm-budget-bar.is-red::-webkit-progress-value { background: var(--danger-500); }
+.wm-budget-bar.is-red::-moz-progress-bar { background: var(--danger-500); }
+.wm-budget-bar.is-none::-webkit-progress-value { background: var(--gray-400); }
+.wm-budget-bar.is-none::-moz-progress-bar { background: var(--gray-400); }
+.wm-budget-total { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; margin-top: 0.5rem; padding-top: 0.75rem; border-top: 1px solid var(--gray-300); font-size: 0.875rem; }
+.wm-budget-times { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.75rem; }
+.wm-budget-time { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; font-size: 0.875rem; }
+.dark .wm-budget-line { border-color: var(--gray-800); }
+.dark .wm-budget-muted { color: var(--gray-400); }
+.dark .wm-budget-bar, .dark .wm-budget-bar::-webkit-progress-bar { background: rgb(255 255 255 / 0.1); }
+.dark .wm-budget-bar.is-none::-webkit-progress-value { background: var(--gray-500); }
+.dark .wm-budget-bar.is-none::-moz-progress-bar { background: var(--gray-500); }
+.dark .wm-budget-total { border-color: var(--gray-700); }
