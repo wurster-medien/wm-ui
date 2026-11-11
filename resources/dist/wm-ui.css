@@ -1006,35 +1006,33 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
     .wm-time-trigger:not(.is-running) .wm-time-label { display: none; }
 }
 
-/*
- * Fremdleistungen am Projekt (Faktura C2, Kasten "Fremdleistungen" auf der Projektseite):
- * Liste mit Trennlinie, Titelzeile, Hinweis- und Fehlerzeile, Knopfreihe und Summenzeile.
- */
-.wm-cost-list { display: flex; flex-direction: column; }
-.wm-cost { padding: 0.875rem 0; border-top: 1px solid var(--gray-100); }
-.wm-cost:first-child { padding-top: 0; border-top: 0; }
-.wm-cost-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
-.wm-cost-text { font-size: 0.875rem; white-space: pre-line; overflow-wrap: anywhere; }
-.wm-cost-meta { font-size: 0.875rem; color: var(--gray-500); white-space: normal; overflow-wrap: anywhere; }
-.wm-cost-error { font-size: 0.875rem; color: var(--danger-600); white-space: normal; overflow-wrap: anywhere; }
-.wm-cost-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
-.wm-cost-total { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--gray-200); font-size: 0.875rem; font-weight: 600; }
-.dark .wm-cost { border-color: var(--gray-800); }
-.dark .wm-cost-meta { color: var(--gray-400); }
-.dark .wm-cost-error { color: var(--danger-400); }
-.dark .wm-cost-total { border-color: var(--gray-700); }
+/* ==========================================================================
+   Listen in Kästen (Faktura C1, C2, A2): Budget, Fremdleistungen und verknüpfte Angebote teilen sich dieses Muster.
+   Zeilen mit Trennlinie (.wm-list-item, mit .is-stacked untereinander statt nebeneinander), Hauptspalte, Kopfzeile,
+   Text, gedämpfte Zeile, Fehlerzeile, Knopfreihe und Summenzeile.
+   ========================================================================== */
+.wm-list { display: flex; flex-direction: column; }
+.wm-list-item { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; padding: 0.75rem 0; border-top: 1px solid var(--gray-200); }
+.wm-list-item:first-child { padding-top: 0; border-top: 0; }
+.wm-list-item.is-stacked { display: block; }
+.wm-list-main { flex: 1 1 12rem; min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
+.wm-list-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
+.wm-list-text { font-size: 0.875rem; white-space: pre-line; overflow-wrap: anywhere; }
+.wm-list-meta { font-size: 0.875rem; font-weight: 400; color: var(--gray-500); white-space: normal; overflow-wrap: anywhere; }
+.wm-list-error { font-size: 0.875rem; color: var(--danger-600); white-space: normal; overflow-wrap: anywhere; }
+.wm-list-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.wm-list-item.is-stacked > .wm-list-actions { margin-top: 0.5rem; }
+.wm-list-total { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--gray-200); font-size: 0.875rem; font-weight: 600; }
+.dark .wm-list-item { border-color: var(--gray-800); }
+.dark .wm-list-meta { color: var(--gray-400); }
+.dark .wm-list-error { color: var(--danger-400); }
+.dark .wm-list-total { border-color: var(--gray-700); }
 
 /* ==========================================================================
    Budget am Projekt (Faktura C1, Kasten "Budget" im Admin: ProjectBudgetBox)
    ========================================================================== */
-.wm-budget-lines { display: flex; flex-direction: column; }
-.wm-budget-line { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; padding: 0.75rem 0; border-top: 1px solid var(--gray-200); }
-.wm-budget-line:first-child { border-top: 0; padding-top: 0; }
-.wm-budget-name { flex: 1 1 11rem; min-width: 0; overflow-wrap: anywhere; font-weight: 500; }
 .wm-budget-meter { flex: 2 1 16rem; min-width: 0; display: flex; flex-direction: column; gap: 0.375rem; }
-.wm-budget-muted { color: var(--gray-500); font-size: 0.875rem; font-weight: 400; }
 .wm-budget-numbers { font-variant-numeric: tabular-nums; font-size: 0.875rem; white-space: normal; }
-.wm-budget-actions { display: flex; flex-wrap: wrap; gap: 0.375rem; }
 .wm-budget-bar { appearance: none; -webkit-appearance: none; display: block; width: 100%; height: 0.5rem; border: 0; border-radius: 9999px; overflow: hidden; background: var(--gray-200); }
 .wm-budget-bar::-webkit-progress-bar { background: var(--gray-200); border-radius: 9999px; }
 .wm-budget-bar::-webkit-progress-value { background: var(--success-500); border-radius: 9999px; }
@@ -1045,20 +1043,15 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
 .wm-budget-bar.is-red::-moz-progress-bar { background: var(--danger-500); }
 .wm-budget-bar.is-none::-webkit-progress-value { background: var(--gray-400); }
 .wm-budget-bar.is-none::-moz-progress-bar { background: var(--gray-400); }
-.wm-budget-total { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; margin-top: 0.5rem; padding-top: 0.75rem; border-top: 1px solid var(--gray-300); font-size: 0.875rem; }
 .wm-budget-times { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.75rem; }
 .wm-budget-time { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; font-size: 0.875rem; }
-.dark .wm-budget-line { border-color: var(--gray-800); }
-.dark .wm-budget-muted { color: var(--gray-400); }
 .dark .wm-budget-bar, .dark .wm-budget-bar::-webkit-progress-bar { background: rgb(255 255 255 / 0.1); }
 .dark .wm-budget-bar.is-none::-webkit-progress-value { background: var(--gray-500); }
 .dark .wm-budget-bar.is-none::-moz-progress-bar { background: var(--gray-500); }
-.dark .wm-budget-total { border-color: var(--gray-700); }
 
 /*
  * Summen und Kalkulation im Angebots-Editor (Faktura A2, Kundenbereich): Blöcke mit Überschrift, Zeilen mit Bezeichnung links
- * und Betrag rechts, gedämpfte Zeilen für die Umsatzsteuer, Warnung, Hinweis. Dazu die Liste verknüpfter Angebote
- * (.wm-linked-offers) am Lead, bei der Firma und in der Anfrage.
+ * und Betrag rechts, gedämpfte Zeilen für die Umsatzsteuer, Warnung, Hinweis.
  */
 .wm-totals { display: flex; flex-direction: column; gap: 1.25rem; font-size: 0.875rem; }
 .wm-totals-block { display: flex; flex-direction: column; gap: 0.375rem; }
@@ -1067,11 +1060,5 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
 .wm-totals-row.is-strong { font-weight: 600; }
 .wm-totals-row.is-muted, .wm-totals-note { color: var(--gray-500); font-size: 0.8125rem; }
 .wm-totals-warning { color: var(--danger-600); font-size: 0.8125rem; }
-.wm-linked-offers { display: flex; flex-direction: column; }
-.wm-linked-offer { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; padding: 0.625rem 0; border-top: 1px solid var(--gray-100); }
-.wm-linked-offer:first-child { border-top: 0; padding-top: 0; }
-.wm-linked-offer-main { flex: 1 1 14rem; min-width: 0; overflow-wrap: anywhere; }
-.wm-linked-offer-note { color: var(--gray-500); font-size: 0.8125rem; }
-.dark .wm-totals-row.is-muted, .dark .wm-totals-note, .dark .wm-linked-offer-note { color: var(--gray-400); }
+.dark .wm-totals-row.is-muted, .dark .wm-totals-note { color: var(--gray-400); }
 .dark .wm-totals-warning { color: var(--danger-400); }
-.dark .wm-linked-offer { border-color: var(--gray-800); }
