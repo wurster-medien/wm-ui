@@ -1065,12 +1065,22 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
 
 /*
  * Kompakte Zeilen im Angebots-Editor (Faktura A2): Eine Position ist eine Zeile. Ziehgriff und Pfeile links, Felder in der Mitte,
- * Löschen rechts; die Kopfzeile des Repeaters wird zur Randspalte der Zeile. Die Summe steht rechts, mit tabellarischen Ziffern.
- * Am Handy stapeln sich die Felder (das Raster darin hat dort eine Spalte).
+ * Löschen rechts; die Kopfzeile des Repeaters wird zur Randspalte der Zeile. Spaltenköpfe (.wm-line-head) stehen im selben
+ * Raster über der Liste, erst ab sm; darunter stehen die Beschriftungen an den Feldern und die Felder stapeln sich. Ab sm sind
+ * die Beschriftungen nur optisch verborgen (Screenreader lesen sie). Nur direkte Kinder des Repeaters und der Zeile, damit ein
+ * Repeater in "Details" (zum Beispiel der Kalkulator) nicht getroffen wird. Die Summe steht rechts, mit tabellarischen Ziffern.
  */
-.wm-offer-lines .fi-fo-repeater-item.fi-fo-repeater-item-has-header { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; column-gap: 0.5rem; padding: 0.5rem 0.75rem; }
-.wm-offer-lines .fi-fo-repeater-item-header { display: contents; }
-.wm-offer-lines .fi-fo-repeater-item-header-start-actions { grid-column: 1; grid-row: 1; display: flex; align-items: center; gap: 0.125rem; padding-top: 0.25rem; }
-.wm-offer-lines .fi-fo-repeater-item-header-end-actions { grid-column: 3; grid-row: 1; display: flex; align-items: center; padding-top: 0.25rem; }
-.wm-offer-lines .fi-fo-repeater-item-has-header > .fi-fo-repeater-item-content { grid-column: 2; grid-row: 1; border-top: 0; padding: 0; }
-.wm-line-sum { text-align: end; font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 600; padding-top: 0.5rem; }
+:root { --wm-line-start: 6rem; --wm-line-end: 2.25rem; --wm-line-pad: 0.75rem; --wm-line-gap: 0.5rem; }
+.wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-item.fi-fo-repeater-item-has-header { display: grid; grid-template-columns: var(--wm-line-start) minmax(0, 1fr) var(--wm-line-end); align-items: start; column-gap: var(--wm-line-gap); padding: 0.5rem var(--wm-line-pad); }
+.wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-item > .fi-fo-repeater-item-header { display: contents; }
+.wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-item > .fi-fo-repeater-item-header > .fi-fo-repeater-item-header-start-actions { grid-column: 1; grid-row: 1; display: flex; align-items: center; gap: 0.125rem; padding-top: 0.25rem; }
+.wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-item > .fi-fo-repeater-item-header > .fi-fo-repeater-item-header-end-actions { grid-column: 3; grid-row: 1; display: flex; align-items: center; padding-top: 0.25rem; }
+.wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-item-has-header > .fi-fo-repeater-item-content { grid-column: 2; grid-row: 1; border-top: 0; padding: 0; }
+.wm-line-sum { text-align: end; font-variant-numeric: tabular-nums; font-weight: 600; padding-top: 0.5rem; }
+.wm-line-head { display: none; }
+@media (min-width: 640px) {
+    .wm-line-head { display: block; padding: 0 calc(var(--wm-line-pad) + 1px + var(--wm-line-end) + var(--wm-line-gap)) 0.25rem calc(var(--wm-line-pad) + 1px + var(--wm-line-start) + var(--wm-line-gap)); font-size: 0.8125rem; font-weight: 500; color: var(--gray-500); }
+    .wm-line-head .wm-line-sum { padding-top: 0; font-weight: 500; }
+    .wm-line > .fi-grid > .fi-grid-col > .fi-sc-component > .fi-fo-field > .fi-fo-field-label-col { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+}
+.dark .wm-line-head { color: var(--gray-400); }
