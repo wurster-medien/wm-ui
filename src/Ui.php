@@ -86,14 +86,21 @@ final class Ui
 
         /**
          * Datumsauswahl immer ohne Browser-Picker und mit deutschem Format (nicht je Feld setzen). Sie bekommt Pfeile für
-         * die Monate, „Heute“, „Leeren“ (ohne Pflicht) und einen deutlich markierten heutigen Tag (wm-ui.js).
+         * die Monate, „Heute“, „Leeren“ (ohne Pflicht) und einen deutlich markierten heutigen Tag (wm-ui.js). Das Datum
+         * lässt sich auch eintippen (12.11.2026, 12.11.26, 121126 …; Simon, 12.11.2026), außer das Feld ist gesperrt.
          */
         DateTimePicker::configureUsing(fn (DateTimePicker $picker): DateTimePicker => $picker
             ->native(false)
             ->displayFormat(fn (DateTimePicker $component): string => $component->hasTime() ? 'd.m.Y H:i' : 'd.m.Y')
             ->extraAlpineAttributes(
                 fn (DateTimePicker $component): array => $component->isNative() ? [] : [
-                    'x-init' => 'window.WmDatePicker?.enhance($el, $data, $watch, { clearable: '.($component->isRequired() ? 'false' : 'true').' })',
+                    /** Ohne doppelte Anführungszeichen: Filament schreibt das Attribut ungeschützt ins HTML. */
+                    'x-init' => sprintf(
+                        'window.WmDatePicker?.enhance($el, $data, $watch, { clearable: %s, typeable: %s, time: %s })',
+                        $component->isRequired() ? 'false' : 'true',
+                        $component->isDisabled() || $component->isReadOnly() ? 'false' : 'true',
+                        $component->hasTime() ? 'true' : 'false',
+                    ),
                 ],
                 merge: true,
             ));

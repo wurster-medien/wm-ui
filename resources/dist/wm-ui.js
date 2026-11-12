@@ -27,12 +27,185 @@ window.WmDatePicker ??= (() => {
         return button
     }
 
+    /**
+     * Getipptes Datum lesen: 12.11.2026, 12.11.26, 1.2.26, 12.11. (dieses Jahr), 12112026, 121126, auch mit / oder -
+     * statt Punkt und mit Uhrzeit dahinter („12.11.2026 14:30“). Liefert { year, month, day, hour, minute } oder null.
+     */
+    function parseTyped(text) {
+        const time = '(?:[\\s,]+(\\d{1,2})[:.](\\d{2}))?'
+        const value = text.trim()
+        const match = value.match(new RegExp(`^(\\d{1,2})[./-](\\d{1,2})(?:[./-](\\d{4}|\\d{2})?)?${time}$`))
+            ?? value.match(new RegExp(`^(\\d{2})(\\d{2})(\\d{4}|\\d{2})${time}$`))
+
+        if (! match) {
+            return null
+        }
+
+        const [, day, month, year, hour, minute] = match
+        const result = {
+            year: year === undefined ? new Date().getFullYear() : Number(year) + (year.length === 2 ? 2000 : 0),
+            month: Number(month),
+            day: Number(day),
+            hour: hour === undefined ? null : Number(hour),
+            minute: minute === undefined ? null : Number(minute),
+        }
+        const check = new Date(Date.UTC(result.year, result.month - 1, result.day))
+
+        if (check.getUTCMonth() !== result.month - 1 || check.getUTCDate() !== result.day) {
+            return null
+        }
+
+        if (result.hour !== null && (result.hour > 23 || result.minute > 59)) {
+            return null
+        }
+
+        return result
+    }
+
+    /**
+     * Feld zum Eintippen (Simon, 12.11.2026): Filament zeigt das Datum nur lesbar. Der Kalender folgt beim Tippen,
+     * übernommen wird mit Enter oder beim Verlassen des Felds; Ungültiges zeigt Enter an, Verlassen setzt es zurück.
+     * Rücktaste, Entfernen, Leertaste und Pfeile links/rechts bearbeiten den Text statt Filament auszulösen.
+     */
+    function makeTypeable(root, picker, watch, options) {
+        const input = picker.$refs?.button ?? root.querySelector('.fi-fo-date-time-picker-display-text-input')
+        const dayjs = window.dayjs
+
+        if (! input || input.disabled || ! dayjs) {
+            return
+        }
+
+        input.readOnly = false
+        input.autocomplete = 'off'
+        input.placeholder ||= options.time ? 'TT.MM.JJJJ hh:mm' : 'TT.MM.JJJJ'
+
+        let dirty = false
+        let hadFocus = false
+
+        const toDate = (parsed) => {
+            const pad = (number) => String(number).padStart(2, '0')
+
+            return dayjs.utc(`${parsed.year}-${pad(parsed.month)}-${pad(parsed.day)}`).locale(picker.focusedDate?.locale() ?? 'de')
+        }
+
+        const reset = () => {
+            dirty = false
+            input.setCustomValidity('')
+            picker.setDisplayText()
+        }
+
+        /** Übernimmt den getippten Text, true wenn er gültig war. */
+        const commit = () => {
+            if (input.value.trim() === '') {
+                options.clearable ? picker.clearState() : reset()
+
+                return true
+            }
+
+            const parsed = parseTyped(input.value)
+            const date = parsed && toDate(parsed)
+
+            if (! date || picker.dateIsDisabled(date)) {
+                return false
+            }
+
+            if (options.time && parsed.hour !== null) {
+                picker.hour = parsed.hour
+                picker.minute = parsed.minute
+                picker.second = 0
+            }
+
+            picker.focusedDate = date
+            picker.setState(date)
+            reset()
+
+            return true
+        }
+
+        input.addEventListener('input', () => {
+            dirty = true
+            input.setCustomValidity('')
+
+            const parsed = parseTyped(input.value)
+
+            if (parsed) {
+                picker.focusedDate = toDate(parsed)
+            }
+        })
+
+        input.addEventListener('change', () => dirty && (commit() || reset()))
+
+        root.addEventListener('keydown', (event) => {
+            if (event.target !== input) {
+                return
+            }
+
+            if (['Backspace', 'Delete', 'Clear', ' ', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
+                event.stopPropagation()
+
+                return
+            }
+
+            /** Tab führt zum nächsten Feld, nicht in den offenen Kalender (der wird sofort unsichtbar). */
+            if (event.key === 'Tab' && ! event.shiftKey && picker.isOpen()) {
+                picker.closePanel()
+                picker.$refs.panel.style.display = 'none'
+
+                return
+            }
+
+            if (event.key !== 'Enter' || ! dirty) {
+                return
+            }
+
+            event.preventDefault()
+            event.stopPropagation()
+
+            if (commit()) {
+                picker.isOpen() && picker.closePanel(true)
+
+                return
+            }
+
+            input.setCustomValidity(options.time ? 'Bitte als TT.MM.JJJJ hh:mm eingeben.' : 'Bitte als TT.MM.JJJJ eingeben.')
+            input.reportValidity()
+        }, true)
+
+        input.addEventListener('mousedown', () => {
+            hadFocus = document.activeElement === input
+        })
+
+        root.addEventListener('click', (event) => {
+            if (event.target === input && picker.isOpen()) {
+                event.stopPropagation()
+            }
+        }, true)
+
+        root.addEventListener('click', (event) => {
+            if (event.target !== input) {
+                return
+            }
+
+            picker.focusGeneration++
+
+            if (! hadFocus) {
+                input.select()
+            }
+        })
+
+        watch('state', () => {
+            dirty = false
+            input.setCustomValidity('')
+        })
+    }
+
     return {
         /**
          * @param {HTMLElement} root Element mit x-data="dateTimePickerFormComponent(…)"
          * @param {object} picker Daten der Filament-Komponente ($data)
          * @param {Function} watch $watch der Komponente (endet mit dem Element)
-         * @param {object} options clearable: „Leeren“ anbieten (Feld ohne Pflicht)
+         * @param {object} options clearable: „Leeren“ anbieten (Feld ohne Pflicht), typeable: Datum eintippen,
+         *                         time: mit Uhrzeit
          */
         enhance(root, picker, watch, options = {}) {
             const panel = root.querySelector('.fi-fo-date-time-picker-panel')
@@ -111,6 +284,10 @@ window.WmDatePicker ??= (() => {
             }
 
             panel.append(footer)
+
+            if (options.typeable) {
+                makeTypeable(root, picker, watch, options)
+            }
 
             root.addEventListener('keydown', (event) => {
                 if (! ['PageUp', 'PageDown'].includes(event.key) || ! picker.isOpen()) {
