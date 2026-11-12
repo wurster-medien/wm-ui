@@ -1062,3 +1062,15 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
 .wm-totals-warning { color: var(--danger-600); font-size: 0.8125rem; }
 .dark .wm-totals-row.is-muted, .dark .wm-totals-note { color: var(--gray-400); }
 .dark .wm-totals-warning { color: var(--danger-400); }
+
+/*
+ * Kompakte Zeilen im Angebots-Editor (Faktura A2): Eine Position ist eine Zeile. Ziehgriff und Pfeile links, Felder in der Mitte,
+ * Löschen rechts; die Kopfzeile des Repeaters wird zur Randspalte der Zeile. Die Summe steht rechts, mit tabellarischen Ziffern.
+ * Am Handy stapeln sich die Felder (das Raster darin hat dort eine Spalte).
+ */
+.wm-offer-lines .fi-fo-repeater-item.fi-fo-repeater-item-has-header { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; column-gap: 0.5rem; padding: 0.5rem 0.75rem; }
+.wm-offer-lines .fi-fo-repeater-item-header { display: contents; }
+.wm-offer-lines .fi-fo-repeater-item-header-start-actions { grid-column: 1; grid-row: 1; display: flex; align-items: center; gap: 0.125rem; padding-top: 0.25rem; }
+.wm-offer-lines .fi-fo-repeater-item-header-end-actions { grid-column: 3; grid-row: 1; display: flex; align-items: center; padding-top: 0.25rem; }
+.wm-offer-lines .fi-fo-repeater-item-has-header > .fi-fo-repeater-item-content { grid-column: 2; grid-row: 1; border-top: 0; padding: 0; }
+.wm-line-sum { text-align: end; font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 600; padding-top: 0.5rem; }
