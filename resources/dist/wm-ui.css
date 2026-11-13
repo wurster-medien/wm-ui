@@ -1105,6 +1105,26 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
 }
 .dark .wm-line-head { color: var(--gray-400); }
 
+/*
+ * „Dazwischen einfügen“ im Zeilen-Editor (Faktura, Filaments Repeater mit addBetweenAction; Simon, 13.11.2026): in Ruhe nur der
+ * Abstand zwischen den Zeilen. Zeigt die Maus auf die Fuge (1rem, gap-4 der Liste), erscheint dort eine Linie in Teal mit rundem
+ * Plus in der Mitte, das das Menü öffnet; mit Fokus oder offenem Menü bleibt beides stehen und liegt über den unsichtbaren Plus der übrigen Fugen. Ohne Maus (Handy, Tablet) steht das Plus
+ * immer da. Der Eintrag selbst braucht keinen Platz: die Zeile darunter rückt um den Abstand auf, den er in der Liste kostet.
+ */
+.wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-add-between-items-ctn { position: relative; z-index: 5; height: 0; }
+.wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-add-between-items-ctn:is(:hover, :focus-within) { z-index: 6; }
+.wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-add-between-items-ctn + .fi-fo-repeater-item { margin-top: -1rem; }
+.wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-add-between-items-ctn > .fi-fo-repeater-add-between-items { position: absolute; top: -1rem; left: 0; right: 0; height: 1rem; display: flex; align-items: center; justify-content: center; background: transparent; }
+.wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-add-between-items-ctn > .fi-fo-repeater-add-between-items::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid var(--primary-500); transform: translateY(-50%); opacity: 0; transition: opacity 0.15s; pointer-events: none; }
+.wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-add-between-items-ctn .fi-dropdown { position: relative; opacity: 0; transition: opacity 0.15s; }
+.wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-add-between-items-ctn .fi-dropdown-trigger .fi-icon-btn { border-radius: 9999px; background: #fff; box-shadow: 0 0 0 2px var(--primary-500); }
+.dark .wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-add-between-items-ctn .fi-dropdown-trigger .fi-icon-btn { background: var(--gray-900); }
+.wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-add-between-items-ctn > .fi-fo-repeater-add-between-items:is(:hover, :focus-within)::before,
+.wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-add-between-items-ctn > .fi-fo-repeater-add-between-items:is(:hover, :focus-within) .fi-dropdown { opacity: 1; }
+@media (hover: none) {
+    .wm-offer-lines > .fi-fo-repeater-items > .fi-fo-repeater-add-between-items-ctn .fi-dropdown { opacity: 1; }
+}
+
 /* ==========================================================================
    Ressourcen und Zeitplan (Faktura C3, Seite "Ressourcen" im Admin): Raster mit einer Namensspalte und zwölf Wochen.
    Zeilen (.wm-resource-line) teilen sich die Spalten der Kopfzeile (.wm-resource-head); Zellen zeigen geplant gegen Kapazität,
