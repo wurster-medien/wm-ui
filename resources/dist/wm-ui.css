@@ -1129,6 +1129,15 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
     .wm-line-head .wm-line-sum { padding-top: 0; font-weight: 500; }
     .wm-line > .fi-grid > .fi-grid-col > .fi-sc-component > .fi-fo-field > .fi-fo-field-label-col { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 }
+/*
+ * Ab xl sind die zwölf Spalten des Rasters nicht mehr gleich breit (Simon, 15.11.2026: Bezeichnung bei 1280 px zu schmal): die
+ * drei der Bezeichnung bekommen den Platz, Menge und Einzelpreis brauchen für ihre Zahlen weniger. Kopf und Zeilen teilen die
+ * Aufteilung, die Spannen der Felder (3, 2, 2, 3, 2) bleiben im Formular. Darunter bleibt es gleichmäßig, sonst werden die
+ * Zahlenfelder zu eng.
+ */
+@media (min-width: 1280px) {
+    .wm-line > .fi-grid.fi-grid.fi-grid, .wm-line-head.fi-grid.fi-grid.fi-grid, .wm-line-head > .fi-grid.fi-grid.fi-grid { grid-template-columns: repeat(3, minmax(0, 2.15fr)) repeat(2, minmax(0, 0.75fr)) repeat(2, minmax(0, 1.4fr)) repeat(3, minmax(0, 0.8fr)) repeat(2, minmax(0, 1fr)); }
+}
 .dark .wm-line-head { color: var(--gray-400); }
 
 /*
