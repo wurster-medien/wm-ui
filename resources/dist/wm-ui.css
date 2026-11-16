@@ -1288,14 +1288,14 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
 .wm-calendar-allday { border-top: 1px solid var(--gray-200); }
 .wm-calendar-allday-cell { display: flex; flex-direction: column; gap: 0.125rem; min-width: 0; min-height: 1.75rem; padding: 0.125rem; border-left: 1px solid var(--gray-100); }
 .wm-calendar-gutter { padding: 0.25rem; font-size: 0.6875rem; color: var(--gray-500); text-align: right; }
-.wm-calendar-scroll { border-top: 1px solid var(--gray-200); }
+.wm-calendar-scroll { --wmc-body: max(20rem, calc(80vh - 7rem)); max-height: var(--wmc-body); overflow-y: auto; border-top: 1px solid var(--gray-200); }
 .wm-calendar-hours { display: grid; }
 .wm-calendar-hour { padding: 0.125rem 0.25rem 0; font-size: 0.6875rem; line-height: 1; color: var(--gray-500); text-align: right; }
-.wm-calendar-col { display: grid; grid-template-columns: repeat(60, minmax(0, 1fr)); min-width: 0; border-left: 1px solid var(--gray-100); background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(3rem - 1px), var(--gray-100) calc(3rem - 1px), var(--gray-100) 3rem); }
+.wm-calendar-col { display: grid; grid-template-columns: repeat(60, minmax(0, 1fr)); min-width: 0; border-left: 1px solid var(--gray-100); background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--wmc-hour, 3rem) - 1px), var(--gray-100) calc(var(--wmc-hour, 3rem) - 1px), var(--gray-100) var(--wmc-hour, 3rem)); }
 .wm-calendar-col.is-today { background-color: var(--primary-50); }
 .dark .wm-calendar-day-head, .dark .wm-calendar-allday-cell, .dark .wm-calendar-col { border-color: rgb(255 255 255 / 0.06); }
 .dark .wm-calendar-allday, .dark .wm-calendar-scroll { border-color: rgb(255 255 255 / 0.1); }
-.dark .wm-calendar-col { background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(3rem - 1px), rgb(255 255 255 / 0.06) calc(3rem - 1px), rgb(255 255 255 / 0.06) 3rem); }
+.dark .wm-calendar-col { background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--wmc-hour, 3rem) - 1px), rgb(255 255 255 / 0.06) calc(var(--wmc-hour, 3rem) - 1px), rgb(255 255 255 / 0.06) var(--wmc-hour, 3rem)); }
 .dark .wm-calendar-gutter, .dark .wm-calendar-hour { color: var(--gray-400); }
 .dark .wm-calendar-day-head.is-weekend, .dark .wm-calendar-allday-cell.is-weekend, .dark .wm-calendar-col.is-weekend { background-color: rgb(255 255 255 / 0.03); }
 .dark .wm-calendar-day-head.is-today, .dark .wm-calendar-col.is-today { background-color: rgb(255 255 255 / 0.08); color: var(--primary-300); }
@@ -1657,54 +1657,54 @@ button.wm-calendar-event:hover, button.wm-calendar-chip:hover { background: colo
 .wm-calendar-w-59 { grid-column-end: span 59; }
 .wm-calendar-x-60 { grid-column-start: 60; }
 .wm-calendar-w-60 { grid-column-end: span 60; }
-.wm-calendar-rows-1 { grid-template-rows: repeat(4, 0.75rem); }
-.wm-calendar-hours-1 { grid-template-rows: repeat(1, 3rem); }
-.wm-calendar-rows-2 { grid-template-rows: repeat(8, 0.75rem); }
-.wm-calendar-hours-2 { grid-template-rows: repeat(2, 3rem); }
-.wm-calendar-rows-3 { grid-template-rows: repeat(12, 0.75rem); }
-.wm-calendar-hours-3 { grid-template-rows: repeat(3, 3rem); }
-.wm-calendar-rows-4 { grid-template-rows: repeat(16, 0.75rem); }
-.wm-calendar-hours-4 { grid-template-rows: repeat(4, 3rem); }
-.wm-calendar-rows-5 { grid-template-rows: repeat(20, 0.75rem); }
-.wm-calendar-hours-5 { grid-template-rows: repeat(5, 3rem); }
-.wm-calendar-rows-6 { grid-template-rows: repeat(24, 0.75rem); }
-.wm-calendar-hours-6 { grid-template-rows: repeat(6, 3rem); }
-.wm-calendar-rows-7 { grid-template-rows: repeat(28, 0.75rem); }
-.wm-calendar-hours-7 { grid-template-rows: repeat(7, 3rem); }
-.wm-calendar-rows-8 { grid-template-rows: repeat(32, 0.75rem); }
-.wm-calendar-hours-8 { grid-template-rows: repeat(8, 3rem); }
-.wm-calendar-rows-9 { grid-template-rows: repeat(36, 0.75rem); }
-.wm-calendar-hours-9 { grid-template-rows: repeat(9, 3rem); }
-.wm-calendar-rows-10 { grid-template-rows: repeat(40, 0.75rem); }
-.wm-calendar-hours-10 { grid-template-rows: repeat(10, 3rem); }
-.wm-calendar-rows-11 { grid-template-rows: repeat(44, 0.75rem); }
-.wm-calendar-hours-11 { grid-template-rows: repeat(11, 3rem); }
-.wm-calendar-rows-12 { grid-template-rows: repeat(48, 0.75rem); }
-.wm-calendar-hours-12 { grid-template-rows: repeat(12, 3rem); }
-.wm-calendar-rows-13 { grid-template-rows: repeat(52, 0.75rem); }
-.wm-calendar-hours-13 { grid-template-rows: repeat(13, 3rem); }
-.wm-calendar-rows-14 { grid-template-rows: repeat(56, 0.75rem); }
-.wm-calendar-hours-14 { grid-template-rows: repeat(14, 3rem); }
-.wm-calendar-rows-15 { grid-template-rows: repeat(60, 0.75rem); }
-.wm-calendar-hours-15 { grid-template-rows: repeat(15, 3rem); }
-.wm-calendar-rows-16 { grid-template-rows: repeat(64, 0.75rem); }
-.wm-calendar-hours-16 { grid-template-rows: repeat(16, 3rem); }
-.wm-calendar-rows-17 { grid-template-rows: repeat(68, 0.75rem); }
-.wm-calendar-hours-17 { grid-template-rows: repeat(17, 3rem); }
-.wm-calendar-rows-18 { grid-template-rows: repeat(72, 0.75rem); }
-.wm-calendar-hours-18 { grid-template-rows: repeat(18, 3rem); }
-.wm-calendar-rows-19 { grid-template-rows: repeat(76, 0.75rem); }
-.wm-calendar-hours-19 { grid-template-rows: repeat(19, 3rem); }
-.wm-calendar-rows-20 { grid-template-rows: repeat(80, 0.75rem); }
-.wm-calendar-hours-20 { grid-template-rows: repeat(20, 3rem); }
-.wm-calendar-rows-21 { grid-template-rows: repeat(84, 0.75rem); }
-.wm-calendar-hours-21 { grid-template-rows: repeat(21, 3rem); }
-.wm-calendar-rows-22 { grid-template-rows: repeat(88, 0.75rem); }
-.wm-calendar-hours-22 { grid-template-rows: repeat(22, 3rem); }
-.wm-calendar-rows-23 { grid-template-rows: repeat(92, 0.75rem); }
-.wm-calendar-hours-23 { grid-template-rows: repeat(23, 3rem); }
-.wm-calendar-rows-24 { grid-template-rows: repeat(96, 0.75rem); }
-.wm-calendar-hours-24 { grid-template-rows: repeat(24, 3rem); }
+.wm-calendar-rows-1 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 1)); grid-template-rows: repeat(4, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-1 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 1)); grid-template-rows: repeat(1, var(--wmc-hour)); }
+.wm-calendar-rows-2 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 2)); grid-template-rows: repeat(8, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-2 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 2)); grid-template-rows: repeat(2, var(--wmc-hour)); }
+.wm-calendar-rows-3 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 3)); grid-template-rows: repeat(12, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-3 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 3)); grid-template-rows: repeat(3, var(--wmc-hour)); }
+.wm-calendar-rows-4 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 4)); grid-template-rows: repeat(16, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-4 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 4)); grid-template-rows: repeat(4, var(--wmc-hour)); }
+.wm-calendar-rows-5 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 5)); grid-template-rows: repeat(20, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-5 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 5)); grid-template-rows: repeat(5, var(--wmc-hour)); }
+.wm-calendar-rows-6 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 6)); grid-template-rows: repeat(24, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-6 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 6)); grid-template-rows: repeat(6, var(--wmc-hour)); }
+.wm-calendar-rows-7 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 7)); grid-template-rows: repeat(28, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-7 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 7)); grid-template-rows: repeat(7, var(--wmc-hour)); }
+.wm-calendar-rows-8 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 8)); grid-template-rows: repeat(32, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-8 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 8)); grid-template-rows: repeat(8, var(--wmc-hour)); }
+.wm-calendar-rows-9 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 9)); grid-template-rows: repeat(36, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-9 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 9)); grid-template-rows: repeat(9, var(--wmc-hour)); }
+.wm-calendar-rows-10 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 10)); grid-template-rows: repeat(40, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-10 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 10)); grid-template-rows: repeat(10, var(--wmc-hour)); }
+.wm-calendar-rows-11 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 11)); grid-template-rows: repeat(44, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-11 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 11)); grid-template-rows: repeat(11, var(--wmc-hour)); }
+.wm-calendar-rows-12 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 12)); grid-template-rows: repeat(48, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-12 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 12)); grid-template-rows: repeat(12, var(--wmc-hour)); }
+.wm-calendar-rows-13 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 13)); grid-template-rows: repeat(52, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-13 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 13)); grid-template-rows: repeat(13, var(--wmc-hour)); }
+.wm-calendar-rows-14 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 14)); grid-template-rows: repeat(56, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-14 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 14)); grid-template-rows: repeat(14, var(--wmc-hour)); }
+.wm-calendar-rows-15 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 15)); grid-template-rows: repeat(60, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-15 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 15)); grid-template-rows: repeat(15, var(--wmc-hour)); }
+.wm-calendar-rows-16 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 16)); grid-template-rows: repeat(64, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-16 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 16)); grid-template-rows: repeat(16, var(--wmc-hour)); }
+.wm-calendar-rows-17 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 17)); grid-template-rows: repeat(68, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-17 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 17)); grid-template-rows: repeat(17, var(--wmc-hour)); }
+.wm-calendar-rows-18 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 18)); grid-template-rows: repeat(72, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-18 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 18)); grid-template-rows: repeat(18, var(--wmc-hour)); }
+.wm-calendar-rows-19 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 19)); grid-template-rows: repeat(76, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-19 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 19)); grid-template-rows: repeat(19, var(--wmc-hour)); }
+.wm-calendar-rows-20 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 20)); grid-template-rows: repeat(80, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-20 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 20)); grid-template-rows: repeat(20, var(--wmc-hour)); }
+.wm-calendar-rows-21 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 21)); grid-template-rows: repeat(84, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-21 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 21)); grid-template-rows: repeat(21, var(--wmc-hour)); }
+.wm-calendar-rows-22 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 22)); grid-template-rows: repeat(88, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-22 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 22)); grid-template-rows: repeat(22, var(--wmc-hour)); }
+.wm-calendar-rows-23 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 23)); grid-template-rows: repeat(92, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-23 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 23)); grid-template-rows: repeat(23, var(--wmc-hour)); }
+.wm-calendar-rows-24 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 24)); grid-template-rows: repeat(96, calc(var(--wmc-hour) / 4)); }
+.wm-calendar-hours-24 { --wmc-hour: max(3rem, calc(var(--wmc-body, 38rem) / 24)); grid-template-rows: repeat(24, var(--wmc-hour)); }
 .wm-calendar-cols-1 { min-width: calc(3.5rem + 1 * 7.5rem); }
 .wm-calendar-cols-1 .wm-calendar-row { grid-template-columns: 3.5rem repeat(1, minmax(7.5rem, 1fr)); }
 .wm-calendar-cols-2 { min-width: calc(3.5rem + 2 * 7.5rem); }
@@ -1787,7 +1787,7 @@ button.wm-calendar-event:hover, button.wm-calendar-chip:hover { background: colo
 .wm-calendar-cols-40 .wm-calendar-row { grid-template-columns: 3.5rem repeat(40, minmax(7.5rem, 1fr)); }
 
 /* Kalender, Nachtrag (K2c): Sammelblock für viele Spuren, Seite am Handy nicht breiter als der Bildschirm */
-a.wm-calendar-summary { text-decoration: none; background: var(--gray-100); border-left-color: var(--gray-500); }
+a.wm-calendar-summary { text-decoration: none; }
 a.wm-calendar-summary:hover { background: var(--gray-200); }
 .wm-calendar-dots { display: none; flex-wrap: wrap; gap: 0.1875rem; margin-top: 0.125rem; }
 .wm-calendar-event.is-tall .wm-calendar-dots { display: flex; }
@@ -1796,3 +1796,22 @@ a.wm-calendar-summary:hover { background: var(--gray-200); }
 .dark a.wm-calendar-summary:hover { background: rgb(255 255 255 / 0.16); }
 :where(.fi-page:has(.wm-calendar-layout)) :where(div, section, form, header) { min-width: 0; }
 .wm-calendar-layout { overflow-x: clip; }
+
+/* Kalender (K2d): Sammelblock als Liste mit allen Titeln, Feiertage in eigener Optik (Bernstein mit Stern, keine Personenfarbe) */
+.wm-calendar-summary { display: flex; flex-direction: column; gap: 1px; padding: 0.0625rem 0.125rem; overflow: hidden; background: var(--gray-50); border-left-color: var(--gray-400); }
+.wm-calendar-line { display: flex; align-items: center; gap: 0.25rem; width: 100%; min-width: 0; padding: 0 0.25rem; font: inherit; font-size: 0.75rem; line-height: 1.25rem; text-align: left; color: var(--gray-900); background: transparent; border: 0; border-radius: 0.1875rem; }
+button.wm-calendar-line { cursor: pointer; }
+button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(--gray-500)) 18%, #fff); }
+.wm-calendar-line > .wm-calendar-dot { width: 0.5rem; height: 0.5rem; }
+.wm-calendar-line > .wm-calendar-line-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wm-calendar-line.is-private { font-style: italic; color: var(--gray-600); }
+.wm-calendar-line.is-cancelled > .wm-calendar-line-text { text-decoration: line-through; }
+.dark .wm-calendar-summary { background: rgb(255 255 255 / 0.05); }
+.dark .wm-calendar-line { color: var(--gray-100); }
+.dark button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(--gray-500)) 30%, var(--gray-900)); }
+.dark .wm-calendar-line.is-private { color: var(--gray-400); }
+.wm-calendar-chip.is-holiday, .wm-calendar-banner { color: #78350f; background: #fef3c7; border-left: 3px solid #d97706; }
+.wm-calendar-chip.is-holiday::before, .wm-calendar-banner::before { content: "\2605"; margin-right: 0.25rem; color: #b45309; }
+.wm-calendar-banner { margin-bottom: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.8125rem; border-radius: 0.25rem; }
+.dark .wm-calendar-chip.is-holiday, .dark .wm-calendar-banner { color: #fde68a; background: rgb(217 119 6 / 0.22); border-left-color: #f59e0b; }
+.dark .wm-calendar-chip.is-holiday::before, .dark .wm-calendar-banner::before { color: #fbbf24; }
