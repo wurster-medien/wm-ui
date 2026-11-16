@@ -1828,8 +1828,8 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 
 /* Kalender (Faktura K2e, 17.11.2026): Besprechung mehrerer Personen als ein Eintrag mit Punkten aller Beteiligten, weitere Kalender
    einer Person als kleinerer Unterpunkt, größere Schrift ab 1600 px, Wochenende im Monat deutlicher, keine Lücke über der Auswahl. */
-.wm-calendar-dots { display: inline-flex; align-items: center; gap: 2px; margin-right: 0.25rem; vertical-align: middle; }
-.wm-calendar-dots .wm-calendar-dot { width: 0.4375rem; height: 0.4375rem; }
+.wm-calendar-dots-inline { display: inline-flex; align-items: center; gap: 2px; margin-right: 0.25rem; vertical-align: middle; }
+.wm-calendar-dots-inline .wm-calendar-dot { width: 0.4375rem; height: 0.4375rem; }
 .wm-calendar-line .wm-calendar-dot + .wm-calendar-dot { margin-left: -0.25rem; }
 .wm-calendar-pick-sub { padding-block: 0; font-size: 0.75rem; line-height: 1.5; }
 .wm-calendar-pick-sub .wm-calendar-dot { width: 0.5rem; height: 0.5rem; }
@@ -1848,3 +1848,4 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
     .wm-calendar-cell { min-height: 8rem; }
     .wm-calendar-event, .wm-calendar-chip { padding-inline: 0.5rem; }
 }
+.wm-calendar-pick.is-unreadable { opacity: 0.6; font-style: italic; }
