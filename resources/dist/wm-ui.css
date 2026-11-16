@@ -1825,3 +1825,26 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .wm-calendar-cell.is-creatable:hover:not(:has(.wm-calendar-chip:hover, .wm-calendar-line:hover, a:hover))::after,
 .wm-calendar-allday-cell.is-creatable:hover:not(:has(.wm-calendar-chip:hover))::after { content: '+ Termin'; position: absolute; right: 0.25rem; bottom: 0.125rem; padding: 0 0.375rem; border: 1px dashed var(--primary-400); border-radius: 0.375rem; background-color: color-mix(in srgb, var(--primary-500) 10%, transparent); color: var(--primary-700); font-size: 0.6875rem; font-weight: 600; line-height: 1rem; pointer-events: none; }
 .dark .wm-calendar-cell.is-creatable:hover::after, .dark .wm-calendar-allday-cell.is-creatable:hover::after { border-color: var(--primary-500); color: var(--primary-300); }
+
+/* Kalender (Faktura K2e, 17.11.2026): Besprechung mehrerer Personen als ein Eintrag mit Punkten aller Beteiligten, weitere Kalender
+   einer Person als kleinerer Unterpunkt, größere Schrift ab 1600 px, Wochenende im Monat deutlicher, keine Lücke über der Auswahl. */
+.wm-calendar-dots { display: inline-flex; align-items: center; gap: 2px; margin-right: 0.25rem; vertical-align: middle; }
+.wm-calendar-dots .wm-calendar-dot { width: 0.4375rem; height: 0.4375rem; }
+.wm-calendar-line .wm-calendar-dot + .wm-calendar-dot { margin-left: -0.25rem; }
+.wm-calendar-pick-sub { padding-block: 0; font-size: 0.75rem; line-height: 1.5; }
+.wm-calendar-pick-sub .wm-calendar-dot { width: 0.5rem; height: 0.5rem; }
+.wm-calendar-layout { margin-top: -1rem; }
+.wm-calendar-cell.is-weekend { background: var(--gray-100); }
+.wm-calendar-cell.is-weekend.is-muted { background: var(--gray-50); }
+.dark .wm-calendar-cell.is-weekend { background: rgb(255 255 255 / 0.07); }
+.dark .wm-calendar-cell.is-weekend.is-muted { background: rgb(255 255 255 / 0.03); }
+.wm-calendar-cell.is-weekend.is-today { background: var(--primary-50); }
+.dark .wm-calendar-cell.is-weekend.is-today { background: rgb(255 255 255 / 0.08); }
+@media (min-width: 1600px) {
+    .wm-calendar-frame { font-size: 0.9375rem; }
+    .wm-calendar-event-time, .wm-calendar-event-sub, .wm-calendar-more { font-size: 0.8125rem; }
+    .wm-calendar-filter { font-size: 0.875rem; }
+    .wm-calendar-pick-sub { font-size: 0.8125rem; }
+    .wm-calendar-cell { min-height: 8rem; }
+    .wm-calendar-event, .wm-calendar-chip { padding-inline: 0.5rem; }
+}
