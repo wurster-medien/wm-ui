@@ -1811,7 +1811,7 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .dark button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(--gray-500)) 30%, var(--gray-900)); }
 .dark .wm-calendar-line.is-private { color: var(--gray-400); }
 .wm-calendar-chip.is-holiday, .wm-calendar-banner { color: #78350f; background: #fef3c7; border-left: 3px solid #d97706; }
-.wm-calendar-chip.is-holiday::before, .wm-calendar-banner::before { content: "\2605"; margin-right: 0.25rem; color: #b45309; }
+.wm-calendar-chip.is-holiday .wm-calendar-event-line::before, .wm-calendar-banner::before { content: "\2605"; margin-right: 0.25rem; color: #b45309; }
 .wm-calendar-banner { margin-bottom: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.8125rem; border-radius: 0.25rem; }
 .dark .wm-calendar-chip.is-holiday, .dark .wm-calendar-banner { color: #fde68a; background: rgb(217 119 6 / 0.22); border-left-color: #f59e0b; }
-.dark .wm-calendar-chip.is-holiday::before, .dark .wm-calendar-banner::before { color: #fbbf24; }
+.dark .wm-calendar-chip.is-holiday .wm-calendar-event-line::before, .dark .wm-calendar-banner::before { color: #fbbf24; }
