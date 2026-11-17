@@ -985,6 +985,79 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
 .wm-stat-sub { font-size: 0.75rem; color: var(--wm-stat-tone, var(--gray-500)); }
 
 /*
+ * Vorgangsleiste (wm-steps, Faktura Modul 22 „Geführter Vorgang“, Simon 17.11.2026: „möglichst intuitiv“): Stufen mit Punkt und Linie,
+ * Stand als Klasse am <li> (is-done, is-here, is-attention, is-next, is-open, is-skipped, is-restricted), Zeichen und Wort im Text,
+ * Farbe nie allein. Am Rechner nebeneinander, am Handy untereinander mit senkrechter Linie.
+ */
+.wm-steps-list { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0.25rem; margin: 0; padding: 0; list-style: none; }
+.wm-step { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; min-width: 0; }
+.wm-step:not(:last-child)::after { content: ""; position: absolute; top: 1.125rem; left: calc(50% + 1.125rem); right: calc(-50% + 0.875rem); border-top: 2px solid var(--gray-200); }
+.dark .wm-step:not(:last-child)::after { border-top-color: var(--gray-700); }
+.wm-step.is-done:not(:last-child)::after { border-top-color: var(--primary-500); }
+.wm-step.is-skipped:not(:last-child)::after, .wm-step:has(+ .wm-step.is-skipped)::after { border-top-style: dashed; }
+.wm-step-box { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100%; padding: 0.25rem 0.25rem 0.375rem; border-radius: 0.5rem; color: inherit; text-align: center; text-decoration: none; transition: background-color 0.15s; }
+a.wm-step-box:hover { background: var(--gray-50); }
+.dark a.wm-step-box:hover { background: rgb(255 255 255 / 0.05); }
+a.wm-step-box:focus-visible { outline: 2px solid var(--primary-600); outline-offset: 2px; }
+.wm-step-dot { position: relative; z-index: 1; display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 999px; border: 2px solid var(--gray-300); background: #fff; color: var(--gray-500); font-size: 0.8125rem; font-weight: 600; line-height: 1; }
+.dark .wm-step-dot { border-color: var(--gray-600); background: var(--gray-900); color: var(--gray-400); }
+.wm-step-text { display: flex; flex-direction: column; gap: 0.0625rem; min-width: 0; max-width: 100%; }
+.wm-step-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.8125rem; font-weight: 500; color: var(--gray-700); }
+.dark .wm-step-label { color: var(--gray-200); }
+.wm-step-sub { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: 0.75rem; line-height: 1.3; color: var(--gray-500); }
+.dark .wm-step-sub { color: var(--gray-400); }
+.wm-step.is-done .wm-step-dot { border-color: var(--primary-600); background: var(--primary-600); color: #fff; }
+.wm-step.is-here .wm-step-dot { border-color: var(--primary-600); background: var(--primary-600); color: #fff; box-shadow: 0 0 0 4px var(--primary-100); }
+.dark .wm-step.is-here .wm-step-dot { box-shadow: 0 0 0 4px rgb(20 184 166 / 0.25); }
+.wm-step.is-here .wm-step-label { font-weight: 700; color: var(--gray-950); }
+.dark .wm-step.is-here .wm-step-label { color: #fff; }
+.wm-step.is-attention .wm-step-dot { border-color: var(--warning-500); background: var(--warning-500); color: #fff; }
+.wm-step.is-attention .wm-step-sub { color: var(--warning-700); }
+.dark .wm-step.is-attention .wm-step-sub { color: var(--warning-400); }
+.wm-step.is-next .wm-step-dot { border-color: var(--primary-500); color: var(--primary-600); }
+.dark .wm-step.is-next .wm-step-dot { color: var(--primary-400); }
+.wm-step.is-skipped .wm-step-dot { border-style: dashed; color: var(--gray-400); }
+.wm-step.is-skipped .wm-step-label, .wm-step.is-restricted .wm-step-label { color: var(--gray-400); }
+.wm-step-more { margin-top: -0.125rem; }
+@media (max-width: 639px) {
+    .wm-steps-list { grid-auto-flow: row; gap: 0; }
+    .wm-step { flex-direction: row; flex-wrap: wrap; align-items: flex-start; column-gap: 0.5rem; }
+    .wm-step:not(:last-child)::after { top: 2rem; bottom: -0.25rem; left: 1.125rem; right: auto; border-top: 0; border-left: 2px solid var(--gray-200); }
+    .dark .wm-step:not(:last-child)::after { border-left-color: var(--gray-700); }
+    .wm-step.is-done:not(:last-child)::after { border-left-color: var(--primary-500); }
+    .wm-step.is-skipped:not(:last-child)::after, .wm-step:has(+ .wm-step.is-skipped)::after { border-left-style: dashed; }
+    .wm-step-box { flex: 1 1 0; flex-direction: row; align-items: flex-start; gap: 0.625rem; text-align: left; padding: 0.25rem; }
+    .wm-step-text { padding-top: 0.125rem; }
+    .wm-step-label { white-space: normal; }
+    .wm-step-more { margin: 0 0 0.375rem 2.625rem; flex-basis: 100%; }
+}
+
+/*
+ * Möglichkeiten zum Weitermachen (wm-choices, Kasten „Weiter“, Faktura Modul 22): große Karten zum Anklicken mit Symbol, Titel und einem Satz.
+ * Genau eine mit is-main (Hauptweg, gefüllt), gesperrte mit is-locked (grau, Grund im Text, Ausweg als kleiner Knopf darunter).
+ */
+.wm-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 0.75rem; }
+.wm-choice { display: flex; align-items: flex-start; gap: 0.75rem; width: 100%; min-width: 0; padding: 0.875rem 1rem; border: 0; border-radius: 0.75rem; background: #fff; color: inherit; font: inherit; text-align: left; text-decoration: none; cursor: pointer; box-shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 0 0 1px rgb(3 7 18 / 0.1); transition: box-shadow 0.15s, background-color 0.15s; }
+.dark .wm-choice { background: var(--gray-900); box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1); }
+.wm-choice:hover { box-shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 0 0 2px var(--primary-500); }
+.wm-choice:focus-visible { outline: 2px solid var(--primary-600); outline-offset: 2px; }
+.wm-choice-icon { flex-shrink: 0; width: 1.25rem; height: 1.25rem; margin-top: 0.0625rem; color: var(--primary-600); }
+.dark .wm-choice-icon { color: var(--primary-400); }
+.wm-choice-text { display: flex; flex-direction: column; gap: 0.125rem; min-width: 0; }
+.wm-choice-title { font-size: 0.875rem; font-weight: 600; line-height: 1.35; }
+.wm-choice-hint { font-size: 0.8125rem; line-height: 1.4; color: var(--gray-500); }
+.dark .wm-choice-hint { color: var(--gray-400); }
+.wm-choice.is-main { background: var(--primary-600); color: #fff; box-shadow: 0 1px 2px rgb(0 0 0 / 0.1); }
+.wm-choice.is-main:hover { background: var(--primary-500); box-shadow: 0 1px 2px rgb(0 0 0 / 0.1); }
+.wm-choice.is-main .wm-choice-icon, .wm-choice.is-main .wm-choice-hint { color: rgb(255 255 255 / 0.9); }
+.wm-choice.is-locked { cursor: default; background: var(--gray-50); color: var(--gray-500); box-shadow: 0 0 0 1px rgb(3 7 18 / 0.05); }
+.dark .wm-choice.is-locked { background: rgb(255 255 255 / 0.03); color: var(--gray-400); box-shadow: 0 0 0 1px rgb(255 255 255 / 0.05); }
+.wm-choice.is-locked .wm-choice-icon { color: var(--gray-400); }
+.wm-choice-way { margin-top: 0.375rem; }
+.wm-choices-summary { margin: 0 0 0.75rem; font-size: 0.875rem; color: var(--gray-600); }
+.dark .wm-choices-summary { color: var(--gray-300); }
+
+/*
  * Zeiterfassung oben rechts (wm-time, Uhr mit Fenster), aus dem Pilot der Faktura übernommen.
  */
 .wm-time { position: relative; flex-shrink: 0; }
