@@ -1228,8 +1228,8 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
    eine Zeile eine Viertelstunde (0,75 rem, eine Stunde 3 rem); sichtbar sind N volle Stunden (.wm-calendar-rows-N am Tag,
    .wm-calendar-hours-N an der Zeitachse). Ein Termin ist ein Block im Raster des Tages: Beginn über .wm-calendar-from-N (N =
    Viertelstunden seit der ersten sichtbaren Stunde), Länge über .wm-calendar-span-N, waagrechte Lage und Breite über
-   .wm-calendar-x-N und .wm-calendar-w-N (60 Spalten, damit 1 bis 6 Spuren aufgehen). Farbe je Person über .wm-calendar-c-1 bis
-   -10 (nicht-semantisch: kein Rot und Gelb, das nach Fehler oder Warnung aussieht), Ressourcen grau (.wm-calendar-c-res).
+   .wm-calendar-x-N und .wm-calendar-w-N (60 Spalten, damit 1 bis 6 Spuren aufgehen). Farbe je Kalender über benannte Töne
+   .wm-calendar-c-blue, -green, -orange, -pink, -red, -yellow, -violet, -teal, -brown, -gray (Simon, 17.11.2026), ohne Wahl grau (.wm-calendar-c-res).
    ========================================================================== */
 .wm-calendar-layout { display: block; width: 100%; min-width: 0; max-width: 100%; contain: inline-size; }
 .wm-calendar-main { min-width: 0; }
@@ -1248,27 +1248,27 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
 .dark .wm-calendar-pick[aria-pressed="false"] { color: var(--gray-400); background: rgb(255 255 255 / 0.04); border-color: rgb(255 255 255 / 0.15); }
 .dark .wm-calendar-pick[aria-pressed="false"] .wm-calendar-dot { background: var(--gray-600); }
 
-.wm-calendar-c-1 { --wmc: #2563eb; }
-.wm-calendar-c-2 { --wmc: #7c3aed; }
-.wm-calendar-c-3 { --wmc: #059669; }
-.wm-calendar-c-4 { --wmc: #c026d3; }
-.wm-calendar-c-5 { --wmc: #0891b2; }
-.wm-calendar-c-6 { --wmc: #4338ca; }
-.wm-calendar-c-7 { --wmc: #65a30d; }
-.wm-calendar-c-8 { --wmc: #0369a1; }
-.wm-calendar-c-9 { --wmc: #a21caf; }
-.wm-calendar-c-10 { --wmc: #78716c; }
+.wm-calendar-c-blue { --wmc: #2563eb; }
+.wm-calendar-c-green { --wmc: #16a34a; }
+.wm-calendar-c-orange { --wmc: #ea580c; }
+.wm-calendar-c-pink { --wmc: #db2777; }
+.wm-calendar-c-red { --wmc: #dc2626; }
+.wm-calendar-c-yellow { --wmc: #ca8a04; }
+.wm-calendar-c-violet { --wmc: #7c3aed; }
+.wm-calendar-c-teal { --wmc: #0d9488; }
+.wm-calendar-c-brown { --wmc: #92400e; }
+.wm-calendar-c-gray { --wmc: #52525b; }
 .wm-calendar-c-res { --wmc: #71717a; }
-.dark .wm-calendar-c-1 { --wmc: #60a5fa; }
-.dark .wm-calendar-c-2 { --wmc: #a78bfa; }
-.dark .wm-calendar-c-3 { --wmc: #34d399; }
-.dark .wm-calendar-c-4 { --wmc: #e879f9; }
-.dark .wm-calendar-c-5 { --wmc: #22d3ee; }
-.dark .wm-calendar-c-6 { --wmc: #818cf8; }
-.dark .wm-calendar-c-7 { --wmc: #a3e635; }
-.dark .wm-calendar-c-8 { --wmc: #38bdf8; }
-.dark .wm-calendar-c-9 { --wmc: #d946ef; }
-.dark .wm-calendar-c-10 { --wmc: #a8a29e; }
+.dark .wm-calendar-c-blue { --wmc: #60a5fa; }
+.dark .wm-calendar-c-green { --wmc: #4ade80; }
+.dark .wm-calendar-c-orange { --wmc: #fb923c; }
+.dark .wm-calendar-c-pink { --wmc: #f472b6; }
+.dark .wm-calendar-c-red { --wmc: #f87171; }
+.dark .wm-calendar-c-yellow { --wmc: #facc15; }
+.dark .wm-calendar-c-violet { --wmc: #a78bfa; }
+.dark .wm-calendar-c-teal { --wmc: #2dd4bf; }
+.dark .wm-calendar-c-brown { --wmc: #d97706; }
+.dark .wm-calendar-c-gray { --wmc: #a1a1aa; }
 .dark .wm-calendar-c-res { --wmc: #a1a1aa; }
 
 .wm-calendar-frame { overflow-x: auto; max-width: 100%; font-size: 0.8125rem; border: 1px solid var(--gray-200); border-radius: 0.5rem; background: #fff; }
@@ -1810,11 +1810,11 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .dark .wm-calendar-line { color: var(--gray-100); }
 .dark button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(--gray-500)) 30%, var(--gray-900)); }
 .dark .wm-calendar-line.is-private { color: var(--gray-400); }
-.wm-calendar-chip.is-holiday, .wm-calendar-banner { color: #78350f; background: #fef3c7; border-left: 3px solid #d97706; }
-.wm-calendar-chip.is-holiday .wm-calendar-event-line::before, .wm-calendar-banner::before { content: "\2605"; margin-right: 0.25rem; color: #b45309; }
+.wm-calendar-chip.is-holiday, .wm-calendar-banner { color: #713f12; background: #fef9c3; border-left: 3px solid #eab308; }
+.wm-calendar-chip.is-holiday .wm-calendar-event-line::before, .wm-calendar-banner::before { content: "\2605"; margin-right: 0.25rem; color: #a16207; }
 .wm-calendar-banner { margin-bottom: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.8125rem; border-radius: 0.25rem; }
-.dark .wm-calendar-chip.is-holiday, .dark .wm-calendar-banner { color: #fde68a; background: rgb(217 119 6 / 0.22); border-left-color: #f59e0b; }
-.dark .wm-calendar-chip.is-holiday .wm-calendar-event-line::before, .dark .wm-calendar-banner::before { color: #fbbf24; }
+.dark .wm-calendar-chip.is-holiday, .dark .wm-calendar-banner { color: #fef08a; background: rgb(234 179 8 / 0.22); border-left-color: #facc15; }
+.dark .wm-calendar-chip.is-holiday .wm-calendar-event-line::before, .dark .wm-calendar-banner::before { color: #fde047; }
 
 /* Kalender: Rückmeldung, wo ein Klick einen Termin anlegt (Faktura K8, Simon 17.11.2026: „es fehlt ein optisches Feedback“). */
 .wm-calendar-col.is-creatable, .wm-calendar-allday-cell.is-creatable, .wm-calendar-cell.is-creatable { cursor: copy; }
