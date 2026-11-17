@@ -1231,7 +1231,7 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
    .wm-calendar-x-N und .wm-calendar-w-N (60 Spalten, damit 1 bis 6 Spuren aufgehen). Farbe je Kalender über benannte Töne
    .wm-calendar-c-blue, -green, -orange, -pink, -red, -yellow, -violet, -teal, -brown, -gray (Simon, 17.11.2026), ohne Wahl grau (.wm-calendar-c-res).
    ========================================================================== */
-.wm-calendar-layout { display: block; width: 100%; min-width: 0; max-width: 100%; contain: inline-size; }
+.wm-calendar-layout { display: block; width: calc(100% + 0.5rem); min-width: 0; max-width: calc(100% + 0.5rem); margin-inline: -0.25rem; padding-inline: 0.25rem; contain: inline-size; }
 .wm-calendar-main { min-width: 0; }
 .wm-calendar-filter { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; font-size: 0.8125rem; }
 .wm-calendar-filter-group { display: flex; flex-wrap: wrap; align-items: center; gap: 0.375rem; min-width: 0; }
@@ -1795,7 +1795,7 @@ a.wm-calendar-summary:hover { background: var(--gray-200); }
 .dark a.wm-calendar-summary { background: rgb(255 255 255 / 0.1); }
 .dark a.wm-calendar-summary:hover { background: rgb(255 255 255 / 0.16); }
 :where(.fi-page:has(.wm-calendar-layout)) :where(div, section, form, header) { min-width: 0; }
-.wm-calendar-layout { overflow-x: clip; overflow-clip-margin: 0.25rem; }
+.wm-calendar-layout { overflow-x: clip; }
 
 /* Kalender (K2d): Sammelblock als Liste mit allen Titeln, Feiertage in eigener Optik (Bernstein mit Stern, keine Personenfarbe) */
 .wm-calendar-summary { display: flex; flex-direction: column; gap: 1px; padding: 0.0625rem 0.125rem; overflow: hidden; background: var(--gray-50); border-left-color: var(--gray-400); }
@@ -1833,7 +1833,7 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .wm-calendar-line .wm-calendar-dot + .wm-calendar-dot { margin-left: -0.25rem; }
 .wm-calendar-pick-sub { padding-block: 0; font-size: 0.75rem; line-height: 1.5; }
 .wm-calendar-pick-sub .wm-calendar-dot { width: 0.5rem; height: 0.5rem; }
-.wm-calendar-layout { margin-top: -1.25rem; }
+/* Abstand zur Überschrift kommt einheitlich aus .fi-page-header-main-ctn (unten), keine Krücke mehr. */
 .wm-calendar-cell.is-weekend { background: var(--gray-100); }
 .wm-calendar-cell.is-weekend.is-muted { background: var(--gray-50); }
 .dark .wm-calendar-cell.is-weekend { background: rgb(255 255 255 / 0.07); }
@@ -1888,3 +1888,6 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
     .wm-calendar-bar { flex-direction: column; align-items: stretch; }
     .wm-calendar-menu-panel { right: auto; left: 0; }
 }
+
+/* Alle Seiten: Abstand zwischen Überschrift und Inhalt kleiner (Filament 2rem → 1.25rem; Simon, 17.11.2026). */
+.fi-page-header-main-ctn { row-gap: 1.25rem; }
