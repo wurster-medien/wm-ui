@@ -1795,7 +1795,7 @@ a.wm-calendar-summary:hover { background: var(--gray-200); }
 .dark a.wm-calendar-summary { background: rgb(255 255 255 / 0.1); }
 .dark a.wm-calendar-summary:hover { background: rgb(255 255 255 / 0.16); }
 :where(.fi-page:has(.wm-calendar-layout)) :where(div, section, form, header) { min-width: 0; }
-.wm-calendar-layout { overflow-x: clip; }
+.wm-calendar-layout { overflow-x: clip; overflow-clip-margin: 0.25rem; }
 
 /* Kalender (K2d): Sammelblock als Liste mit allen Titeln, Feiertage in eigener Optik (Bernstein mit Stern, keine Personenfarbe) */
 .wm-calendar-summary { display: flex; flex-direction: column; gap: 1px; padding: 0.0625rem 0.125rem; overflow: hidden; background: var(--gray-50); border-left-color: var(--gray-400); }
