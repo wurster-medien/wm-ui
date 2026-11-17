@@ -1201,6 +1201,42 @@ a.wm-step-box:focus-visible { outline: 2px solid var(--primary-600); outline-off
 .dark .wm-totals-internal { border-color: rgb(255 255 255 / 0.15); background: rgb(255 255 255 / 0.03); }
 
 /*
+ * Farben und Symbole im gegliederten Summen-Kasten (Simon, 17.11.2026: "mehr mit Farben, evtl. Icons, damit man es noch schneller
+ * erfassen kann"): Jeder Block hat einen Ton (.is-tone-primary einmalig, -info laufend, -gray Zwischensummen und erstes Jahr,
+ * -warning Kalkulation), der Symbol der Kennzeile und die Hauptzahl färbt. Die Kalkulation zeigt einen Balken aus Arbeitskosten,
+ * Fremdkosten und Deckungsbeitrag (Breite über --w), Punkte an den Zeilen als Legende und den Deckungsbeitrag als Pille in der
+ * Ampelfarbe (.is-margin-success|warning|danger|gray am Kasten).
+ */
+.wm-totals-label { display: flex; align-items: center; gap: 0.375rem; }
+.wm-totals-label > .fi-icon { width: 1rem; height: 1rem; flex: none; color: var(--wm-tone, var(--gray-400)); }
+.is-tone-primary { --wm-tone: var(--primary-600); --wm-tone-text: var(--primary-700); }
+.is-tone-info { --wm-tone: var(--info-600); --wm-tone-text: var(--info-700); }
+.is-tone-gray { --wm-tone: var(--gray-400); }
+.is-tone-warning { --wm-tone: var(--warning-500); }
+.is-tone-success { --wm-tone: var(--success-600); }
+.is-tone-danger { --wm-tone: var(--danger-600); }
+.wm-totals-row.is-lead > span:last-child { color: var(--wm-tone-text, inherit); }
+.wm-totals-internal .wm-totals-row > span:first-child { display: inline-flex; align-items: center; gap: 0.5rem; }
+.wm-totals-dot { width: 0.5rem; height: 0.5rem; flex: none; border-radius: 9999px; background: var(--gray-300); }
+.wm-totals-dot.is-labor, .wm-totals-bar > .is-labor { background: var(--gray-400); }
+.wm-totals-dot.is-external, .wm-totals-bar > .is-external { background: var(--warning-400); }
+.wm-totals-dot.is-margin, .wm-totals-bar > .is-margin { background: var(--wm-margin, var(--gray-300)); }
+.wm-totals-bar { display: flex; height: 0.625rem; margin: 0.25rem 0 0.375rem; overflow: hidden; border-radius: 9999px; background: var(--gray-200); }
+.wm-totals-bar > span { width: var(--w, 0); }
+.wm-totals-pill { padding: 0.0625rem 0.5rem; border-radius: 9999px; background: var(--wm-margin-bg, transparent); color: var(--wm-margin-text, inherit); }
+.is-margin-success { --wm-margin: var(--success-500); --wm-margin-bg: var(--success-50); --wm-margin-text: var(--success-700); }
+.is-margin-warning { --wm-margin: var(--warning-500); --wm-margin-bg: var(--warning-50); --wm-margin-text: var(--warning-700); }
+.is-margin-danger { --wm-margin: var(--danger-500); --wm-margin-bg: var(--danger-50); --wm-margin-text: var(--danger-700); }
+.is-margin-gray { --wm-margin: var(--gray-300); --wm-margin-bg: var(--gray-100); --wm-margin-text: var(--gray-600); }
+.dark .is-tone-primary { --wm-tone: var(--primary-400); --wm-tone-text: var(--primary-300); }
+.dark .is-tone-info { --wm-tone: var(--info-400); --wm-tone-text: var(--info-300); }
+.dark .wm-totals-bar { background: rgb(255 255 255 / 0.1); }
+.dark .is-margin-success { --wm-margin-bg: rgb(34 197 94 / 0.15); --wm-margin-text: var(--success-300); }
+.dark .is-margin-warning { --wm-margin-bg: rgb(245 158 11 / 0.15); --wm-margin-text: var(--warning-300); }
+.dark .is-margin-danger { --wm-margin-bg: rgb(239 68 68 / 0.15); --wm-margin-text: var(--danger-300); }
+.dark .is-margin-gray { --wm-margin-bg: rgb(255 255 255 / 0.08); --wm-margin-text: var(--gray-300); }
+
+/*
  * Kompakte Zeilen im Angebots-Editor (Faktura A2): Eine Position ist eine Zeile. Ziehgriff und Pfeile links, Felder in der Mitte,
  * Löschen rechts; die Kopfzeile des Repeaters wird zur Randspalte der Zeile. Spaltenköpfe (.wm-line-head) stehen im selben
  * Raster über der Liste, erst ab sm; darunter stehen die Beschriftungen an den Feldern und die Felder stapeln sich. Ab sm sind
