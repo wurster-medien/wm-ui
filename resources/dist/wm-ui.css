@@ -1845,3 +1845,46 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
     .wm-calendar-cell { min-height: 8rem; }
 }
 .wm-calendar-pick.is-unreadable { opacity: 0.6; font-style: italic; }
+
+/* Blättern durch Zeiträume (<x-period-nav>) und Umschalter für Ansichten (<x-view-toggle>), aus dem Social Hub übernommen (v0.2.42). */
+.wm-period-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.wm-period-nav-month { width: 11rem; }
+.wm-period-nav-label { margin-left: 0.5rem; font-size: 1.125rem; font-weight: 600; color: var(--gray-950); }
+.dark .wm-period-nav-label { color: #fff; }
+.wm-view-toggle { display: inline-flex; align-items: center; gap: 0.375rem; height: 2.25rem; padding: 0 0.75rem; border: 1px solid var(--gray-300); border-radius: 0.5rem; background: #fff; color: var(--gray-700); font-size: 0.875rem; font-weight: 500; line-height: 1; white-space: nowrap; cursor: pointer; transition: background-color 75ms, border-color 75ms, color 75ms; }
+.wm-view-toggle:hover { background: var(--gray-50); }
+.wm-view-toggle:focus-visible { outline: 2px solid var(--primary-500); outline-offset: 2px; }
+.wm-view-toggle-on { border-color: color-mix(in oklab, var(--primary-500) 55%, transparent); background: color-mix(in oklab, var(--primary-500) 12%, #fff); color: var(--primary-700); }
+.wm-view-toggle-on:hover { background: color-mix(in oklab, var(--primary-500) 18%, #fff); }
+.dark .wm-view-toggle { border-color: var(--gray-700); background: var(--gray-900); color: var(--gray-200); }
+.dark .wm-view-toggle:hover { background: var(--gray-800); }
+.dark .wm-view-toggle-on { border-color: color-mix(in oklab, var(--primary-400) 50%, transparent); background: color-mix(in oklab, var(--primary-500) 20%, var(--gray-900)); color: var(--primary-300); }
+.wm-view-toggle-icon { width: 1rem; height: 1rem; flex-shrink: 0; }
+.wm-view-toggle-off-mark { display: inline-flex; align-items: center; justify-content: center; }
+.wm-view-toggle-off-mark::before { content: ''; width: 0.75rem; height: 0.75rem; border: 1.5px solid var(--gray-400); border-radius: 9999px; }
+.dark .wm-view-toggle-off-mark::before { border-color: var(--gray-500); }
+
+/* Kalender: Leiste über dem Raster (Zeitraum links, Kalender-Menü und Umschalter rechts) und das Menü der Kalender (Kundenbereich, K2f). */
+.wm-calendar-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; margin-bottom: 0.75rem; min-width: 0; }
+.wm-calendar-bar-end { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; min-width: 0; }
+.wm-calendar-menu { position: relative; }
+.wm-calendar-menu-panel { position: absolute; right: 0; top: calc(100% + 0.25rem); z-index: 30; display: flex; flex-direction: column; gap: 0.125rem; width: 18rem; max-width: calc(100vw - 2rem); max-height: 70vh; padding: 0.375rem; overflow-y: auto; border: 1px solid var(--gray-200); border-radius: 0.5rem; background: #fff; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); font-size: 0.875rem; }
+.dark .wm-calendar-menu-panel { border-color: rgb(255 255 255 / 0.1); background: var(--gray-900); }
+.wm-calendar-menu-quick { display: flex; gap: 0.375rem; padding: 0.25rem 0.375rem 0.5rem; border-bottom: 1px solid var(--gray-200); }
+.dark .wm-calendar-menu-quick { border-bottom-color: rgb(255 255 255 / 0.1); }
+.wm-calendar-menu-heading { padding: 0.375rem 0.5rem 0.125rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--gray-500); }
+.wm-calendar-menu-item { display: flex; align-items: center; gap: 0.5rem; width: 100%; padding: 0.3125rem 0.5rem; font: inherit; text-align: left; color: var(--gray-900); background: transparent; border: 0; border-radius: 0.375rem; cursor: pointer; }
+.wm-calendar-menu-item:hover { background: var(--gray-100); }
+.wm-calendar-menu-item > .wm-calendar-menu-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wm-calendar-menu-item > .wm-calendar-menu-check { width: 1rem; height: 1rem; flex: none; color: var(--primary-600); visibility: hidden; }
+.wm-calendar-menu-item[aria-checked="true"] > .wm-calendar-menu-check { visibility: visible; }
+.wm-calendar-menu-item[aria-checked="false"] .wm-calendar-dot { background: var(--gray-300); }
+.wm-calendar-menu-item.is-sub { padding-left: 1.75rem; font-size: 0.8125rem; }
+.wm-calendar-menu-item.is-unreadable { opacity: 0.6; font-style: italic; }
+.dark .wm-calendar-menu-item { color: var(--gray-100); }
+.dark .wm-calendar-menu-item:hover { background: rgb(255 255 255 / 0.06); }
+.dark .wm-calendar-menu-item[aria-checked="false"] .wm-calendar-dot { background: var(--gray-600); }
+@media (max-width: 640px) {
+    .wm-calendar-bar { flex-direction: column; align-items: stretch; }
+    .wm-calendar-menu-panel { right: auto; left: 0; }
+}
