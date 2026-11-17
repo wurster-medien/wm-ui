@@ -1183,6 +1183,24 @@ a.wm-step-box:focus-visible { outline: 2px solid var(--primary-600); outline-off
 .dark .wm-totals-warning { color: var(--danger-400); }
 
 /*
+ * Gegliederter Summen-Kasten (Angebot, Vorlage, Rechnung; Simon 17.11.2026: "unstrukturiert und unübersichtlich"): Blöcke durch
+ * Linien getrennt, Überschriften als kleine Kennzeile, die Hauptzahl größer, Summenzeile mit Linie darüber, Interna als getönter
+ * Kasten, der Speicherstand als Fußzeile. Nur mit .is-divided, die übrigen .wm-totals bleiben wie sie sind.
+ */
+.wm-totals.is-divided { gap: 1rem; }
+.wm-totals.is-divided > .wm-totals-block + .wm-totals-block:not(.wm-totals-internal) { padding-top: 1rem; border-top: 1px solid var(--gray-200); }
+.wm-totals-label { margin-bottom: 0.125rem; font-size: 0.75rem; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.04em; }
+.wm-totals-row.is-lead { font-size: 1rem; font-weight: 600; }
+.wm-totals-row.is-total { margin-top: 0.25rem; padding-top: 0.5rem; border-top: 1px solid var(--gray-200); font-weight: 600; }
+.wm-totals-row > .is-danger { color: var(--danger-600); }
+.wm-totals-internal { padding: 0.875rem 1rem; border: 1px dashed var(--gray-300); border-radius: 0.5rem; background: var(--gray-50); }
+.wm-totals-footer { padding-top: 0.75rem; border-top: 1px solid var(--gray-200); color: var(--gray-500); font-size: 0.75rem; }
+.dark .wm-totals.is-divided > .wm-totals-block + .wm-totals-block:not(.wm-totals-internal), .dark .wm-totals-row.is-total, .dark .wm-totals-footer { border-color: rgb(255 255 255 / 0.1); }
+.dark .wm-totals-label, .dark .wm-totals-footer { color: var(--gray-400); }
+.dark .wm-totals-row > .is-danger { color: var(--danger-400); }
+.dark .wm-totals-internal { border-color: rgb(255 255 255 / 0.15); background: rgb(255 255 255 / 0.03); }
+
+/*
  * Kompakte Zeilen im Angebots-Editor (Faktura A2): Eine Position ist eine Zeile. Ziehgriff und Pfeile links, Felder in der Mitte,
  * Löschen rechts; die Kopfzeile des Repeaters wird zur Randspalte der Zeile. Spaltenköpfe (.wm-line-head) stehen im selben
  * Raster über der Liste, erst ab sm; darunter stehen die Beschriftungen an den Feldern und die Felder stapeln sich. Ab sm sind
