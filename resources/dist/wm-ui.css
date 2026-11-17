@@ -1840,12 +1840,8 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .dark .wm-calendar-cell.is-weekend.is-muted { background: rgb(255 255 255 / 0.03); }
 .wm-calendar-cell.is-weekend.is-today { background: var(--primary-50); }
 .dark .wm-calendar-cell.is-weekend.is-today { background: rgb(255 255 255 / 0.08); }
+/* Große Bildschirme: nur höhere Monatszellen, Schrift wie sonst (Simon, 17.11.2026: „Text zu groß in Kalender-Badges“). */
 @media (min-width: 1600px) {
-    .wm-calendar-frame { font-size: 0.9375rem; }
-    .wm-calendar-event-time, .wm-calendar-event-sub, .wm-calendar-more { font-size: 0.8125rem; }
-    .wm-calendar-filter { font-size: 0.875rem; }
-    .wm-calendar-pick-sub { font-size: 0.8125rem; }
     .wm-calendar-cell { min-height: 8rem; }
-    .wm-calendar-event, .wm-calendar-chip { padding-inline: 0.5rem; }
 }
 .wm-calendar-pick.is-unreadable { opacity: 0.6; font-style: italic; }
