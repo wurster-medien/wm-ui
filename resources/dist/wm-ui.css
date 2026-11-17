@@ -1201,6 +1201,13 @@ a.wm-step-box:focus-visible { outline: 2px solid var(--primary-600); outline-off
 .dark .wm-totals-internal { border-color: rgb(255 255 255 / 0.15); background: rgb(255 255 255 / 0.03); }
 
 /*
+ * Mitlaufende Spalte neben dem Inhalt (Summen im Angebots-, Vorlagen- und Rechnungs-Editor, Simon 17.11.2026): Die Spalte bleibt
+ * beim Scrollen unter der Kopfzeile stehen (--wm-thead-top setzt wm-ui.js). Ist sie höher als das Fenster, scrollt sie in sich.
+ * Untereinander (schmale Fenster) wirkt sie nicht, weil die Spalte dann nur so hoch wie ihr Inhalt ist.
+ */
+.wm-sticky-aside { position: sticky; top: calc(var(--wm-thead-top, 4rem) + 1rem); align-self: start; max-height: calc(100dvh - var(--wm-thead-top, 4rem) - 2rem); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 1px; margin: -1px; }
+
+/*
  * Farben und Symbole im gegliederten Summen-Kasten (Simon, 17.11.2026: "mehr mit Farben, evtl. Icons, damit man es noch schneller
  * erfassen kann"): Jeder Block hat einen Ton (.is-tone-primary einmalig, -info laufend, -gray Zwischensummen und erstes Jahr,
  * -warning Kalkulation), der Symbol der Kennzeile und die Hauptzahl färbt. Die Kalkulation zeigt einen Balken aus Arbeitskosten,
