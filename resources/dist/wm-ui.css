@@ -1238,11 +1238,15 @@ a.wm-step-box:focus-visible { outline: 2px solid var(--primary-600); outline-off
 .wm-totals-row.is-lead > span:last-child { color: var(--wm-tone-text, inherit); }
 .wm-totals-internal .wm-totals-row > span:first-child { display: inline-flex; align-items: center; gap: 0.5rem; }
 .wm-totals-dot { width: 0.5rem; height: 0.5rem; flex: none; border-radius: 9999px; background: var(--gray-300); }
-.wm-totals-dot.is-labor, .wm-totals-bar > .is-labor { background: var(--gray-400); }
-.wm-totals-dot.is-external, .wm-totals-bar > .is-external { background: var(--warning-400); }
-.wm-totals-dot.is-margin, .wm-totals-bar > .is-margin { background: var(--wm-margin, var(--gray-300)); }
+.wm-totals-dot.is-labor, .wm-totals-bar > .is-labor { background: var(--gray-400); fill: var(--gray-400); }
+.wm-totals-dot.is-external, .wm-totals-bar > .is-external { background: var(--warning-400); fill: var(--warning-400); }
+.wm-totals-dot.is-margin, .wm-totals-bar > .is-margin { background: var(--wm-margin, var(--gray-300)); fill: var(--wm-margin, var(--gray-300)); }
 .wm-totals-bar { display: flex; height: 0.625rem; margin: 0.25rem 0 0.375rem; overflow: hidden; border-radius: 9999px; background: var(--gray-200); }
 .wm-totals-bar > span { width: var(--w, 0); }
+/* Anteilsbalken <x-share-bar> (v0.2.56): SVG mit den Breiten als Attribute, Farben über fill der Klasse je Abschnitt. */
+.wm-share-bar { display: block; width: 100%; height: 0.625rem; overflow: hidden; clip-path: inset(0 round 9999px); }
+.wm-share-bar > rect { fill: var(--gray-300); }
+svg.wm-totals-bar { display: block; width: 100%; clip-path: inset(0 round 9999px); }
 .wm-totals-pill { padding: 0.0625rem 0.5rem; border-radius: 9999px; background: var(--wm-margin-bg, transparent); color: var(--wm-margin-text, inherit); }
 .is-margin-success { --wm-margin: var(--success-500); --wm-margin-bg: var(--success-50); --wm-margin-text: var(--success-700); }
 .is-margin-warning { --wm-margin: var(--warning-500); --wm-margin-bg: var(--warning-50); --wm-margin-text: var(--warning-700); }
