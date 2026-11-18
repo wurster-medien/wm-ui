@@ -2037,3 +2037,60 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 
 /* Alle Seiten: Abstand zwischen Überschrift und Inhalt kleiner (Filament 2rem → 1.25rem; Simon, 17.11.2026). */
 .fi-page-header-main-ctn { row-gap: 1.25rem; }
+
+/*
+ * Ansicht eines Datensatzes mit Seitenspalte (Auftrag und Angebot im Admin, Simon 18.11.2026, Entwurf B): links der Inhalt
+ * (.wm-detail-main, z. B. Positionen), rechts die Angaben (.wm-detail-aside, läuft mit .wm-sticky-aside beim Scrollen mit). Unter
+ * 80rem untereinander, die Angaben dann zuerst.
+ */
+.wm-detail { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; align-items: start; font-size: 0.875rem; }
+.wm-detail-main, .wm-detail-aside { display: flex; flex-direction: column; gap: 1.5rem; min-width: 0; }
+.wm-detail-aside { order: -1; }
+@media (min-width: 80rem) {
+    .wm-detail { grid-template-columns: minmax(0, 1fr) 22rem; }
+    .wm-detail-aside { order: 0; }
+}
+/* Untereinander läuft die Spalte nicht mit (sie steht dann oben und würde den Inhalt beim Scrollen verdecken). */
+@media (max-width: 79.99rem) {
+    .wm-detail-aside.wm-sticky-aside { position: static; max-height: none; overflow: visible; }
+}
+
+/* Angaben als Liste: Beschriftung klein über dem Wert, Trennlinie dazwischen (statt Beschriftung links und Wert ganz rechts). */
+.wm-facts { margin: 0; display: flex; flex-direction: column; }
+.wm-fact { padding: 0.625rem 0; border-top: 1px solid var(--gray-100); min-width: 0; }
+.wm-fact:first-child { padding-top: 0; border-top: 0; }
+.wm-fact:last-child { padding-bottom: 0; }
+.wm-fact > dt { font-size: 0.75rem; color: var(--gray-500); margin-bottom: 0.125rem; }
+.wm-fact > dd { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
+.wm-fact > dd.is-muted { color: var(--gray-500); font-weight: 400; }
+.wm-facts.is-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1rem 1.5rem; }
+.wm-facts.is-grid > .wm-fact { padding: 0; border-top: 0; }
+.wm-facts + .wm-facts { margin-top: 1rem; }
+.dark .wm-fact { border-top-color: rgb(255 255 255 / 0.06); }
+.dark .wm-fact > dt, .dark .wm-fact > dd.is-muted { color: var(--gray-400); }
+
+/*
+ * Positionen als Tabelle (Pos., Bezeichnung, Menge, Einzelpreis, Betrag): Gruppen fett mit Fläche, Summe je Gruppe grau, Beträge
+ * rechtsbündig; am Handy fallen die Spalten mit .is-wide weg. Darunter die Summen rechts (.wm-lines-sums mit .wm-totals-row).
+ */
+.wm-lines { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.wm-lines th { text-align: start; font-size: 0.75rem; font-weight: 500; color: var(--gray-500); padding: 0 0.75rem 0.5rem; border-bottom: 1px solid var(--gray-200); }
+.wm-lines td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--gray-100); vertical-align: top; }
+.wm-lines :is(th, td):first-child { padding-inline-start: 0; }
+.wm-lines :is(th, td):last-child { padding-inline-end: 0; }
+.wm-lines .is-num { text-align: end; white-space: nowrap; font-variant-numeric: tabular-nums; width: 9rem; }
+.wm-lines .is-qty { white-space: nowrap; width: 8rem; }
+.wm-lines .is-pos { width: 3rem; color: var(--gray-500); font-variant-numeric: tabular-nums; }
+.wm-lines tr.is-group td { font-weight: 600; background: var(--gray-50); }
+.wm-lines tr.is-sub td { color: var(--gray-500); font-size: 0.8125rem; }
+.wm-lines tr.is-note td { color: var(--gray-500); font-size: 0.8125rem; }
+.wm-lines .wm-lines-note { display: block; color: var(--gray-500); font-size: 0.8125rem; font-weight: 400; }
+.wm-lines-sums { display: flex; justify-content: flex-end; margin-top: 1rem; }
+.wm-lines-sums > div { display: flex; flex-direction: column; gap: 0.25rem; min-width: min(20rem, 100%); }
+.dark .wm-lines th { color: var(--gray-400); border-bottom-color: rgb(255 255 255 / 0.1); }
+.dark .wm-lines td { border-bottom-color: rgb(255 255 255 / 0.06); }
+.dark .wm-lines tr.is-group td { background: rgb(255 255 255 / 0.03); }
+.dark .wm-lines :is(.is-pos, tr.is-sub td, tr.is-note td, .wm-lines-note) { color: var(--gray-400); }
+@media (max-width: 640px) {
+    .wm-lines .is-wide { display: none; }
+}
