@@ -922,8 +922,8 @@ document.addEventListener('livewire:init', () => {
             item.setAttribute('aria-selected', String(option.selected))
             item.classList.toggle('wm-selected', option.selected)
             item.classList.toggle('wm-disabled', option.disabled)
-            item.innerHTML = `<span></span>${option.selected ? CHECK : ''}`
-            item.firstChild.textContent = label || ' '
+            item.innerHTML = `${CHECK}<span></span>`
+            item.lastChild.textContent = label || ' '
             item.dataset.index = String(open.items.length)
             list.append(item)
             open.items.push({ option, item })

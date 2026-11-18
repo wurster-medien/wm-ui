@@ -502,7 +502,14 @@ tr:has(> td .wm-row-open):hover > td,
     box-shadow: 0 0 0 2px var(--primary-500);
 }
 
-/* Auswahl in einem Menü (ChoiceMenu) wie in den Auswahlfeldern: der aktuelle Eintrag in Teal, Haken rechts, nicht blass. */
+/*
+ * Auswahl in einem Menü (ChoiceMenu, Klasse wm-choice-option an jedem Eintrag) wie in den Auswahlfeldern: der aktuelle Eintrag in
+ * Teal mit Haken vorne, nicht blass; die übrigen ohne Icon, um Haken und Abstand eingerückt (Filament: p-2, Icon size-5, gap-2).
+ */
+.fi-dropdown-list-item.wm-choice-option:not(.wm-choice-current) {
+    padding-inline-start: 2.25rem;
+}
+
 .fi-dropdown-list-item.wm-choice-current {
     opacity: 1;
 }
@@ -513,7 +520,6 @@ tr:has(> td .wm-row-open):hover > td,
 }
 
 .fi-dropdown-list-item.wm-choice-current > .fi-icon {
-    order: 1;
     color: var(--primary-600);
 }
 
@@ -839,7 +845,8 @@ thead.wm-sticky-box-head {
 
 /*
  * Auswahlfelder mit Menü statt der Liste des Browsers (wm-ui.js): Das <select> nimmt keine Klicks mehr an, das Feld drum
- * herum öffnet das Menü. Aussehen wie Filaments Dropdowns, gewählter Eintrag in der Hauptfarbe mit Haken rechts.
+ * herum öffnet das Menü. Aussehen wie Filaments Dropdowns, gewählter Eintrag in der Hauptfarbe mit Haken vorne,
+ * die übrigen um dieselbe Breite eingerückt (Simon, 18.11.2026: „Haken vorne, wie sonst auch, und mit Space, wenn nicht aktiv“).
  */
 .wm-selects .fi-input-wrp-content-ctn > select.fi-select-input:not([multiple]) {
     pointer-events: none;
@@ -892,6 +899,11 @@ thead.wm-sticky-box-head {
     flex-shrink: 0;
     width: 1.25rem;
     height: 1.25rem;
+    visibility: hidden;
+}
+
+.wm-select-option.wm-selected > svg {
+    visibility: visible;
 }
 
 .wm-select-option.wm-active {
@@ -2010,7 +2022,7 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .wm-calendar-menu-item { display: flex; align-items: center; gap: 0.5rem; width: 100%; padding: 0.3125rem 0.5rem; font: inherit; text-align: left; color: var(--gray-900); background: transparent; border: 0; border-radius: 0.375rem; cursor: pointer; }
 .wm-calendar-menu-item:hover { background: var(--gray-100); }
 .wm-calendar-menu-item > .wm-calendar-menu-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wm-calendar-menu-item > .wm-calendar-menu-check { width: 1rem; height: 1rem; flex: none; color: var(--primary-600); visibility: hidden; }
+.wm-calendar-menu-item > .wm-calendar-menu-check { order: -1; width: 1rem; height: 1rem; flex: none; color: var(--primary-600); visibility: hidden; }
 .wm-calendar-menu-item[aria-checked="true"] > .wm-calendar-menu-check { visibility: visible; }
 .wm-calendar-menu-item[aria-checked="false"] .wm-calendar-dot { background: var(--gray-300); }
 .wm-calendar-menu-item.is-sub { padding-left: 1.75rem; font-size: 0.8125rem; }

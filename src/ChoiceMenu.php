@@ -11,8 +11,8 @@ use Filament\Support\Icons\Heroicon;
 /**
  * Knopf mit Menü, der eine Auswahl zeigt und ändert, z. B. „Stand: In Bearbeitung ▾“ in der Kopfzeile einer Seite. Das
  * Menü sieht aus wie das der Auswahlfelder (Tabellenfilter, Formulare; `wm-ui.js`, Simon 9.11.2026: „das Dropdown aus
- * den Filtern übernehmen“): der aktuelle Eintrag in Teal mit Haken rechts und nicht wählbar, die übrigen ohne Icon
- * bündig darüber und darunter. Für Menüs mit Aktionen bleibt `MoreActions`.
+ * den Filtern übernehmen“): der aktuelle Eintrag in Teal mit Haken vorne und nicht wählbar, die übrigen ohne Icon
+ * um dieselbe Breite eingerückt (Simon, 18.11.2026; Klasse `wm-choice-option`). Für Menüs mit Aktionen bleibt `MoreActions`.
  */
 class ChoiceMenu
 {
@@ -38,6 +38,6 @@ class ChoiceMenu
         return $action
             ->icon(fn (): ?Heroicon => $current() ? Heroicon::Check : null)
             ->disabled(fn (): bool => $current())
-            ->extraAttributes(fn (): array => $current() ? ['class' => 'wm-choice-current', 'aria-current' => 'true'] : []);
+            ->extraAttributes(fn (): array => $current() ? ['class' => 'wm-choice-option wm-choice-current', 'aria-current' => 'true'] : ['class' => 'wm-choice-option']);
     }
 }
