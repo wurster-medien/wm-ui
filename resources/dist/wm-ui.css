@@ -999,11 +999,13 @@ a.wm-stat:hover { box-shadow: 0 0 0 2px var(--primary-500); }
 /*
  * Vorgangsleiste (wm-steps, Faktura Modul 22 „Geführter Vorgang“, Simon 17.11.2026: „möglichst intuitiv“): Stufen mit Punkt und Linie,
  * Stand als Klasse am <li> (is-done, is-here, is-attention, is-next, is-open, is-skipped, is-restricted), Zeichen und Wort im Text,
- * Farbe nie allein. Am Rechner nebeneinander, am Handy untereinander mit senkrechter Linie.
+ * Farbe nie allein. Am Rechner nebeneinander, am Handy untereinander mit senkrechter Linie. Die Linie ragt in die Spalte der nächsten
+ * Stufe und liegt deshalb mit z-index über deren Hover-Fläche (sonst verschwand beim Hover die halbe Linie); der nächste Punkt deckt ihr
+ * Ende ab. Die aktuelle Stufe ohne Ring um den Punkt (Simon, 18.11.2026): gefüllter Punkt mit Zahl und fetter Name.
  */
 .wm-steps-list { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0.25rem; margin: 0; padding: 0; list-style: none; }
 .wm-step { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; min-width: 0; }
-.wm-step:not(:last-child)::after { content: ""; position: absolute; top: 1.125rem; left: calc(50% + 1.125rem); right: calc(-50% + 0.875rem); border-top: 2px solid var(--gray-200); }
+.wm-step:not(:last-child)::after { content: ""; position: absolute; z-index: 1; top: 1.125rem; left: calc(50% + 1.125rem); right: calc(-50% + 0.875rem); border-top: 2px solid var(--gray-200); }
 .dark .wm-step:not(:last-child)::after { border-top-color: var(--gray-700); }
 .wm-step.is-done:not(:last-child)::after { border-top-color: var(--primary-500); }
 .wm-step.is-skipped:not(:last-child)::after, .wm-step:has(+ .wm-step.is-skipped)::after { border-top-style: dashed; }
@@ -1019,8 +1021,7 @@ a.wm-step-box:focus-visible { outline: 2px solid var(--primary-600); outline-off
 .wm-step-sub { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: 0.75rem; line-height: 1.3; color: var(--gray-500); }
 .dark .wm-step-sub { color: var(--gray-400); }
 .wm-step.is-done .wm-step-dot { border-color: var(--primary-600); background: var(--primary-600); color: #fff; }
-.wm-step.is-here .wm-step-dot { border-color: var(--primary-600); background: var(--primary-600); color: #fff; box-shadow: 0 0 0 4px var(--primary-100); }
-.dark .wm-step.is-here .wm-step-dot { box-shadow: 0 0 0 4px rgb(20 184 166 / 0.25); }
+.wm-step.is-here .wm-step-dot { border-color: var(--primary-600); background: var(--primary-600); color: #fff; }
 .wm-step.is-here .wm-step-label { font-weight: 700; color: var(--gray-950); }
 .dark .wm-step.is-here .wm-step-label { color: #fff; }
 .wm-step.is-attention .wm-step-dot { border-color: var(--warning-500); background: var(--warning-500); color: #fff; }
