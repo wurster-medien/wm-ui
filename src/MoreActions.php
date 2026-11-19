@@ -10,16 +10,17 @@ use Filament\Support\Icons\Heroicon;
 /**
  * Menü „Mehr“ in der Kopfzeile einer Seite (Admin und Portal): seltene, rückwärts gerichtete und löschende Aktionen,
  * damit oben nur die Hauptschritte als Buttons stehen. Mehrere Themen stehen in Abschnitten (section), Löschen kommt
- * als Letztes. In Karten (forRecord) nur als Icon-Button, damit die Aktionen in eine Zeile passen.
+ * als Letztes. In Karten (forRecord) nur als Icon-Button, damit die Aktionen in eine Zeile passen. Bleibt in make() oder menu() nur
+ * eine sichtbare Aktion, steht sie direkt als Knopf da (MenuActionGroup).
  */
 class MoreActions
 {
     /**
      * @param  list<Action|ActionGroup>  $actions
      */
-    public static function make(array $actions): ActionGroup
+    public static function make(array $actions): MenuActionGroup
     {
-        return ActionGroup::make($actions)
+        return MenuActionGroup::make($actions)
             ->label('Mehr')
             ->icon(Heroicon::OutlinedEllipsisVertical)
             ->color(ActionStyle::Secondary->color())
@@ -43,9 +44,9 @@ class MoreActions
      *
      * @param  list<Action|ActionGroup>  $actions
      */
-    public static function menu(string $label, Heroicon $icon, array $actions): ActionGroup
+    public static function menu(string $label, Heroicon $icon, array $actions): MenuActionGroup
     {
-        return ActionGroup::make($actions)
+        return MenuActionGroup::make($actions)
             ->label($label)
             ->icon($icon)
             ->color(ActionStyle::Secondary->color())
