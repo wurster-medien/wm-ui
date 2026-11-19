@@ -2099,3 +2099,21 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 @media (max-width: 640px) {
     .wm-lines .is-wide { display: none; }
 }
+
+/*
+ * Mitlaufende Formular-Knöpfe (v0.2.58, Simon 19.11.2026: „er springt unten … rechts anordnen“): Filament schaltet die Leiste per
+ * Skript zwischen fest am Bildschirmrand und ihrem Platz um, beim Ankommen am Ende sprang sie. Hier reines CSS-Sticky: die Knöpfe
+ * kleben rechts unten und laufen am Ende des Formulars ohne Sprung an ihren Platz; der Kasten sieht in beiden Lagen gleich aus.
+ * Erkannt an Filaments Beobachter-Attribut, das nur Leisten mit stickyFormActions tragen; sticky ist die Fußzeile des Formulars
+ * (direktes Kind von <form>), die Leiste selbst steckt in Hüllen ihrer eigenen Höhe.
+ */
+.fi-sc-form > .fi-sc:has(.fi-sc-actions[x-intersect\:leave]) { position: sticky; bottom: 1rem; z-index: 20; pointer-events: none; }
+.fi-sc-actions[x-intersect\:leave] { align-items: flex-end; }
+.fi-sc-actions[x-intersect\:leave] .fi-ac,
+.fi-sc-actions[x-intersect\:leave].fi-sticky .fi-ac {
+    position: static; inset: auto; width: auto; margin: 0; transform: none; transition: none;
+    justify-content: flex-end; padding: 0.5rem; border-radius: 0.75rem; pointer-events: auto;
+    background: #fff; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1), 0 0 0 1px rgb(3 7 18 / 0.05);
+}
+.dark .fi-sc-actions[x-intersect\:leave] .fi-ac,
+.dark .fi-sc-actions[x-intersect\:leave].fi-sticky .fi-ac { background: var(--gray-900); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 0 0 1px rgb(255 255 255 / 0.1); }
