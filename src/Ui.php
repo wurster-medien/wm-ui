@@ -6,6 +6,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Repeater;
+use Filament\Pages\BasePage;
 use Filament\Panel;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\Colors\Color;
@@ -49,6 +50,13 @@ final class Ui
         /** Feste Farben und Icons je Art eines Buttons (Bearbeiten, Löschen …), siehe ActionStyle. */
         ActionStyle::registerColors();
         ActionStyle::configureBuiltInActions();
+
+        /**
+         * Knöpfe unter langen Formularen („Speichern“, „Anlegen“) laufen beim Scrollen am unteren Rand mit (v0.2.57, Simon 19.11.2026:
+         * „als Regel, wenn es Sinn macht, so Buttons sticky machen“), damit man sie unter langen Masken nicht suchen muss. Gilt für alle
+         * Seiten von Filament mit Formular-Knöpfen (Anlegen, Bearbeiten, Profil); eine Seite schaltet es mit stickyFormActions(false) ab.
+         */
+        BasePage::stickyFormActions();
 
         /**
          * Filter und Spaltenauswahl wirken sofort, ohne Knopf „Filter anwenden“. Filter stehen ohne Filter-Icon direkt in
