@@ -2101,6 +2101,38 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 }
 
 /*
+ * .wm-lines als Auswertung (v0.2.61, Simon 20.11.2026: „die Seiten sehen nicht schön aus“): breite Tabellen scrollen waagerecht in
+ * .wm-lines-scroll, .is-fluid lässt Betragsspalten so breit wie ihr Inhalt (viele Spalten), die Summenzeile steht im tfoot, Knöpfe je
+ * Zeile rechts in .is-actions, Minusbeträge rot (.is-negative), Balken mit Mindestbreite.
+ */
+.wm-lines-scroll { max-width: 100%; overflow-x: auto; }
+.wm-lines.is-fluid .is-num { width: auto; }
+.wm-lines.is-fluid :is(th, td):first-child { min-width: 11rem; }
+.wm-lines tfoot :is(th, td) { padding: 0.625rem 0.75rem 0; font-size: 0.875rem; font-weight: 600; color: inherit; border-top: 1px solid var(--gray-300); border-bottom: 0; vertical-align: top; }
+.wm-lines .is-negative { color: var(--danger-600); }
+.wm-lines .is-actions { width: 1%; text-align: end; white-space: nowrap; }
+.wm-lines td.is-actions { padding-block: 0.25rem; }
+.wm-lines .is-actions > * + * { margin-inline-start: 0.5rem; }
+.wm-lines tr:has(> td.is-actions) > td { vertical-align: middle; }
+.wm-lines .wm-budget-bar { min-width: 5rem; margin-top: 0.375rem; }
+.dark .wm-lines tfoot :is(th, td) { border-top-color: rgb(255 255 255 / 0.15); }
+.dark .wm-lines .is-negative { color: var(--danger-400); }
+
+/*
+ * Seiten aus mehreren Blöcken (Auswertungen): .wm-stack setzt Kacheln, Tabellen und Erklärungen mit festem Abstand untereinander,
+ * .wm-stack-block hält Überschrift, Inhalt und Erklärung eines Blocks zusammen. Erklärungen klein und grau (.wm-note), nie als
+ * Fließtext in voller Schrift über die ganze Breite.
+ */
+.wm-stack { display: flex; flex-direction: column; gap: 2rem; min-width: 0; }
+.wm-stack-block { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+.wm-stack-heading { margin: 0; font-size: 0.9375rem; font-weight: 600; line-height: 1.5rem; color: var(--gray-950); }
+.wm-stack-heading.is-sub { font-size: 0.875rem; color: var(--gray-700); }
+.wm-note { margin: 0; max-width: 72rem; font-size: 0.8125rem; line-height: 1.25rem; color: var(--gray-500); }
+.dark .wm-stack-heading { color: #fff; }
+.dark .wm-stack-heading.is-sub { color: var(--gray-300); }
+.dark .wm-note { color: var(--gray-400); }
+
+/*
  * Mitlaufende Formular-Knöpfe (v0.2.58, Simon 19.11.2026: „er springt unten … rechts anordnen“): Filament schaltet die Leiste per
  * Skript zwischen fest am Bildschirmrand und ihrem Platz um, beim Ankommen am Ende sprang sie. Hier reines CSS-Sticky: die Knöpfe
  * kleben rechts unten und laufen am Ende des Formulars ohne Sprung an ihren Platz; der Kasten sieht in beiden Lagen gleich aus.
