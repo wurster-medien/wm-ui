@@ -1221,6 +1221,11 @@ a.wm-step-box:focus-visible { outline: 2px solid var(--primary-600); outline-off
 .wm-sticky-aside { position: sticky; top: calc(var(--wm-thead-top, 4rem) + 1rem); align-self: start; max-height: calc(100dvh - var(--wm-thead-top, 4rem) - 2rem); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 1px; margin: -1px; }
 
 /*
+ * PDF neben den Feldern (Eingangsrechnung, 20.11.2026): füllt die Fensterhöhe unter der Kopfzeile, mindestens 30rem.
+ */
+.wm-pdf-frame { display: block; height: max(30rem, calc(100dvh - var(--wm-thead-top, 4rem) - 9rem)); }
+
+/*
  * Farben und Symbole im gegliederten Summen-Kasten (Simon, 17.11.2026: "mehr mit Farben, evtl. Icons, damit man es noch schneller
  * erfassen kann"): Jeder Block hat einen Ton (.is-tone-primary einmalig, -info laufend, -gray Zwischensummen und erstes Jahr,
  * -warning Kalkulation), der Symbol der Kennzeile und die Hauptzahl färbt. Die Kalkulation zeigt einen Balken aus Arbeitskosten,
