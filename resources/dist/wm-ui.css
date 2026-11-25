@@ -2493,7 +2493,9 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .fi-fo-slider.wm-spam-slider .noUi-connects .noUi-connect:nth-child(2) { background: var(--danger-500); }
 .fi-fo-slider.wm-spam-slider .noUi-tooltip { font-size: 0.75rem; white-space: nowrap; }
 .fi-fo-slider.wm-spam-slider .noUi-base > .noUi-origin:last-child .noUi-tooltip { bottom: auto; top: 120%; }
-.wm-spam-scale { margin-bottom: 0.25rem; font-size: 0.75rem; }
+/* Volle Breite: Filament stellt aboveContent in eine Flex-Zeile, ohne eigenen Inhalt in der Breite (früher die Hinweisliste) schrumpfte der Balken auf 0. */
+.wm-spam-scale { flex: 1 1 100%; width: 100%; min-width: 0; margin-bottom: 0.25rem; font-size: 0.75rem; }
+.fi-sc.fi-inline > :has(> .wm-spam-scale) { flex: 1 1 100%; min-width: 0; }
 .wm-spam-scale-bar { position: relative; height: 1.75rem; margin-bottom: 1.75rem; }
 .wm-spam-scale-zone { position: absolute; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; border-inline: 1px solid var(--color-white, #fff); background: color-mix(in oklab, var(--zone) 22%, transparent); color: color-mix(in oklab, var(--zone) 70%, var(--gray-950)); font-weight: 500; white-space: nowrap; }
 .wm-spam-scale-zone:first-child { border-radius: 0.5rem 0 0 0.5rem; }
