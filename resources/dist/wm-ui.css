@@ -2459,3 +2459,12 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .dark .wm-notes-older > summary:hover { color: var(--gray-200); }
 .wm-mention { font-weight: 500; color: var(--primary-600); }
 .dark .wm-mention { color: var(--primary-400); }
+
+/*
+ * Platzhalter mit „{“ (Simon, 25.11.2026: statt „Platzhalter: …“ unter Betreff und Text in Versand- und Vorlagen-Dialogen):
+ * Menü wie beim „@“ (.wm-select-panel), rechts je Eintrag der Platzhalter selbst (.wm-select-detail).
+ */
+.wm-select-option > .wm-select-detail { flex-shrink: 0; font-family: var(--mono-font-family, ui-monospace, SFMono-Regular, Menlo, monospace); font-size: 0.75rem; color: var(--gray-400); }
+.wm-select-option.wm-active > .wm-select-detail { color: var(--gray-500); }
+.dark .wm-select-option > .wm-select-detail { color: var(--gray-500); }
+.dark .wm-select-option.wm-active > .wm-select-detail { color: var(--gray-400); }

@@ -1275,42 +1275,79 @@ document.addEventListener('livewire:init', () => {
 })()
 
 /*
- * Jemanden aus dem Team mit „@“ erwähnen (Simon, 25.11.2026: Notizen in Anfragen und Projekten): Ein <textarea> mit
- * `data-wm-mentions='[{"label":"Tanja Wurster","insert":"Tanja"}]'` zeigt beim Tippen von „@“ am Wortanfang ein Menü mit
- * den Personen im Stil der Auswahlfelder (wm-select-*), gefiltert nach dem Getippten. Pfeile wählen, Enter, Tab oder ein
- * Klick setzen „@Tanja “ an die Stelle, Esc schließt. Der Fokus bleibt im Feld, Livewire bekommt den Text über input.
- * Ohne Treffer bleibt das Menü zu, Adressen (name@domain) öffnen es nie. Was eine Erwähnung ist, entscheidet der Server.
+ * Menü beim Tippen in Textfeldern im Stil der Auswahlfelder (wm-select-*), gefiltert nach dem Getippten. Pfeile wählen,
+ * Enter, Tab oder ein Klick setzen ein, Esc schließt. Der Fokus bleibt im Feld, Livewire bekommt den Text über input.
+ * Ohne Treffer bleibt das Menü zu. Was der Text bedeutet, entscheidet der Server.
+ *
+ * - „@“ erwähnt jemanden aus dem Team (Simon, 25.11.2026: Notizen in Anfragen und Projekten): ein <textarea> mit
+ *   `data-wm-mentions='[{"label":"Tanja Wurster","insert":"Tanja"}]'`, nur am Wortanfang, setzt „@Tanja “; Adressen
+ *   (name@domain) öffnen es nie.
+ * - „{“ setzt einen Platzhalter (Simon, 25.11.2026: statt „Platzhalter: …“ unter Betreff und Text): ein <input> oder
+ *   <textarea> mit `data-wm-placeholders='[{"label":"Firma","insert":"{firma}"}]'`, überall im Text, setzt „{firma}“;
+ *   rechts im Menü steht der Platzhalter selbst.
  */
 ;(() => {
-    const FIELD = 'textarea[data-wm-mentions]'
-    const LIMIT = 8
+    const fold = (text) => text.toLocaleLowerCase('de').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ß/g, 'ss')
+    const words = (text) => fold(text).split(/[^\p{L}\p{N}_]+/u).filter(Boolean)
+
+    const KINDS = [
+        {
+            field: 'textarea[data-wm-mentions]',
+            data: 'wmMentions',
+            label: 'Erwähnen',
+            panel: 'wm-mention-panel',
+            limit: 8,
+            width: 260,
+            trigger: /(?:^|[\s(„“"'])@([\p{L}\p{M}.\-]{0,30})$/u,
+            text: (item) => `@${item.insert} `,
+            matches: (item, query) => words(item.label).some((word) => word.startsWith(query)) || fold(item.insert).startsWith(query),
+        },
+        {
+            field: 'input[data-wm-placeholders], textarea[data-wm-placeholders]',
+            data: 'wmPlaceholders',
+            label: 'Platzhalter',
+            panel: 'wm-placeholder-panel',
+            limit: 30,
+            width: 320,
+            detail: true,
+            trigger: /\{([\p{L}\p{M}\p{N}_]{0,30})$/u,
+            text: (item) => item.insert,
+            matches: (item, query) => words(item.label).some((word) => word.startsWith(query)) || fold(item.insert).replace(/[{}]/g, '').startsWith(query),
+        },
+    ]
+    const FIELDS = KINDS.map((kind) => kind.field).join(', ')
     let open = null
 
-    const fold = (text) => text.toLocaleLowerCase('de').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ß/g, 'ss')
-
-    const people = (field) => {
+    const entries = (field, kind) => {
         try {
-            const list = JSON.parse(field.dataset.wmMentions ?? '[]')
+            const list = JSON.parse(field.dataset[kind.data] ?? '[]')
 
-            return Array.isArray(list) ? list.filter((person) => person?.label && person?.insert) : []
+            return Array.isArray(list) ? list.filter((item) => item?.label && item?.insert) : []
         } catch {
             return []
         }
     }
 
-    // Das Wort mit „@“ direkt vor dem Cursor: Anfang und bisher Getipptes, sonst null.
+    // Das Menü, das zum Text vor dem Cursor passt: Art, Anfang des Auslösers und bisher Getipptes, sonst null.
     const typed = (field) => {
         if (field.selectionStart !== field.selectionEnd) {
             return null
         }
 
         const before = field.value.slice(0, field.selectionStart)
-        const match = before.match(/(?:^|[\s(„“"'])@([\p{L}\p{M}.\-]{0,30})$/u)
 
-        return match ? { query: match[1], start: field.selectionStart - match[1].length - 1 } : null
+        for (const kind of KINDS) {
+            const match = field.matches(kind.field) ? before.match(kind.trigger) : null
+
+            if (match) {
+                return { kind, query: match[1], start: field.selectionStart - match[1].length - 1 }
+            }
+        }
+
+        return null
     }
 
-    // Lage des Cursors im Fenster über ein unsichtbares Abbild des Feldes.
+    // Lage des Cursors im Fenster über ein unsichtbares Abbild des Feldes (einzeilige Felder ohne Umbruch).
     const caret = (field, index) => {
         const style = window.getComputedStyle(field)
         const mirror = document.createElement('div')
@@ -1319,7 +1356,8 @@ document.addEventListener('livewire:init', () => {
             mirror.style[property] = style[property]
         }
 
-        Object.assign(mirror.style, { position: 'absolute', visibility: 'hidden', top: '0', left: '-9999px', whiteSpace: 'pre-wrap', overflowWrap: 'break-word', borderStyle: 'solid' })
+        const single = field.tagName === 'INPUT'
+        Object.assign(mirror.style, { position: 'absolute', visibility: 'hidden', top: '0', left: '-9999px', whiteSpace: single ? 'pre' : 'pre-wrap', overflowWrap: single ? 'normal' : 'break-word', borderStyle: 'solid' })
         mirror.textContent = field.value.slice(0, index)
         const marker = document.createElement('span')
         marker.textContent = '​'
@@ -1327,10 +1365,11 @@ document.addEventListener('livewire:init', () => {
         document.body.append(mirror)
 
         const box = field.getBoundingClientRect()
+        const height = marker.offsetHeight || parseFloat(style.lineHeight) || 20
         const position = {
             left: box.left + marker.offsetLeft - field.scrollLeft,
-            top: box.top + marker.offsetTop - field.scrollTop,
-            height: marker.offsetHeight || parseFloat(style.lineHeight) || 20,
+            top: single ? box.top + (box.height - height) / 2 : box.top + marker.offsetTop - field.scrollTop,
+            height,
         }
 
         mirror.remove()
@@ -1355,10 +1394,10 @@ document.addEventListener('livewire:init', () => {
             return
         }
 
-        const { field, panel, start } = open
+        const { field, panel, start, kind } = open
         const margin = 8
         const gap = 4
-        const width = Math.min(260, window.innerWidth - 2 * margin)
+        const width = Math.min(kind.width, window.innerWidth - 2 * margin)
         const spot = caret(field, start)
         const below = window.innerHeight - (spot.top + spot.height) - gap - margin
         const up = below < 160 && spot.top > below
@@ -1377,15 +1416,15 @@ document.addEventListener('livewire:init', () => {
     }
 
     const choose = (index) => {
-        const person = open?.matches[index]
+        const entry = open?.matches[index]
 
-        if (! person) {
+        if (! entry) {
             return
         }
 
-        const { field, start } = open
+        const { field, start, kind } = open
         const end = field.selectionStart
-        const text = `@${person.insert} `
+        const text = kind.text(entry)
         close()
 
         field.value = field.value.slice(0, start) + text + field.value.slice(end)
@@ -1394,12 +1433,36 @@ document.addEventListener('livewire:init', () => {
         field.focus({ preventScroll: true })
     }
 
+    const panelFor = (field, kind) => {
+        const panel = document.createElement('div')
+        panel.className = `wm-select-panel ${kind.panel}`
+        panel.innerHTML = '<div class="wm-select-list" role="listbox"></div>'
+        panel.firstChild.setAttribute('aria-label', kind.label)
+        panel.addEventListener('mousedown', (event) => event.preventDefault())
+        panel.addEventListener('click', (event) => {
+            const item = event.target.closest('.wm-select-option')
+
+            if (item) {
+                choose(Number(item.dataset.index))
+            }
+        })
+        panel.addEventListener('mousemove', (event) => {
+            const item = event.target.closest('.wm-select-option')
+
+            if (item && open && Number(item.dataset.index) !== open.active) {
+                highlight(Number(item.dataset.index))
+            }
+        })
+        document.body.append(panel)
+        field.setAttribute('aria-expanded', 'true')
+
+        return { field, kind, panel, list: panel.firstChild }
+    }
+
     const update = (field) => {
         const found = typed(field)
         const query = found ? fold(found.query) : ''
-        const matches = found
-            ? people(field).filter((person) => fold(person.label).split(/\s+/).some((word) => word.startsWith(query)) || fold(person.insert).startsWith(query)).slice(0, LIMIT)
-            : []
+        const matches = found ? entries(field, found.kind).filter((entry) => found.kind.matches(entry, query)).slice(0, found.kind.limit) : []
 
         if (matches.length === 0) {
             close()
@@ -1407,41 +1470,27 @@ document.addEventListener('livewire:init', () => {
             return
         }
 
-        if (open?.field !== field) {
+        if (open?.field !== field || open?.kind !== found.kind) {
             close()
-
-            const panel = document.createElement('div')
-            panel.className = 'wm-select-panel wm-mention-panel'
-            panel.innerHTML = '<div class="wm-select-list" role="listbox" aria-label="Erwähnen"></div>'
-            panel.addEventListener('mousedown', (event) => event.preventDefault())
-            panel.addEventListener('click', (event) => {
-                const item = event.target.closest('.wm-select-option')
-
-                if (item) {
-                    choose(Number(item.dataset.index))
-                }
-            })
-            panel.addEventListener('mousemove', (event) => {
-                const item = event.target.closest('.wm-select-option')
-
-                if (item && open && Number(item.dataset.index) !== open.active) {
-                    highlight(Number(item.dataset.index))
-                }
-            })
-            document.body.append(panel)
-            field.setAttribute('aria-expanded', 'true')
-            open = { field, panel, list: panel.firstChild }
+            open = panelFor(field, found.kind)
         }
 
         open.start = found.start
         open.matches = matches
-        open.items = matches.map((person, index) => {
+        open.items = matches.map((entry, index) => {
             const item = document.createElement('div')
             item.className = 'wm-select-option'
             item.setAttribute('role', 'option')
             item.dataset.index = String(index)
             item.append(document.createElement('span'))
-            item.firstChild.textContent = person.label
+            item.firstChild.textContent = entry.label
+
+            if (found.kind.detail) {
+                const detail = document.createElement('code')
+                detail.className = 'wm-select-detail'
+                detail.textContent = entry.insert
+                item.append(detail)
+            }
 
             return item
         })
@@ -1451,7 +1500,7 @@ document.addEventListener('livewire:init', () => {
     }
 
     document.addEventListener('input', (event) => {
-        if (event.target.matches?.(FIELD) && ! event.isComposing) {
+        if (event.target.matches?.(FIELDS) && ! event.isComposing) {
             update(event.target)
         }
     })
