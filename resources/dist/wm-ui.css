@@ -2183,10 +2183,11 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .dark .fi-sc-actions[x-intersect\:leave].fi-sticky .fi-ac { background: var(--gray-900); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 0 0 1px rgb(255 255 255 / 0.1); }
 
 /*
- * „Mein Tag“ und Übersicht der Agentur im Kundenbereich (v0.2.60, Simon 20.11.2026: Startseite grafischer, ganze Breite):
- * Kacheln mit Symbol (.wm-day-stat), Karten mit Zeilen (.wm-day-card, -task, -deal), Abzeichen (.wm-day-chip), Pipeline aus
- * Pfeilen (.wm-day-pipe), Tagesleiste (.wm-day-tl), Personen (.wm-day-people) und Projektkarten mit Farbe je Art und
- * Fortschrittsring (.wm-day-project). Töne über data-tone (danger, warning, primary, info, success, gray). Das Raster
+ * „Mein Tag“ und Übersicht der Agentur im Kundenbereich (v0.2.60, Simon 20.11.2026; „Mein Tag“ seit v0.2.67 nach Entwurf B3,
+ * Simon 25.11.2026: drei gleich hohe Spalten statt Kacheln): Kacheln mit Symbol (.wm-day-stat, Übersicht der Agentur),
+ * Karten mit Zeilen (.wm-day-card, -deal), Abzeichen (.wm-day-chip), Termine als Zeile (.wm-day-agenda), Spalten
+ * (.wm-day-lane), Projekte als Liste mit Schritten (.wm-day-plist), Personen (.wm-day-people). Töne über data-tone
+ * (danger, warning, primary, info, success, gray). Das Raster
  * richtet sich nach der Breite des Inhalts (Container-Query am Widget, darin gibt es keine Filament-Menüs).
  */
 .wm-day { container: wm-day / inline-size; --wm-day-line: var(--gray-200); --wm-day-soft: var(--gray-100); --wm-day-card: #fff; --wm-day-muted: var(--gray-500); font-size: 0.875rem; }
@@ -2211,9 +2212,9 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .dark .wm-day-warn { background: color-mix(in srgb, var(--warning-400) 12%, transparent); border-color: color-mix(in srgb, var(--warning-400) 35%, transparent); color: var(--warning-300) !important; }
 
 .wm-day-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 0.875rem; margin-bottom: 1rem; }
-.wm-day-stat, .wm-day-card, .wm-day-project { background: var(--wm-day-card); border: 1px solid var(--wm-day-line); border-radius: 0.75rem; }
+.wm-day-stat, .wm-day-card { background: var(--wm-day-card); border: 1px solid var(--wm-day-line); border-radius: 0.75rem; }
 .wm-day-stat { display: flex; gap: 0.875rem; align-items: flex-start; padding: 0.875rem 1rem; }
-.wm-day-stat:hover, .wm-day-project:hover { border-color: var(--gray-400); }
+.wm-day-stat:hover { border-color: var(--gray-400); }
 .wm-day-stat[data-alert] { background: linear-gradient(180deg, var(--danger-50), var(--wm-day-card) 70%); border-color: var(--danger-200); }
 .dark .wm-day-stat[data-alert] { background: linear-gradient(180deg, color-mix(in srgb, var(--danger-400) 14%, transparent), transparent 70%), var(--wm-day-card); border-color: color-mix(in srgb, var(--danger-400) 40%, transparent); }
 .wm-day-ico { flex: none; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 0.7rem; background: var(--wm-tint); color: var(--wm-tone); }
@@ -2223,34 +2224,21 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .wm-day-stat-body strong { display: block; font-size: 1.6rem; font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .wm-day-stat-body > span:last-child { font-size: 0.8rem; color: var(--wm-tone, var(--wm-day-muted)); }
 
-.wm-day-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(18rem, 0.8fr); gap: 1rem; align-items: start; margin-bottom: 1rem; }
 .wm-day-side { display: grid; gap: 1rem; }
 .wm-day-card { overflow: hidden; }
 .wm-day-card > header { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; padding: 0.8rem 1.125rem 0.6rem; }
 .wm-day-card h3, .wm-day-band h3 { font-size: 0.95rem; font-weight: 650; margin: 0; }
 .wm-day-card > header a, .wm-day-band a { color: var(--primary-700); font-size: 0.8125rem; font-weight: 500; white-space: nowrap; }
 .dark .wm-day-card > header a, .dark .wm-day-band a { color: var(--primary-400); }
-.wm-day-group { display: flex; align-items: center; gap: 0.5rem; margin: 0; padding: 0.4rem 1.125rem; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--wm-tone); background: var(--wm-tint); border-top: 1px solid var(--wm-day-line); }
-.wm-day-group b { background: var(--wm-day-card); border-radius: 99px; padding: 0 0.45rem; }
-.wm-day-task, .wm-day-deal { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0.75rem; align-items: center; padding: 0.6rem 1.125rem; border-top: 1px solid var(--wm-day-soft); }
-.wm-day-task { border-left: 3px solid var(--wm-tone); padding-left: calc(1.125rem - 3px); }
-.wm-day-task:hover, .wm-day-deal:hover, .wm-day-more:hover { background: var(--wm-day-soft); }
+.wm-day-deal { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0.75rem; align-items: center; padding: 0.6rem 1.125rem; border-top: 1px solid var(--wm-day-soft); }
+.wm-day-deal:hover, .wm-day-more:hover { background: var(--wm-day-soft); }
 .wm-day-main { display: block; min-width: 0; }
 .wm-day-main strong { display: block; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wm-day-main small { display: block; color: var(--wm-day-muted); font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wm-day-tick { width: 1.125rem; height: 1.125rem; border: 2px solid var(--gray-300); border-radius: 50%; }
-.wm-day-tick[data-kind="ticket"] { border-radius: 0.3rem 0.3rem 0.3rem 0; }
-.dark .wm-day-tick { border-color: var(--gray-600); }
 .wm-day-chip { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.1rem 0.55rem; border-radius: 99px; background: var(--wm-tint, var(--wm-day-soft)); color: var(--wm-tone, var(--wm-day-muted)); white-space: nowrap; }
-.wm-day-chip[data-solid] { background: var(--warning-600); color: #fff; }
 .wm-day-who { display: inline-grid; place-items: center; min-width: 1.3rem; height: 1.3rem; padding: 0 0.2rem; margin-left: 0.4rem; border-radius: 99px; background: var(--wm-day-soft); border: 1px solid var(--wm-day-line); font-size: 0.6rem; font-weight: 700; color: var(--wm-day-muted); vertical-align: middle; }
 .wm-day-more, .wm-day-empty { display: block; margin: 0; padding: 0.6rem 1.125rem; border-top: 1px solid var(--wm-day-soft); color: var(--wm-day-muted) !important; font-size: 0.8rem; }
 
-.wm-day-stage { padding: 0.5rem 0.9rem 0.5rem 1.25rem; background: var(--wm-tint); clip-path: polygon(0 0, calc(100% - 0.7rem) 0, 100% 50%, calc(100% - 0.7rem) 100%, 0 100%, 0.7rem 50%); min-width: 0; }
-.wm-day-stage:first-child { clip-path: polygon(0 0, calc(100% - 0.7rem) 0, 100% 50%, calc(100% - 0.7rem) 100%, 0 100%); padding-left: 0.75rem; border-radius: 0.5rem 0 0 0.5rem; }
-.wm-day-stage small { display: block; font-size: 0.72rem; color: var(--wm-day-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.wm-day-stage strong { display: block; font-size: 1.25rem; line-height: 1.2; color: var(--wm-tone); font-variant-numeric: tabular-nums; }
-.wm-day-stage span { display: block; font-size: 0.72rem; color: var(--wm-day-muted); white-space: nowrap; min-height: 1.1em; }
 .wm-day-value { padding: 0 1.125rem 0.75rem; }
 .wm-day-value-key { display: flex; flex-wrap: wrap; gap: 0.2rem 0.875rem; margin: 0.45rem 0 0; font-size: 0.75rem; color: var(--wm-day-muted); }
 .wm-day-value-key i { display: inline-block; width: 0.55rem; height: 0.55rem; border-radius: 0.2rem; margin-right: 0.3rem; }
@@ -2273,29 +2261,6 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .wm-day-band { display: flex; align-items: baseline; gap: 0.625rem; margin: 0.25rem 0.125rem 0.625rem; }
 .wm-day-band span { color: var(--wm-day-muted); font-size: 0.8rem; }
 .wm-day-band a { margin-left: auto; }
-.wm-day-projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr)); gap: 0.875rem; }
-.wm-day-project { display: block; border-top: 4px solid var(--wm-kind); color: var(--wm-kind) !important; --wm-kind: var(--gray-500); --wm-kind-tint: var(--wm-day-soft); }
-.wm-day-project[data-kind="website"], .wm-day-project[data-kind="landingpage"] { --wm-kind: var(--primary-600); --wm-kind-tint: var(--primary-50); }
-.wm-day-project[data-kind="video"] { --wm-kind: #7c3aed; --wm-kind-tint: #f5f3ff; }
-.wm-day-project[data-kind="photo"] { --wm-kind: #ca8a04; --wm-kind-tint: #fefce8; }
-.wm-day-project[data-kind="social_media"] { --wm-kind: #db2777; --wm-kind-tint: #fdf2f8; }
-.wm-day-project[data-kind="print"] { --wm-kind: #2563eb; --wm-kind-tint: #eff6ff; }
-.dark .wm-day-project { --wm-kind-tint: color-mix(in srgb, var(--wm-kind) 18%, transparent); }
-.dark .wm-day-project[data-kind="video"] { --wm-kind: #a78bfa; } .dark .wm-day-project[data-kind="photo"] { --wm-kind: #facc15; }
-.dark .wm-day-project[data-kind="social_media"] { --wm-kind: #f472b6; } .dark .wm-day-project[data-kind="print"] { --wm-kind: #60a5fa; }
-.dark .wm-day-project[data-kind="website"], .dark .wm-day-project[data-kind="landingpage"] { --wm-kind: var(--primary-400); }
-.wm-day-project[data-ours] { border-color: var(--warning-300); border-top-color: var(--wm-kind); }
-.wm-day-project-top { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; padding: 0.6rem 0.875rem 0; }
-.wm-day-kind { font-size: 0.72rem; font-weight: 700; background: var(--wm-kind-tint); padding: 0.1rem 0.55rem; border-radius: 99px; }
-.wm-day-project-body { display: flex; gap: 0.75rem; align-items: center; padding: 0.6rem 0.875rem; }
-.wm-day-project-body .wm-day-main { color: var(--gray-950); }
-.dark .wm-day-project-body .wm-day-main, .dark .wm-day-project-next { color: #fff; }
-.wm-day-ring { flex: none; }
-.wm-day-ring-track { stroke: var(--wm-day-soft); }
-.wm-day-ring text { fill: var(--gray-950); }
-.dark .wm-day-ring text { fill: #fff; }
-.wm-day-project-next { display: block; padding: 0.55rem 0.875rem 0.75rem; border-top: 1px solid var(--wm-day-soft); color: var(--gray-950); font-weight: 500; }
-.wm-day-project-next small { display: block; color: var(--wm-day-muted); font-weight: 400; font-size: 0.72rem; }
 
 /* Balken aus Abschnitten: <svg class="wm-day-bar" viewBox="0 0 100 6" preserveAspectRatio="none"> mit <rect x width> in Prozent. */
 .wm-day-bar { display: block; width: 100%; height: 6px; margin: 0.375rem 0 0.3rem; border-radius: 99px; overflow: hidden; }
@@ -2309,23 +2274,70 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .wm-day-value-key i[data-share] { background: var(--wm-share); }
 .wm-day-value-key i[data-tone] { background: var(--wm-tone); }
 .wm-day-more[data-tone] { color: var(--wm-tone) !important; font-weight: 600; }
-.wm-day-pipe { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 3px; padding: 0.25rem 1.125rem 0.75rem; }
 
-/* Tagesleiste 7 bis 19 Uhr: Stunden als sechs gleich breite Zellen (8, 10 … 18 je in der Mitte), Termine als <rect> in Prozent. */
-.wm-day-tl { padding: 0.125rem 1.125rem 0.875rem; }
-.wm-day-tl-hours { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); height: 1rem; font-size: 0.66rem; color: var(--gray-400); text-align: center; }
-.wm-day-tl[data-names] .wm-day-tl-hours { margin-left: 3.6rem; }
-.wm-day-tl-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.375rem; }
-.wm-day-tl-row b { flex: none; width: 3.1rem; font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.wm-day-tl-track { display: block; flex: 1; min-width: 0; height: 1.875rem; background: var(--wm-day-soft); border-radius: 0.45rem; }
-.wm-day-tl-grid { fill: var(--wm-day-line); }
-.wm-day-tl-event { fill: var(--primary-600); }
-.dark .wm-day-tl-event { fill: var(--primary-500); }
-.wm-day-tl-now { fill: var(--danger-600); }
-.wm-day-tl-line { display: flex; gap: 0.625rem; margin: 0.3rem 0 0; font-size: 0.8rem; }
-.wm-day-tl-line b { flex: none; font-variant-numeric: tabular-nums; }
-.wm-day-tl-line span { color: var(--wm-day-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .wm-day-tl-foot { margin: 0.5rem 0 0; font-size: 0.75rem; color: var(--wm-day-muted); }
+
+/* „Mein Tag“ (v0.2.67): Termine als Zeile, drei Spalten gleich hoch in einer Zeile, Zeilen mit Kreis zum Abhaken bzw. Symbol. */
+.wm-day-agenda { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.5rem; padding: 0.55rem 1rem; margin-bottom: 1rem; background: var(--wm-day-card); border: 1px solid var(--wm-day-line); border-radius: 0.75rem; }
+.wm-day-agenda > b { margin-right: 0.25rem; font-weight: 650; }
+.wm-day-agenda > a { margin-left: auto; color: var(--primary-700); font-size: 0.8125rem; font-weight: 500; }
+.dark .wm-day-agenda > a { color: var(--primary-400); }
+.wm-day-appt { display: inline-flex; gap: 0.4rem; align-items: baseline; max-width: 100%; padding: 0.2rem 0.6rem; border-radius: 0.45rem; background: var(--primary-50); color: var(--primary-800); font-size: 0.8125rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dark .wm-day-appt { background: color-mix(in srgb, var(--primary-400) 14%, transparent); color: var(--primary-300); }
+.wm-day-appt b { font-variant-numeric: tabular-nums; }
+.wm-day-appt[data-past] { background: var(--wm-day-soft); color: var(--wm-day-muted); }
+
+.wm-day-lanes { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 1rem; margin-bottom: 1.25rem; }
+.wm-day-lane { display: flex; flex-direction: column; min-width: 0; background: var(--wm-day-card); border: 1px solid var(--wm-day-line); border-radius: 0.75rem; overflow: hidden; }
+.wm-day-lane > header { padding: 0.8rem 1.125rem 0.7rem; border-bottom: 1px solid var(--wm-day-soft); }
+.wm-day-lane-big { display: flex; align-items: baseline; gap: 0.6rem; margin: 0; }
+.wm-day-lane-big strong { font-size: 1.5rem; font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.wm-day-lane-big span { font-weight: 650; }
+.wm-day-lane-big a { margin-left: auto; color: var(--primary-700); font-size: 0.8125rem; font-weight: 500; white-space: nowrap; }
+.dark .wm-day-lane-big a { color: var(--primary-400); }
+.wm-day-lane-q { margin: 0.1rem 0 0; color: var(--wm-day-muted); font-size: 0.8rem; }
+.wm-day-lane-q [data-tone] { color: var(--wm-tone); font-weight: 600; }
+.wm-day-lane-rows { flex: 1; }
+.wm-day-lane .wm-day-empty { border-top: 0; padding: 1rem 1.125rem; }
+.wm-day-row { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.7rem; align-items: center; padding-left: 1.125rem; border-top: 1px solid var(--wm-day-soft); }
+.wm-day-row:first-child { border-top: 0; }
+.wm-day-row:hover { background: var(--wm-day-soft); }
+.wm-day-row-link { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.75rem; align-items: center; min-width: 0; min-height: 3.4rem; padding: 0.55rem 1.125rem 0.55rem 0; }
+.wm-day-row[data-later] .wm-day-main strong { font-weight: 500; color: var(--wm-day-muted); }
+.wm-day-kind-icon { display: grid; place-items: center; width: 1.125rem; height: 1.125rem; color: var(--gray-400); }
+.wm-day-kind-icon svg { width: 1.05rem; height: 1.05rem; }
+.wm-day-tick { width: 1.125rem; height: 1.125rem; padding: 0; border: 2px solid var(--gray-300); border-radius: 50%; background: none; cursor: pointer; }
+.wm-day-tick:hover { border-color: var(--primary-600); background: var(--primary-50); }
+.dark .wm-day-tick { border-color: var(--gray-600); }
+.dark .wm-day-tick:hover { border-color: var(--primary-400); background: transparent; }
+
+/* Projekte als Liste: Gruppen „Wir sind dran“ und „Beim Kunden“, Art als Punkt, Schritte als <svg class="wm-day-steps"> mit <rect data-state>. */
+.wm-day-plist { margin-bottom: 1rem; }
+.wm-day-phead, .wm-day-prow { display: grid; grid-template-columns: minmax(0, 1.3fr) 8.5rem minmax(0, 1.6fr) 7.5rem; gap: 1rem; align-items: center; padding: 0.6rem 1.125rem; }
+.wm-day-phead { padding-bottom: 0.4rem; font-size: 0.75rem; color: var(--wm-day-muted); }
+.wm-day-phead span:last-child, .wm-day-psince { text-align: right; }
+.wm-day-pgroup { margin: 0; padding: 0.35rem 1.125rem; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--wm-day-muted); background: var(--wm-day-soft); }
+.wm-day-prow { border-top: 1px solid var(--wm-day-soft); }
+.wm-day-pgroup + .wm-day-prow { border-top: 0; }
+.wm-day-prow:hover { background: var(--wm-day-soft); }
+.wm-day-prow[data-theirs] .wm-day-main strong { font-weight: 500; }
+.wm-day-pkind { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--gray-600); white-space: nowrap; --wm-kind: var(--gray-400); }
+.dark .wm-day-pkind { color: var(--gray-400); }
+.wm-day-pkind::before { content: ""; flex: none; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--wm-kind); }
+.wm-day-pkind[data-kind="website"], .wm-day-pkind[data-kind="landingpage"] { --wm-kind: var(--primary-600); }
+.wm-day-pkind[data-kind="video"] { --wm-kind: #7c3aed; } .wm-day-pkind[data-kind="photo"] { --wm-kind: #ca8a04; }
+.wm-day-pkind[data-kind="social_media"] { --wm-kind: #db2777; } .wm-day-pkind[data-kind="print"] { --wm-kind: #2563eb; }
+.wm-day-pstep { display: block; min-width: 0; }
+.wm-day-pstep-text { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.4rem; }
+.wm-day-steps { display: block; width: 100%; max-width: 16rem; height: 6px; margin-top: 0.4rem; }
+.wm-day-steps rect { fill: var(--gray-200); }
+.wm-day-steps rect[data-state="done"] { fill: var(--primary-600); }
+.wm-day-steps rect[data-state="current"] { fill: var(--gray-900); }
+.wm-day-prow[data-theirs] .wm-day-steps rect[data-state="current"] { fill: var(--gray-400); }
+.dark .wm-day-steps rect { fill: var(--gray-700); }
+.dark .wm-day-steps rect[data-state="done"] { fill: var(--primary-500); }
+.dark .wm-day-steps rect[data-state="current"] { fill: #fff; }
+.dark .wm-day-prow[data-theirs] .wm-day-steps rect[data-state="current"] { fill: var(--gray-500); }
 
 /* Übersicht der Agentur (Kundenbereich, Widget AgencyDesk): Umsatz je Monat als Säulen, Zeilen mit Wert rechts. */
 .wm-desk-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(19rem, 1fr); gap: 1rem; align-items: start; }
@@ -2347,18 +2359,23 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .wm-desk-meter { flex: 1; max-width: 9rem; margin: 0; }
 
 @container wm-day (max-width: 74rem) {
-    .wm-day-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
     .wm-day-side { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
 }
 @container wm-day (max-width: 46rem) {
-    .wm-day-grid, .wm-day-side { grid-template-columns: minmax(0, 1fr); }
+    .wm-day-side { grid-template-columns: minmax(0, 1fr); }
+    .wm-day-phead, .wm-day-pkind { display: none; }
+    .wm-day-prow { grid-template-columns: minmax(0, 1fr) auto; gap: 0.3rem 0.75rem; }
+    .wm-day-pstep { grid-column: 1 / -1; grid-row: 2; }
     .wm-day-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.625rem; }
     .wm-day-stat { padding: 0.75rem; gap: 0.625rem; }
     .wm-day-ico { width: 2rem; height: 2rem; }
     .wm-day-stat-body strong { font-size: 1.3rem; }
     .wm-day-right .wm-day-chip { white-space: normal; }
 }
-@container wm-day (max-width: 56rem) { .wm-desk-grid { grid-template-columns: minmax(0, 1fr); } }
+@container wm-day (max-width: 56rem) {
+    .wm-desk-grid { grid-template-columns: minmax(0, 1fr); }
+    .wm-day-lanes { grid-auto-flow: row; grid-template-columns: minmax(0, 1fr); }
+}
 
 /*
  * Balken unten in der Mitte, wenn der Server gerade aktualisiert wird oder ein Fehler keine Filament-Meldung zeigen kann
