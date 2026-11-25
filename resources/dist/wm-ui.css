@@ -2419,3 +2419,26 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 @media (max-width: 40rem) {
     .wm-server-banner { left: 1rem; right: 1rem; bottom: 1rem; width: auto; transform: none; }
 }
+
+/*
+ * Notizen des Teams mit „@“-Erwähnung (Simon, 25.11.2026; Kundenbereich: Kasten „Notizen“ am Projekt): Feld oben, darunter
+ * die Notizen mit Person und Zeit, Erwähnungen hervorgehoben (.wm-mention, auch anderswo im Text nutzbar). Das Menü beim
+ * Tippen von „@“ nimmt die Stile der Auswahlfelder (.wm-select-panel).
+ */
+.wm-notes { display: flex; flex-direction: column; gap: 0.75rem; }
+.wm-notes-form { display: flex; flex-direction: column; gap: 0.5rem; }
+.wm-notes-actions { display: flex; justify-content: flex-end; }
+.wm-notes-empty { font-size: 0.875rem; color: var(--gray-500); }
+.wm-notes-list { display: flex; flex-direction: column; }
+.wm-note { padding: 0.625rem 0; border-top: 1px solid rgb(3 7 18 / 0.06); font-size: 0.875rem; line-height: 1.25rem; }
+.dark .wm-note { border-top-color: rgb(255 255 255 / 0.08); }
+.wm-note-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.25rem 0.75rem; font-size: 0.75rem; color: var(--gray-500); }
+.wm-note-head b { font-weight: 600; color: var(--gray-700); }
+.dark .wm-note-head b { color: var(--gray-200); }
+.wm-note-body { margin-top: 0.125rem; white-space: pre-line; overflow-wrap: anywhere; color: var(--gray-700); }
+.dark .wm-note-body { color: var(--gray-200); }
+.wm-notes-older > summary { cursor: pointer; padding-top: 0.25rem; font-size: 0.875rem; color: var(--gray-500); }
+.wm-notes-older > summary:hover { color: var(--gray-700); }
+.dark .wm-notes-older > summary:hover { color: var(--gray-200); }
+.wm-mention { font-weight: 500; color: var(--primary-600); }
+.dark .wm-mention { color: var(--primary-400); }

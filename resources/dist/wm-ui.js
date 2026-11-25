@@ -1273,3 +1273,227 @@ document.addEventListener('livewire:init', () => {
         Livewire.hook('morph.updated', () => requestAnimationFrame(place))
     })
 })()
+
+/*
+ * Jemanden aus dem Team mit „@“ erwähnen (Simon, 25.11.2026: Notizen in Anfragen und Projekten): Ein <textarea> mit
+ * `data-wm-mentions='[{"label":"Tanja Wurster","insert":"Tanja"}]'` zeigt beim Tippen von „@“ am Wortanfang ein Menü mit
+ * den Personen im Stil der Auswahlfelder (wm-select-*), gefiltert nach dem Getippten. Pfeile wählen, Enter, Tab oder ein
+ * Klick setzen „@Tanja “ an die Stelle, Esc schließt. Der Fokus bleibt im Feld, Livewire bekommt den Text über input.
+ * Ohne Treffer bleibt das Menü zu, Adressen (name@domain) öffnen es nie. Was eine Erwähnung ist, entscheidet der Server.
+ */
+;(() => {
+    const FIELD = 'textarea[data-wm-mentions]'
+    const LIMIT = 8
+    let open = null
+
+    const fold = (text) => text.toLocaleLowerCase('de').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ß/g, 'ss')
+
+    const people = (field) => {
+        try {
+            const list = JSON.parse(field.dataset.wmMentions ?? '[]')
+
+            return Array.isArray(list) ? list.filter((person) => person?.label && person?.insert) : []
+        } catch {
+            return []
+        }
+    }
+
+    // Das Wort mit „@“ direkt vor dem Cursor: Anfang und bisher Getipptes, sonst null.
+    const typed = (field) => {
+        if (field.selectionStart !== field.selectionEnd) {
+            return null
+        }
+
+        const before = field.value.slice(0, field.selectionStart)
+        const match = before.match(/(?:^|[\s(„“"'])@([\p{L}\p{M}.\-]{0,30})$/u)
+
+        return match ? { query: match[1], start: field.selectionStart - match[1].length - 1 } : null
+    }
+
+    // Lage des Cursors im Fenster über ein unsichtbares Abbild des Feldes.
+    const caret = (field, index) => {
+        const style = window.getComputedStyle(field)
+        const mirror = document.createElement('div')
+
+        for (const property of ['boxSizing', 'width', 'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth', 'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'letterSpacing', 'lineHeight', 'textTransform', 'wordSpacing', 'tabSize']) {
+            mirror.style[property] = style[property]
+        }
+
+        Object.assign(mirror.style, { position: 'absolute', visibility: 'hidden', top: '0', left: '-9999px', whiteSpace: 'pre-wrap', overflowWrap: 'break-word', borderStyle: 'solid' })
+        mirror.textContent = field.value.slice(0, index)
+        const marker = document.createElement('span')
+        marker.textContent = '​'
+        mirror.append(marker)
+        document.body.append(mirror)
+
+        const box = field.getBoundingClientRect()
+        const position = {
+            left: box.left + marker.offsetLeft - field.scrollLeft,
+            top: box.top + marker.offsetTop - field.scrollTop,
+            height: marker.offsetHeight || parseFloat(style.lineHeight) || 20,
+        }
+
+        mirror.remove()
+
+        return position
+    }
+
+    const close = () => {
+        open?.panel.remove()
+        open?.field.removeAttribute('aria-expanded')
+        open = null
+    }
+
+    const place = () => {
+        if (! open) {
+            return
+        }
+
+        if (! open.field.isConnected) {
+            close()
+
+            return
+        }
+
+        const { field, panel, start } = open
+        const margin = 8
+        const gap = 4
+        const width = Math.min(260, window.innerWidth - 2 * margin)
+        const spot = caret(field, start)
+        const below = window.innerHeight - (spot.top + spot.height) - gap - margin
+        const up = below < 160 && spot.top > below
+
+        panel.style.width = `${width}px`
+        panel.style.left = `${Math.max(margin, Math.min(spot.left, window.innerWidth - width - margin))}px`
+        panel.style.maxHeight = `${Math.min(280, up ? spot.top - gap - margin : below)}px`
+        panel.style.top = up ? '' : `${spot.top + spot.height + gap}px`
+        panel.style.bottom = up ? `${window.innerHeight - spot.top + gap}px` : ''
+    }
+
+    const highlight = (index) => {
+        open.active = index
+        open.items.forEach((item, position) => item.classList.toggle('wm-active', position === index))
+        open.items[index]?.scrollIntoView({ block: 'nearest' })
+    }
+
+    const choose = (index) => {
+        const person = open?.matches[index]
+
+        if (! person) {
+            return
+        }
+
+        const { field, start } = open
+        const end = field.selectionStart
+        const text = `@${person.insert} `
+        close()
+
+        field.value = field.value.slice(0, start) + text + field.value.slice(end)
+        field.setSelectionRange(start + text.length, start + text.length)
+        field.dispatchEvent(new Event('input', { bubbles: true }))
+        field.focus({ preventScroll: true })
+    }
+
+    const update = (field) => {
+        const found = typed(field)
+        const query = found ? fold(found.query) : ''
+        const matches = found
+            ? people(field).filter((person) => fold(person.label).split(/\s+/).some((word) => word.startsWith(query)) || fold(person.insert).startsWith(query)).slice(0, LIMIT)
+            : []
+
+        if (matches.length === 0) {
+            close()
+
+            return
+        }
+
+        if (open?.field !== field) {
+            close()
+
+            const panel = document.createElement('div')
+            panel.className = 'wm-select-panel wm-mention-panel'
+            panel.innerHTML = '<div class="wm-select-list" role="listbox" aria-label="Erwähnen"></div>'
+            panel.addEventListener('mousedown', (event) => event.preventDefault())
+            panel.addEventListener('click', (event) => {
+                const item = event.target.closest('.wm-select-option')
+
+                if (item) {
+                    choose(Number(item.dataset.index))
+                }
+            })
+            panel.addEventListener('mousemove', (event) => {
+                const item = event.target.closest('.wm-select-option')
+
+                if (item && open && Number(item.dataset.index) !== open.active) {
+                    highlight(Number(item.dataset.index))
+                }
+            })
+            document.body.append(panel)
+            field.setAttribute('aria-expanded', 'true')
+            open = { field, panel, list: panel.firstChild }
+        }
+
+        open.start = found.start
+        open.matches = matches
+        open.items = matches.map((person, index) => {
+            const item = document.createElement('div')
+            item.className = 'wm-select-option'
+            item.setAttribute('role', 'option')
+            item.dataset.index = String(index)
+            item.append(document.createElement('span'))
+            item.firstChild.textContent = person.label
+
+            return item
+        })
+        open.list.replaceChildren(...open.items)
+        highlight(0)
+        place()
+    }
+
+    document.addEventListener('input', (event) => {
+        if (event.target.matches?.(FIELD) && ! event.isComposing) {
+            update(event.target)
+        }
+    })
+
+    document.addEventListener('keydown', (event) => {
+        if (! open || event.target !== open.field || event.isComposing) {
+            return
+        }
+
+        const key = event.key
+
+        if (key === 'ArrowDown' || key === 'ArrowUp') {
+            event.preventDefault()
+            highlight((open.active + (key === 'ArrowDown' ? 1 : -1) + open.items.length) % open.items.length)
+        } else if ((key === 'Enter' && ! event.shiftKey && ! event.ctrlKey && ! event.metaKey) || key === 'Tab') {
+            event.preventDefault()
+            event.stopPropagation()
+            choose(open.active)
+        } else if (key === 'Escape') {
+            event.preventDefault()
+            event.stopPropagation()
+            close()
+        } else if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Home' || key === 'End') {
+            requestAnimationFrame(() => open && update(open.field))
+        }
+    }, true)
+
+    document.addEventListener('focusout', (event) => {
+        if (open && event.target === open.field) {
+            close()
+        }
+    })
+    document.addEventListener('click', (event) => {
+        if (open && ! open.panel.contains(event.target) && event.target !== open.field) {
+            close()
+        }
+    })
+    window.addEventListener('resize', () => close())
+    document.addEventListener('scroll', (event) => {
+        if (open && ! open.panel.contains(event.target)) {
+            place()
+        }
+    }, true)
+    document.addEventListener('livewire:navigating', () => close())
+})()
