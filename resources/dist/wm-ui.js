@@ -630,6 +630,10 @@ window.WmDatePicker ??= (() => {
  * gerade“, die Seite fragt alle paar Sekunden nach und lädt neu, sobald der Server wieder antwortet (dann läuft neuer
  * Code). Steht der Cursor in einem Feld, lädt sie nicht von selbst, sondern bietet „Neu laden“ an, damit nichts Getipptes
  * verloren geht. Andere Fehler des Servers (5xx) zeigen eine ruhige Meldung statt der Fehlerseite, höchstens eine pro Minute.
+ *
+ * Ganze Seite statt Daten (Simon, 25.11.2026: ein Tab, der über einen Deploy offen blieb, zeigte die To-Do-Seite im
+ * Rahmen über der alten Seite): Antwortet der Server mit 200, aber ohne JSON, legte Livewire die Antwort ebenso über die
+ * Seite. Abfragen laden die Seite dann einmal still neu, nach einem Klick lädt sie neu bzw. bietet „Neu laden“ an.
  */
 document.addEventListener('livewire:init', () => {
     const RELOADED_AT = 'wm-session-reload'
@@ -785,6 +789,20 @@ document.addEventListener('livewire:init', () => {
         banner({ text: `${title}. ${body}`, closable: true })
     }
 
+    /** Antwort ohne Daten nach einem Klick: neu laden, außer jemand tippt gerade. */
+    const showOutdatedPage = () => {
+        if (! isTyping()) {
+            window.location.reload()
+
+            return
+        }
+
+        banner({
+            text: 'Die Seite ist nicht mehr aktuell. Bitte laden Sie sie neu, bevor Sie weiterarbeiten.',
+            action: { label: 'Neu laden', run: () => window.location.reload() },
+        })
+    }
+
     Livewire.interceptRequest(({ request, onFailure, onError }) => {
         onFailure(() => {
             if (onlyPolls(request) || waitingSince !== null) {
@@ -818,6 +836,21 @@ document.addEventListener('livewire:init', () => {
                 preventDefault()
                 skipFilamentNotice()
                 showServerError()
+
+                return
+            }
+
+            if (response?.ok) {
+                preventDefault()
+                skipFilamentNotice()
+
+                if (onlyPolls(request)) {
+                    reloadOnce()
+
+                    return
+                }
+
+                showOutdatedPage()
             }
         })
     })
