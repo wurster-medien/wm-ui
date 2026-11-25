@@ -2482,6 +2482,8 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .wm-team-cal-mark.is-requested { background: transparent; border: 2px dashed var(--primary-500); box-shadow: none; }
 .wm-team-cal-mark.is-requested.is-half { background: linear-gradient(90deg, color-mix(in oklab, var(--primary-500) 30%, transparent) 50%, transparent 50%); }
 .dark .wm-team-cal-mark:not(.is-half):not(.is-requested) { background: var(--primary-400); }
+/* Wochenende und Feiertag: dieselbe Abwesenheit blass, der Tag zählt nicht (Simon, 25.11.2026). */
+.wm-team-cal-free .wm-team-cal-mark { opacity: 0.35; }
 
 /*
  * Spamfilter (v0.2.69, Kundenbereich, SpamFilterFields::slider): Griffe beschriften sich selbst, „Spam-Ordner ab …“ über
