@@ -618,13 +618,27 @@ window.WmDatePicker ??= (() => {
  * Abfragen im Hintergrund (wire:poll): Am Handy scheitert leicht eine, wenn es aufwacht oder die App wechselt, die nächste
  * klappt wieder. Dafür keine Meldung „Fehler beim Laden der Seite“ (Simon, 3.11.2026), die gilt nur, wenn jemand etwas
  * getan hat. Eine abgelaufene Sitzung lädt die Seite neu, statt die Fehlerseite über die Liste zu legen; der Status ist dabei
- * nicht immer 419, weil Laravel Anfragen der eigenen Seite auch ohne Token durchlässt. Fehler des Servers (5xx) bleiben sichtbar.
+ * nicht immer 419, weil Laravel Anfragen der eigenen Seite auch ohne Token durchlässt. Fehler des Servers (5xx) bleiben sichtbar,
+ * als Meldung (siehe unten).
  *
  * Filament fragt window.filamentErrorNotifications beim Scheitern ab und kennt keine Ausnahme für Abfragen. Darum läuft
  * dieser Teil über capture vor Filament, nimmt den Wert für diesen Durchlauf weg und setzt ihn gleich danach wieder.
+ *
+ * Update der Plattform (Simon, 25.11.2026: „oft sehe ich so eine Fehlerseite, geht das professioneller?“): Während eines
+ * Deploys mit Migrationen antwortet der Server mit 503 (Wartungsseite), Livewire legte diese Seite ohne ihr Layout über
+ * die offene Seite. Abfragen im Hintergrund schweigen dazu. Nach einem Klick erscheint unten ein Balken „Wir aktualisieren
+ * gerade“, die Seite fragt alle paar Sekunden nach und lädt neu, sobald der Server wieder antwortet (dann läuft neuer
+ * Code). Steht der Cursor in einem Feld, lädt sie nicht von selbst, sondern bietet „Neu laden“ an, damit nichts Getipptes
+ * verloren geht. Andere Fehler des Servers (5xx) zeigen eine ruhige Meldung statt der Fehlerseite, höchstens eine pro Minute.
  */
 document.addEventListener('livewire:init', () => {
     const RELOADED_AT = 'wm-session-reload'
+    const WAIT_MS = 5000
+    const SLOW_WAIT_MS = 30000
+    const SLOW_AFTER_MS = 600000
+    const ERROR_NOTICE_GAP_MS = 60000
+    let waitingSince = null
+    let lastErrorNotice = 0
 
     const onlyPolls = (request) => {
         const messages = [...(request?.messages ?? [])]
@@ -653,18 +667,157 @@ document.addEventListener('livewire:init', () => {
         window.location.reload()
     }
 
+    /** Ein Balken unten in der Mitte, für Update und Fehler derselbe. */
+    const banner = ({ text, busy = false, action = null, closable = false }) => {
+        let element = document.getElementById('wm-server-banner')
+
+        if (! element) {
+            element = document.createElement('div')
+            element.id = 'wm-server-banner'
+            element.className = 'wm-server-banner'
+            element.setAttribute('role', 'status')
+            element.setAttribute('aria-live', 'polite')
+            document.body.append(element)
+        }
+
+        element.replaceChildren()
+        element.classList.toggle('wm-server-banner-busy', busy)
+
+        if (busy) {
+            const spinner = document.createElement('span')
+            spinner.className = 'wm-server-banner-spinner'
+            spinner.setAttribute('aria-hidden', 'true')
+            element.append(spinner)
+        }
+
+        const message = document.createElement('p')
+        message.textContent = text
+        element.append(message)
+
+        if (action) {
+            const button = document.createElement('button')
+            button.type = 'button'
+            button.className = 'wm-server-banner-action'
+            button.textContent = action.label
+            button.addEventListener('click', action.run)
+            element.append(button)
+        }
+
+        if (closable) {
+            const close = document.createElement('button')
+            close.type = 'button'
+            close.className = 'wm-server-banner-close'
+            close.setAttribute('aria-label', 'Schließen')
+            close.textContent = '×'
+            close.addEventListener('click', () => element.remove())
+            element.append(close)
+        }
+    }
+
+    const isTyping = () => {
+        const active = document.activeElement
+
+        if (! (active instanceof HTMLElement)) {
+            return false
+        }
+
+        return active.isContentEditable
+            || (active.matches('input, textarea, select') && ! active.matches('[readonly], [disabled], [type=button], [type=submit], [type=checkbox], [type=radio]'))
+    }
+
+    /** Fragt die aktuelle Adresse ab (HEAD, ohne Cache): alles außer 503 heißt, der Server ist wieder da. */
+    const serverIsBack = async () => {
+        try {
+            const response = await fetch(window.location.href, { method: 'HEAD', cache: 'no-store', credentials: 'same-origin', redirect: 'manual' })
+
+            return response.type === 'opaqueredirect' || response.status !== 503
+        } catch (error) {
+            return false
+        }
+    }
+
+    const waitForServer = async () => {
+        if (await serverIsBack()) {
+            waitingSince = null
+
+            if (! isTyping()) {
+                window.location.reload()
+
+                return
+            }
+
+            banner({
+                text: 'Die Aktualisierung ist fertig. Bitte laden Sie die Seite neu, bevor Sie weiterarbeiten.',
+                action: { label: 'Neu laden', run: () => window.location.reload() },
+            })
+
+            return
+        }
+
+        setTimeout(waitForServer, Date.now() - waitingSince > SLOW_AFTER_MS ? SLOW_WAIT_MS : WAIT_MS)
+    }
+
+    const showMaintenance = () => {
+        if (waitingSince !== null) {
+            return
+        }
+
+        waitingSince = Date.now()
+        banner({ text: 'Wir aktualisieren gerade. Die Seite lädt gleich von selbst neu.', busy: true })
+        setTimeout(waitForServer, WAIT_MS)
+    }
+
+    const showServerError = () => {
+        if (waitingSince !== null || Date.now() - lastErrorNotice < ERROR_NOTICE_GAP_MS) {
+            return
+        }
+
+        lastErrorNotice = Date.now()
+        const title = 'Das hat nicht geklappt'
+        const body = 'Bitte versuchen Sie es gleich noch einmal. Hält der Fehler an, melden Sie sich bitte bei uns.'
+
+        if (typeof window.FilamentNotification === 'function') {
+            new window.FilamentNotification().title(title).body(body).danger().send()
+
+            return
+        }
+
+        banner({ text: `${title}. ${body}`, closable: true })
+    }
+
     Livewire.interceptRequest(({ request, onFailure, onError }) => {
         onFailure(() => {
-            if (onlyPolls(request)) {
+            if (onlyPolls(request) || waitingSince !== null) {
                 skipFilamentNotice()
             }
         })
 
         onError(({ response, preventDefault }) => {
-            if (response?.status >= 400 && response.status < 500 && onlyPolls(request)) {
+            const status = response?.status ?? 0
+
+            if (status >= 400 && status < 500 && onlyPolls(request)) {
                 preventDefault()
                 skipFilamentNotice()
                 reloadOnce()
+
+                return
+            }
+
+            if (status === 503) {
+                preventDefault()
+                skipFilamentNotice()
+
+                if (! onlyPolls(request)) {
+                    showMaintenance()
+                }
+
+                return
+            }
+
+            if (status >= 500) {
+                preventDefault()
+                skipFilamentNotice()
+                showServerError()
             }
         })
     })
