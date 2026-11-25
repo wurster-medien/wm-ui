@@ -2468,3 +2468,39 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .wm-select-option.wm-active > .wm-select-detail { color: var(--gray-500); }
 .dark .wm-select-option > .wm-select-detail { color: var(--gray-500); }
 .dark .wm-select-option.wm-active > .wm-select-detail { color: var(--gray-400); }
+
+/*
+ * Teamkalender (v0.2.69, Kundenbereich, Widget TeamCalendar): ohne Legende lesbar. Abwesend gefüllt, halber Tag halb
+ * gefüllt, beantragt gestrichelt; Wochenende und Feiertag als graue Spalte, der Kopf eines Feiertags gelb wie im Kalender.
+ */
+.fi-ta-cell.wm-team-cal-free, .fi-ta-header-cell.wm-team-cal-free { background-color: var(--gray-100); }
+.dark .fi-ta-cell.wm-team-cal-free, .dark .fi-ta-header-cell.wm-team-cal-free { background-color: rgb(255 255 255 / 0.05); }
+.fi-ta-header-cell.wm-team-cal-holiday { background-color: #fef9c3; color: #713f12; }
+.dark .fi-ta-header-cell.wm-team-cal-holiday { background-color: rgb(234 179 8 / 0.22); color: #fef08a; }
+.wm-team-cal-mark { display: block; box-sizing: border-box; width: 1.5rem; height: 1.25rem; margin-inline: auto; border-radius: 0.25rem; background: var(--primary-500); }
+.wm-team-cal-mark.is-half { background: linear-gradient(90deg, var(--primary-500) 50%, transparent 50%); box-shadow: inset 0 0 0 1px var(--primary-500); }
+.wm-team-cal-mark.is-requested { background: transparent; border: 2px dashed var(--primary-500); box-shadow: none; }
+.wm-team-cal-mark.is-requested.is-half { background: linear-gradient(90deg, color-mix(in oklab, var(--primary-500) 30%, transparent) 50%, transparent 50%); }
+.dark .wm-team-cal-mark:not(.is-half):not(.is-requested) { background: var(--primary-400); }
+
+/*
+ * Spamfilter (v0.2.69, Kundenbereich, SpamFilterFields::slider): Griffe beschriften sich selbst, „Spam-Ordner ab …“ über
+ * dem Regler, „Abweisen ab …“ darunter, damit sie sich nie überdecken; Bereiche farbig (Posteingang grau, Spam-Ordner gelb,
+ * abgewiesen rot). Darüber der Orientierungsbalken (.wm-spam-scale, Lage und Farbe je Zone kommen aus den Werten).
+ */
+.fi-fo-slider.wm-spam-slider { margin-bottom: 2.5rem; }
+.fi-fo-slider.wm-spam-slider .noUi-connects .noUi-connect:nth-child(1) { background: var(--warning-400); }
+.fi-fo-slider.wm-spam-slider .noUi-connects .noUi-connect:nth-child(2) { background: var(--danger-500); }
+.fi-fo-slider.wm-spam-slider .noUi-tooltip { font-size: 0.75rem; white-space: nowrap; }
+.fi-fo-slider.wm-spam-slider .noUi-base > .noUi-origin:last-child .noUi-tooltip { bottom: auto; top: 120%; }
+.wm-spam-scale { margin-bottom: 0.25rem; font-size: 0.75rem; }
+.wm-spam-scale-bar { position: relative; height: 1.75rem; margin-bottom: 1.75rem; }
+.wm-spam-scale-zone { position: absolute; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; border-inline: 1px solid var(--color-white, #fff); background: color-mix(in oklab, var(--zone) 22%, transparent); color: color-mix(in oklab, var(--zone) 70%, var(--gray-950)); font-weight: 500; white-space: nowrap; }
+.wm-spam-scale-zone:first-child { border-radius: 0.5rem 0 0 0.5rem; }
+.wm-spam-scale-zone:nth-last-child(3) { border-radius: 0 0.5rem 0.5rem 0; }
+.wm-spam-scale-zone span { overflow: hidden; text-overflow: ellipsis; padding-inline: 0.25rem; }
+.wm-spam-scale-mark { position: absolute; top: -0.125rem; bottom: -0.375rem; width: 2px; margin-left: -1px; background: var(--gray-700); }
+.wm-spam-scale-mark span { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 0.125rem; white-space: nowrap; color: var(--gray-600); }
+.dark .wm-spam-scale-zone { border-color: var(--gray-900); color: color-mix(in oklab, var(--zone) 60%, white); background: color-mix(in oklab, var(--zone) 30%, transparent); }
+.dark .wm-spam-scale-mark { background: var(--gray-300); }
+.dark .wm-spam-scale-mark span { color: var(--gray-400); }
