@@ -2362,8 +2362,11 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
  * Stammdaten der Kundenansicht (v0.2.73, Simon 26.11.2026, Entwurf 28 A): Visitenkarte (.wm-master-card) mit Avatar, Name,
  * Abzeichen und Kontakt als Zeile mit Symbolen, darunter Kacheln (.wm-master-tile) mit Symbol, Titel und „Ändern“ im Kopf,
  * einer großen Zeile (.wm-master-big, Punkt als <i data-tone>) und Angaben als .wm-desk-line. Steht in .wm-day.
+ * Abstände (v0.2.74, Simon 26.11.2026: „abstände zwischen bereichen einheitlich“): zwischen Karte, Kacheln und weiteren Kästen
+ * 1,5 rem wie Filament zwischen Kästen eines Schemas (darunter die Ansprechpartner), ohne Rand außen.
  */
-.wm-master-card { display: flex; gap: 1.125rem; align-items: flex-start; padding: 1.25rem 1.375rem; margin-bottom: 1rem; background: var(--wm-day-card); border: 1px solid var(--wm-day-line); border-radius: 0.75rem; }
+.wm-master { display: grid; gap: 1.5rem; }
+.wm-master-card { display: flex; gap: 1.125rem; align-items: flex-start; padding: 1.25rem 1.375rem; background: var(--wm-day-card); border: 1px solid var(--wm-day-line); border-radius: 0.75rem; }
 .wm-master-card .wm-master-avatar { width: 3.5rem; height: 3.5rem; border-radius: 0.75rem; flex: none; }
 .wm-master-body { min-width: 0; flex: 1; }
 .wm-master-name { margin: 0 0 0.4rem; font-size: 1.125rem; font-weight: 700; letter-spacing: -0.01em; color: var(--gray-950); }
@@ -2381,9 +2384,8 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .wm-master-note { display: flex; gap: 0.5rem; align-items: flex-start; margin: 0.875rem 0 0; padding: 0.5rem 0.75rem; border-radius: 0.5rem; background: var(--warning-50); color: var(--warning-900); white-space: pre-line; }
 .wm-master-note .fi-icon { width: 1rem; height: 1rem; flex: none; margin-top: 0.15rem; }
 .dark .wm-master-note { background: color-mix(in srgb, var(--warning-400) 12%, transparent); color: var(--warning-200); }
-.wm-master-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; margin-bottom: 1rem; align-items: stretch; }
+.wm-master-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem; align-items: stretch; }
 .wm-master-tile { display: flex; flex-direction: column; min-width: 0; padding-bottom: 0.25rem; background: var(--wm-day-card); border: 1px solid var(--wm-day-line); border-radius: 0.75rem; overflow: hidden; }
-.wm-master > .wm-master-tile { margin-bottom: 1rem; }
 .wm-master-tile > header { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.125rem 0.25rem; color: var(--wm-day-muted); }
 .wm-master-tile > header .fi-icon { width: 1.05rem; height: 1.05rem; flex: none; }
 .wm-master-tile > header h3 { margin: 0; font-size: 0.75rem; font-weight: 650; letter-spacing: 0.04em; text-transform: uppercase; }
