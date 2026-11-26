@@ -1527,6 +1527,9 @@ button.wm-calendar-event:hover, button.wm-calendar-chip:hover { background: colo
 .wm-calendar-facts dd { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
 .wm-calendar-badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
 .dark .wm-calendar-facts dt { color: var(--gray-400); }
+/* Text eines Termins aus Outlook im Fenster der Einzelheiten (reiner Text, Links als Inhaltslinks) */
+.wm-calendar-text { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--gray-200); font-size: 0.875rem; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; color: var(--gray-700); max-height: 24rem; overflow-y: auto; }
+.dark .wm-calendar-text { border-color: rgb(255 255 255 / 0.1); color: var(--gray-300); }
 /* Lage der Termine im Zeitraster: Beginn und Länge in Viertelstunden, Spalte und Breite in 60stel, sichtbare Stunden, Spalten je Person */
 .wm-calendar-from-0 { grid-row-start: 1; }
 .wm-calendar-from-1 { grid-row-start: 2; }
