@@ -2358,6 +2358,47 @@ button.wm-calendar-line:hover { background: color-mix(in oklab, var(--wmc, var(-
 .wm-desk-line em { font-style: normal; color: var(--wm-tone); }
 .wm-desk-meter { flex: 1; max-width: 9rem; margin: 0; }
 
+/*
+ * Stammdaten der Kundenansicht (v0.2.73, Simon 26.11.2026, Entwurf 28 A): Visitenkarte (.wm-master-card) mit Avatar, Name,
+ * Abzeichen und Kontakt als Zeile mit Symbolen, darunter Kacheln (.wm-master-tile) mit Symbol, Titel und „Ändern“ im Kopf,
+ * einer großen Zeile (.wm-master-big, Punkt als <i data-tone>) und Angaben als .wm-desk-line. Steht in .wm-day.
+ */
+.wm-master-card { display: flex; gap: 1.125rem; align-items: flex-start; padding: 1.25rem 1.375rem; margin-bottom: 1rem; background: var(--wm-day-card); border: 1px solid var(--wm-day-line); border-radius: 0.75rem; }
+.wm-master-card .wm-master-avatar { width: 3.5rem; height: 3.5rem; border-radius: 0.75rem; flex: none; }
+.wm-master-body { min-width: 0; flex: 1; }
+.wm-master-name { margin: 0 0 0.4rem; font-size: 1.125rem; font-weight: 700; letter-spacing: -0.01em; color: var(--gray-950); }
+.dark .wm-master-name { color: #fff; }
+.wm-master-chips { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 0.75rem; }
+.wm-master-facts { display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; margin: 0; padding: 0; list-style: none; color: var(--gray-700); }
+.dark .wm-master-facts { color: var(--gray-300); }
+.wm-master-facts li { display: inline-flex; align-items: center; gap: 0.4rem; min-width: 0; }
+.wm-master-facts .fi-icon { width: 1rem; height: 1rem; flex: none; color: var(--gray-400); }
+.wm-master .wm-master-facts a { color: var(--primary-700); }
+.dark .wm-master .wm-master-facts a { color: var(--primary-400); }
+.wm-master-facts button { all: unset; cursor: copy; }
+.wm-master-facts button:hover { text-decoration: underline dotted; }
+.wm-master-hint { margin: 0.6rem 0 0; color: var(--wm-day-muted); }
+.wm-master-note { display: flex; gap: 0.5rem; align-items: flex-start; margin: 0.875rem 0 0; padding: 0.5rem 0.75rem; border-radius: 0.5rem; background: var(--warning-50); color: var(--warning-900); white-space: pre-line; }
+.wm-master-note .fi-icon { width: 1rem; height: 1rem; flex: none; margin-top: 0.15rem; }
+.dark .wm-master-note { background: color-mix(in srgb, var(--warning-400) 12%, transparent); color: var(--warning-200); }
+.wm-master-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; margin-bottom: 1rem; align-items: stretch; }
+.wm-master-tile { display: flex; flex-direction: column; min-width: 0; padding-bottom: 0.25rem; background: var(--wm-day-card); border: 1px solid var(--wm-day-line); border-radius: 0.75rem; overflow: hidden; }
+.wm-master > .wm-master-tile { margin-bottom: 1rem; }
+.wm-master-tile > header { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.125rem 0.25rem; color: var(--wm-day-muted); }
+.wm-master-tile > header .fi-icon { width: 1.05rem; height: 1.05rem; flex: none; }
+.wm-master-tile > header h3 { margin: 0; font-size: 0.75rem; font-weight: 650; letter-spacing: 0.04em; text-transform: uppercase; }
+.wm-master-tile > header .fi-btn { margin-left: auto; }
+.wm-master-big { display: flex; align-items: center; gap: 0.6rem; margin: 0; padding: 0.2rem 1.125rem 0.75rem; font-size: 1.125rem; font-weight: 700; letter-spacing: -0.01em; color: var(--gray-950); }
+.dark .wm-master-big { color: #fff; }
+.wm-master-big[data-tone] { color: var(--wm-tone); font-weight: 600; }
+.wm-master-big i { width: 0.5rem; height: 0.5rem; flex: none; border-radius: 50%; background: var(--wm-tone); box-shadow: 0 0 0 3px var(--wm-tint); }
+.wm-master-tile .wm-desk-line b { font-weight: 500; color: var(--wm-day-muted); }
+.wm-master-tile .wm-desk-line > span:last-child { color: inherit; }
+.wm-master-tile a.wm-desk-line:hover { background: var(--wm-day-soft); }
+@container wm-day (max-width: 36rem) {
+    .wm-master-card { flex-direction: column; gap: 0.75rem; padding: 1rem; }
+}
+
 @container wm-day (max-width: 74rem) {
     .wm-day-side { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
 }
