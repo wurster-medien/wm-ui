@@ -615,6 +615,59 @@ window.WmDatePicker ??= (() => {
 })()
 
 /*
+ * Bereich markieren mit Shift auf der ganzen Zeile (Simon, 27.11.2026: „wie man es sonst auch kann“): Die Zeilen der Filament-Tabellen
+ * öffnen ihren Eintrag (RowClick), Shift-Klick auf diesen Link öffnete ein neues Fenster. In Tabellen mit Haken wirkt Shift-Klick auf
+ * eine Zeile wie Shift-Klick auf ihren Haken: Filament markiert alles vom zuletzt angeklickten Haken bis hierher (handleCheckboxClick
+ * in table.js) bzw. nimmt es heraus. Strg/⌘ öffnen weiter im neuen Tab, Knöpfe, Felder und Menüs der Zeile behalten ihren Klick,
+ * Shift markiert dabei keinen Text.
+ */
+;(() => {
+    if (window.wmRowRangeSelect) {
+        return
+    }
+
+    window.wmRowRangeSelect = true
+
+    const OWN_TARGETS = 'input, select, textarea, label, summary, [role="button"], [contenteditable], .fi-ta-actions, .fi-dropdown-panel, .fi-modal, button:not(.fi-ta-col):not(.fi-ta-record-content)'
+
+    /** Die Zeile einer Tabelle mit Haken, in die ein Shift-Klick fällt, sonst null. */
+    const selectableRow = (event) => {
+        const target = event.target
+
+        if (! event.shiftKey || event.ctrlKey || event.metaKey || event.altKey || event.button !== 0 || ! (target instanceof Element) || target.closest(OWN_TARGETS)) {
+            return null
+        }
+
+        const row = target.closest('.fi-ta-row, .fi-ta-record')
+
+        return row?.closest('.fi-ta')?.querySelector('.fi-ta-record-checkbox') ? row : null
+    }
+
+    document.addEventListener('mousedown', (event) => {
+        if (selectableRow(event)) {
+            event.preventDefault()
+        }
+    }, true)
+
+    document.addEventListener('click', (event) => {
+        const row = selectableRow(event)
+
+        if (! row) {
+            return
+        }
+
+        event.preventDefault()
+        event.stopImmediatePropagation()
+
+        const checkbox = row.querySelector('.fi-ta-record-checkbox')
+
+        if (checkbox && ! checkbox.disabled) {
+            checkbox.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, shiftKey: true, view: window }))
+        }
+    }, true)
+})()
+
+/*
  * Abfragen im Hintergrund (wire:poll): Am Handy scheitert leicht eine, wenn es aufwacht oder die App wechselt, die nächste
  * klappt wieder. Dafür keine Meldung „Fehler beim Laden der Seite“ (Simon, 3.11.2026), die gilt nur, wenn jemand etwas
  * getan hat. Eine abgelaufene Sitzung lädt die Seite neu, statt die Fehlerseite über die Liste zu legen; der Status ist dabei
